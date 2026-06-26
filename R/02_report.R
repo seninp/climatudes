@@ -38,6 +38,25 @@ rows_html <- paste(sprintf(
   "<tr><td>%d</td><td>%.1f</td><td>%.1f</td><td><strong>%.1f</strong></td></tr>",
   recent$year, recent$TN, recent$TX, recent$Mean), collapse = "\n")
 
+# ---- record-days table rows (hottest / coldest per station) -----------------
+rec_row <- function(label, span, date, tn, tx, colour, val_col) {
+  vals <- c(TN = sprintf("%.1f", tn), TX = sprintf("%.1f", tx))
+  vals[[val_col]] <- sprintf("<strong style=\"color:%s\">%s</strong>", colour, vals[[val_col]])
+  sprintf(paste0("<tr><td>%s</td>",
+                 "<td style=\"color:%s;font-weight:600\">%s</td>",
+                 "<td>%s</td><td>%s</td><td>%s</td></tr>"),
+          span, colour, label, date, vals[["TN"]], vals[["TX"]])
+}
+record_rows <- character(0)
+for (r in stats$records) {
+  span <- sprintf("%s<br><span style=\"color:#8A97A0;font-size:0.85em\">%d&ndash;%d</span>",
+                  r$station, r$span_yr0, r$span_yr1)
+  record_rows <- c(record_rows,
+    rec_row("Hottest &#128293;", span, r$hot$date,  r$hot$tn,  r$hot$tx,  "#C0392B", "TX"),
+    rec_row("Coldest &#10052;",  span, r$cold$date, r$cold$tn, r$cold$tx, "#1F5FA8", "TN"))
+}
+record_rows_html <- paste(record_rows, collapse = "\n")
+
 fmt <- function(x, d = 2) formatC(x, format = "f", digits = d)
 early_decade <- (stats$yr0 %/% 10) * 10
 
@@ -170,6 +189,25 @@ template <- '<!DOCTYPE html>
     unsmoothed daily mean, 1947 and 1987 each touch both extremes.)</span>
   </div>
 
+  <h2>The record days</h2>
+  <p>
+    The single most extreme days in each station&rsquo;s record. &ldquo;Hottest&rdquo;
+    is the highest daily maximum (TX), &ldquo;coldest&rdquo; the lowest daily minimum (TN).
+  </p>
+  <table>
+    <thead><tr>
+      <th>Station (record span)</th><th>Extreme</th><th>Date</th>
+      <th>Min (TN)</th><th>Max (TX)</th>
+    </tr></thead>
+    <tbody>
+{{RECORD_ROWS}}
+    </tbody>
+  </table>
+  <p style="color:#8A97A0; font-size:0.9rem;">
+    The all-time heat (Aug 2023) is recent at both stations, while the deepest cold
+    is decades old (Feb 1956 at Blagnac) &mdash; the same warming signature seen above.
+  </p>
+
   <div class="note">
     <strong>Why Auzeville?</strong> The M&eacute;t&eacute;o-France dataset for department&nbsp;31
     contains no station literally named &ldquo;Castanet-Tolosan&rdquo;. The
@@ -265,6 +303,7 @@ fills <- c(
   BOTH_SENTENCE   = both_sentence,
   R_VERSION       = paste(R.version$major, R.version$minor, sep = "."),
   ROWS            = rows_html,
+  RECORD_ROWS     = record_rows_html,
   IMG_SERIES      = img_series,
   IMG_CLIM        = img_clim
 )

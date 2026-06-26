@@ -269,6 +269,25 @@ agg_png(file.path(PATHS$figures, "temperature_climatology.png"),
 print(p2); invisible(dev.off())
 message("Wrote temperature_climatology.png")
 
+# ---- all-time record days (per station) -------------------------------------
+# Hottest = highest daily max (TX); coldest = lowest daily min (TN).
+record_day <- function(st, col, decreasing) {
+  d <- dat[station == st & !is.na(get(col))]
+  d <- d[order(if (decreasing) -get(col) else get(col))][1]
+  list(date = sprintf("%04d-%02d-%02d", d$year, d$month, d$day),
+       value = d[[col]], tn = d$TN, tx = d$TX)
+}
+records <- lapply(levels(dat$station), function(st) {
+  list(station = st,
+       span_yr0 = min(dat[station == st]$year),
+       span_yr1 = max(dat[station == st]$year),
+       hot  = record_day(st, "TX", TRUE),
+       cold = record_day(st, "TN", FALSE))
+})
+for (r in records)
+  message(sprintf("%-26s hottest %s = %.1f°C (TX) | coldest %s = %.1f°C (TN)",
+                  r$station, r$hot$date, r$hot$value, r$cold$date, r$cold$value))
+
 # ---- stash numbers for the HTML report --------------------------------------
 stats <- list(
   yr0 = yr0, yr1 = yr1,
@@ -282,7 +301,8 @@ stats <- list(
   n_station_years = nrow(annual),
   hot_thr = HOT_THR, cold_thr = COLD_THR,
   hot_years = hot_years, cold_years = cold_years, both_years = both_years,
-  smooth_window = SMOOTH_WINDOW
+  smooth_window = SMOOTH_WINDOW,
+  records = records
 )
 saveRDS(stats, file.path(PATHS$processed, "trend_stats.rds"))
 message("Wrote trend_stats.rds")
