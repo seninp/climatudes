@@ -2,7 +2,7 @@
 # Castanet-Tolosan temperature analysis — reproducible pipeline
 #   make all      run the full pipeline (prepare -> plots -> report)
 #   make prepare  slice raw .csv.gz -> small gzipped station extract
-#   make plots    build the two figures + annual table + stats
+#   make plots    build the three figures + annual table + stats
 #   make report   build the self-contained HTML report
 #   make open     open the report in the default browser (macOS)
 #   make clean    remove generated outputs + cached extract (raw is untouched)
@@ -14,7 +14,8 @@ RAW_GZ      := $(wildcard data/raw/*.csv.gz)
 PROCESSED   := data/processed
 EXTRACT     := data/processed/stations_daily.csv.gz
 FIGURES     := outputs/figures/temperature_series.png \
-               outputs/figures/temperature_climatology.png
+               outputs/figures/temperature_climatology.png \
+               outputs/figures/temperature_ytd.png
 ANNUAL      := outputs/annual_temperatures.csv
 STATS       := data/processed/trend_stats.rds
 REPORT      := outputs/temperature_report.html

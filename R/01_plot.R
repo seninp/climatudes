@@ -36,7 +36,7 @@ message(sprintf("Loaded %d daily rows for %d stations (%d..%d).",
 # PLOT 1 — annual means, first available year -> current year
 # =============================================================================
 
-annual <- dat[, .(
+annual_all <- dat[, .(
   n_tn = sum(!is.na(TN)),
   n_tx = sum(!is.na(TX)),
   n_tm = sum(!is.na(TNTXM)),
@@ -45,15 +45,32 @@ annual <- dat[, .(
   TMEAN = mean(TNTXM, na.rm = TRUE)
 ), by = .(station, year)]
 
-annual <- annual[n_tn >= MIN_DAYS & n_tx >= MIN_DAYS & n_tm >= MIN_DAYS]
-setorder(annual, station, year)
+annual_all[, complete := n_tn >= MIN_DAYS & n_tx >= MIN_DAYS & n_tm >= MIN_DAYS]
+setorder(annual_all, station, year)
 
-fwrite(annual, file.path(PATHS$outputs, "annual_temperatures.csv"))
-message(sprintf("Annual table: %d complete station-years (%d..%d).",
-                nrow(annual), min(annual$year), max(annual$year)))
+cur_year <- max(dat$year)   # the in-progress (usually partial) year, e.g. 2026
+
+# Complete years drive the trend, lines, LOESS and all long-term stats — a partial
+# year's mean is seasonally biased (missing the warm late-summer tail) and must not
+# enter the annual trend.
+annual <- annual_all[complete == TRUE]
+
+# The annual TABLE, however, keeps every complete year PLUS the in-progress year
+# (flagged via `complete`), so a record-breaking year in progress stays visible.
+# Its true, like-for-like standing is shown by the year-to-date figure below.
+annual_out <- annual_all[complete == TRUE | year == cur_year]
+fwrite(annual_out, file.path(PATHS$outputs, "annual_temperatures.csv"))
+message(sprintf("Annual table: %d complete station-years (%d..%d)%s.",
+                nrow(annual), min(annual$year), max(annual$year),
+                if (any(!annual_out$complete))
+                  sprintf(" + %d partial (in progress)", sum(!annual_out$complete)) else ""))
 
 blag <- annual[station == "Toulouse-Blagnac"]
 auz  <- annual[station == "Auzeville-Tolosane-INRAE"]
+
+# current partial-year rows (for the hollow "to date" markers on plot 1)
+blag_cur <- annual_all[station == "Toulouse-Blagnac" & year == cur_year & complete == FALSE]
+auz_cur  <- annual_all[station == "Auzeville-Tolosane-INRAE" & year == cur_year & complete == FALSE]
 
 L_TX   <- "Toulouse-Blagnac — daily maximum (TX)"
 L_MEAN <- "Toulouse-Blagnac — daily mean"
@@ -104,8 +121,8 @@ p1 <- ggplot() +
            fill = "white", alpha = 0.7, label.padding = unit(0.4, "lines")) +
   scale_colour_manual(values = pal, name = NULL, breaks = series_levels) +
   scale_shape_manual(values = shp, name = NULL, breaks = series_levels) +
-  scale_x_continuous(breaks = x_breaks, limits = c(yr0, yr1),
-                     expand = expansion(mult = c(0.01, 0.02))) +
+  scale_x_continuous(breaks = x_breaks, limits = c(yr0, max(yr1, cur_year)),
+                     expand = expansion(mult = c(0.01, 0.04))) +
   scale_y_continuous(breaks = seq(-5, 30, 2),
                      limits = c(min(blag$TN) - 0.5, max(blag$TX) + 1.6),
                      labels = function(x) paste0(x, " °C")) +
@@ -139,6 +156,20 @@ p1 <- ggplot() +
     plot.margin = margin(18, 22, 12, 18),
     plot.background = element_rect(fill = "white", colour = NA)
   )
+
+# current, in-progress year: a hollow "to date" marker (Jan 1 -> latest day), kept
+# visually distinct because a partial-year mean is NOT comparable to full years —
+# its true, like-for-like standing is the year-to-date figure. Drawn in the
+# "current year" red used for the climatology, so the eye links the two charts.
+if (nrow(blag_cur)) {
+  p1 <- p1 +
+    geom_point(data = blag_cur, aes(year, TMEAN),
+               shape = 23, size = 3, fill = "white", colour = COL$tx, stroke = 1.2) +
+    annotate("text", x = blag_cur$year, y = blag_cur$TMEAN - 0.75,
+             label = sprintf("%d\nto date", cur_year),
+             colour = COL$tx, size = 3, fontface = "italic",
+             hjust = 0.7, vjust = 1, lineheight = 0.95)
+}
 
 agg_png(file.path(PATHS$figures, "temperature_series.png"),
         width = 2400, height = 1400, res = 200, background = "white")
@@ -269,6 +300,86 @@ agg_png(file.path(PATHS$figures, "temperature_climatology.png"),
 print(p2); invisible(dev.off())
 message("Wrote temperature_climatology.png")
 
+# =============================================================================
+# PLOT 3 — the year so far vs the SAME window of every year (year-to-date race)
+# The only fair way to place an in-progress year against history: compare each
+# year over the identical calendar window (Jan 1 -> the current year's last day).
+# =============================================================================
+
+blagd <- dat[station == CLIMATOLOGY_STATION & !is.na(TNTXM)]
+cutM <- max(blagd[year == cur_year]$month)
+cutD <- max(blagd[year == cur_year & month == cutM]$day)
+in_window <- function(m, d) (m < cutM) | (m == cutM & d <= cutD)
+
+ytd <- blagd[in_window(month, day), .(ytd = mean(TNTXM), n = .N), by = year][n >= MIN_YTD_DAYS]
+setorder(ytd, year)
+ytd[, is_cur := year == cur_year]
+
+win_lab  <- sprintf("Jan 1 – %s %d", month.abb[cutM], cutD)   # e.g. "Jan 1 – Jul 9"
+cur_ytd  <- ytd[year == cur_year]$ytd
+best_oth <- ytd[year != cur_year][order(-ytd)][1]   # warmest of all OTHER years
+ytd_rank <- match(cur_year, ytd[order(-ytd)]$year)
+delta    <- cur_ytd - best_oth$ytd                  # + if the current year is the record
+is_record <- ytd_rank == 1L
+
+message(sprintf("YTD (%s): %d = %.2f°C, rank %d/%d%s",
+                win_lab, cur_year, cur_ytd, ytd_rank, nrow(ytd),
+                if (is_record) sprintf(" — RECORD, +%.2f°C over %d", delta, best_oth$year) else
+                  sprintf(" — record held by %d (%.2f°C)", best_oth$year, best_oth$ytd)))
+
+# each year's window mean as a DEPARTURE from the long-term (prior-years) normal —
+# blue below, red above; the warming shows as the swing from blue to red, and the
+# current year stands out as the tallest bar (no floating point, real time axis).
+normal   <- mean(ytd[year != cur_year]$ytd)
+ytd[, anom := ytd - normal]
+cur_anom <- ytd[year == cur_year]$anom
+delta_disp <- round(cur_ytd, 1) - round(best_oth$ytd, 1)   # matches the report's rounding
+norm_yr1 <- max(ytd[is_cur == FALSE]$year)
+
+p3 <- ggplot(ytd, aes(year, anom, fill = anom > 0)) +
+  geom_col(width = 0.72, alpha = 0.85) +
+  geom_hline(yintercept = 0, colour = "#8A97A0", linewidth = 0.4) +
+  # current year emphasised: full-opacity red bar with a dark outline
+  geom_col(data = ytd[is_cur == TRUE], aes(year, anom),
+           fill = COL$tx, colour = "#7B241C", linewidth = 0.4, width = 0.92) +
+  annotate("text", x = cur_year, y = cur_anom, vjust = -0.35, hjust = 0.65,
+           label = sprintf("%d\n+%.1f °C", cur_year, cur_anom),
+           colour = COL$tx, fontface = "bold", size = 3.7, lineheight = 0.92) +
+  scale_fill_manual(values = c(`TRUE` = COL$tx, `FALSE` = COL$tn), guide = "none") +
+  scale_x_continuous(breaks = x_breaks, expand = expansion(mult = c(0.01, 0.04))) +
+  scale_y_continuous(labels = function(x) sprintf("%+g °C", x),
+                     expand = expansion(mult = c(0.04, 0.20))) +
+  labs(
+    title = sprintf("The year so far, warmer than any before it — %s", CLIMATOLOGY_STATION),
+    subtitle = sprintf(
+      "Each bar is a year's mean over the same window (%s) as its departure from the %d–%d normal (%.1f °C).\nRed = warmer than normal, blue = cooler.  %d is the warmest such period on record: +%.1f °C above normal, +%.1f °C over the previous record (%d).",
+      win_lab, min(ytd$year), norm_yr1, normal, cur_year, cur_anom, delta_disp, best_oth$year),
+    x = NULL, y = NULL,
+    caption = paste0(
+      "Source: Météo-France, Données climatologiques de base – quotidiennes (meteo.data.gouv.fr, dataset 6569b51a…). Licence Ouverte / Etalab.  Station: Toulouse-Blagnac (31069001).  ",
+      sprintf("Each bar = mean of daily mean (TN+TX)/2 over %s of that year, minus the %d–%d average of the same window; years with < %d valid days in the window are omitted.",
+              win_lab, min(ytd$year), norm_yr1, MIN_YTD_DAYS))
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(
+    plot.title    = element_text(face = "bold", size = 17, colour = "#1A2530"),
+    plot.subtitle = element_text(size = 11, colour = "#566573", margin = margin(b = 12)),
+    plot.caption  = element_text(size = 8, colour = "#7F8C8D", hjust = 0,
+                                 margin = margin(t = 14), lineheight = 1.05),
+    plot.caption.position = "plot", plot.title.position = "plot",
+    panel.grid.minor = element_blank(),
+    panel.grid.major.x = element_line(colour = "#EDF0F2", linewidth = 0.4),
+    panel.grid.major.y = element_line(colour = "#ECEFF1", linewidth = 0.4),
+    axis.text = element_text(colour = "#566573"),
+    plot.margin = margin(18, 22, 12, 18),
+    plot.background = element_rect(fill = "white", colour = NA)
+  )
+
+agg_png(file.path(PATHS$figures, "temperature_ytd.png"),
+        width = 2400, height = 1250, res = 200, background = "white")
+print(p3); invisible(dev.off())
+message("Wrote temperature_ytd.png")
+
 # ---- all-time record days (per station) -------------------------------------
 # Hottest = highest daily max (TX); coldest = lowest daily min (TN).
 record_day <- function(st, col, decreasing) {
@@ -302,7 +413,19 @@ stats <- list(
   hot_thr = HOT_THR, cold_thr = COLD_THR,
   hot_years = hot_years, cold_years = cold_years, both_years = both_years,
   smooth_window = SMOOTH_WINDOW,
-  records = records
+  records = records,
+  ytd = list(
+    window    = win_lab,
+    n_years   = nrow(ytd),
+    cur       = round(cur_ytd, 1),
+    rank      = ytd_rank,
+    is_record = is_record,
+    rec_year  = best_oth$year,
+    rec_val   = round(best_oth$ytd, 1),
+    delta     = round(delta, 1),
+    normal    = round(normal, 1),
+    cur_anom  = round(cur_anom, 1)
+  )
 )
 saveRDS(stats, file.path(PATHS$processed, "trend_stats.rds"))
 message("Wrote trend_stats.rds")

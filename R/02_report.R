@@ -19,14 +19,16 @@ source("R/config.R")
 
 fig_series <- file.path(PATHS$figures, "temperature_series.png")
 fig_clim   <- file.path(PATHS$figures, "temperature_climatology.png")
+fig_ytd    <- file.path(PATHS$figures, "temperature_ytd.png")
 annual_csv <- file.path(PATHS$outputs, "annual_temperatures.csv")
 stats_rds  <- file.path(PATHS$processed, "trend_stats.rds")
 
-stopifnot(file.exists(fig_series), file.exists(fig_clim),
+stopifnot(file.exists(fig_series), file.exists(fig_clim), file.exists(fig_ytd),
           file.exists(annual_csv), file.exists(stats_rds))
 
 img_series <- base64encode(fig_series)
 img_clim   <- base64encode(fig_clim)
+img_ytd    <- base64encode(fig_ytd)
 stats      <- readRDS(stats_rds)
 annual     <- fread(annual_csv)
 
@@ -163,6 +165,27 @@ template <- '<!DOCTYPE html>
     on the regional mean: the local and regional signals are the same.
   </p>
 
+  <h2>This year, against every year before it</h2>
+  <figure>
+    <img src="data:image/png;base64,{{IMG_YTD}}" alt="Per-year departure of the same-window mean temperature from the long-term normal, current year highlighted as the largest">
+    <figcaption>
+      Each bar is a year&rsquo;s mean over the <em>same window</em> &mdash;
+      <strong>{{YTD_WINDOW}}</strong> &mdash; shown as its departure from the long-term
+      normal ({{YTD_NORMAL}}&nbsp;&deg;C): red above, blue below. Comparing each year over
+      the identical part-of-year is the only fair way to place a year that is still in
+      progress against history. The bars swing from blue to red over the decades &mdash;
+      the warming &mdash; and <strong>{{CUR_YEAR}}</strong> is the tallest of all.
+    </figcaption>
+  </figure>
+  <p>{{YTD_SENTENCE}}</p>
+  <div class="note">
+    A partial year cannot be compared to other years&rsquo; <em>full-year</em> means &mdash;
+    it is still missing the warm late-summer and autumn tail. That is why {{CUR_YEAR}}
+    appears on the long-view chart above only as a marked, hollow &ldquo;to&nbsp;date&rdquo;
+    point (seasonally incomplete, so lower than its eventual annual figure), while its
+    real, like-for-like standing is the chart here.
+  </div>
+
   <h2>Every year, day by day</h2>
   <figure>
     <img src="data:image/png;base64,{{IMG_CLIM}}" alt="Daily temperature climatology, every year January to December, with hot years in red and cold years in blue">
@@ -234,8 +257,11 @@ template <- '<!DOCTYPE html>
         maximum&nbsp;=&nbsp;<code>TX</code>, mean&nbsp;=&nbsp;<code>(TN+TX)/2</code>
         (field <code>TNTXM</code>), in&nbsp;&deg;C.</li>
     <li><strong>Annual aggregation.</strong> Arithmetic mean of daily values over each
-        calendar year. Years with fewer than 330 valid days (including the current,
-        partial year) are excluded to avoid seasonal bias.</li>
+        calendar year. The long-term trend uses only complete years (&ge;&nbsp;330 valid
+        days). The in-progress year is shown separately &mdash; as a hollow
+        &ldquo;to&nbsp;date&rdquo; marker on the trend chart, and (for a fair record
+        comparison) against the same calendar window (Jan&nbsp;1&nbsp;&rarr;&nbsp;cutoff)
+        of every prior year.</li>
     <li><strong>Daily climatology.</strong> Each year&rsquo;s daily mean is smoothed
         with a centred {{SMOOTH_WINDOW}}-day rolling mean (unweighted moving average,
         computed per year so December never bleeds into January; the first/last
@@ -274,6 +300,22 @@ both_sentence <- if (length(stats$both_years) == 0)
   "No single year managed to hit both extremes." else
   sprintf("Years hitting both extremes: %s.", paste(stats$both_years, collapse = ", "))
 
+# ---- year-to-date sentence (record vs not) ----------------------------------
+y <- stats$ytd
+ytd_sentence <- if (isTRUE(y$is_record))
+  sprintf(paste0("Measured like-for-like, <strong>%d is the warmest %s in %d years</strong> ",
+                 "at Toulouse-Blagnac: <strong>%s&nbsp;&deg;C</strong> &mdash; +%s&nbsp;&deg;C above the ",
+                 "previous record (%d, %s&nbsp;&deg;C) and <strong>+%s&nbsp;&deg;C above the long-term ",
+                 "normal</strong> (%s&nbsp;&deg;C). This is exactly the point of the chart: ",
+                 "a year still in progress can already stand out against the whole record."),
+          stats$cur_year, y$window, y$n_years, fmt(y$cur, 1), fmt(y$cur - y$rec_val, 1),
+          y$rec_year, fmt(y$rec_val, 1), fmt(y$cur_anom, 1), fmt(y$normal, 1)) else
+  sprintf(paste0("Measured like-for-like over %s, %d currently ranks <strong>#%d of %d</strong> ",
+                 "at Toulouse-Blagnac (%s&nbsp;&deg;C). The warmest such window on record remains ",
+                 "%d (%s&nbsp;&deg;C)."),
+          y$window, stats$cur_year, y$rank, y$n_years, fmt(y$cur, 1),
+          y$rec_year, fmt(y$rec_val, 1))
+
 # ---- fill placeholders (single gsub pass, no length limit) ------------------
 fills <- c(
   YR0             = stats$yr0,
@@ -305,7 +347,11 @@ fills <- c(
   ROWS            = rows_html,
   RECORD_ROWS     = record_rows_html,
   IMG_SERIES      = img_series,
-  IMG_CLIM        = img_clim
+  IMG_CLIM        = img_clim,
+  IMG_YTD         = img_ytd,
+  YTD_WINDOW      = stats$ytd$window,
+  YTD_NORMAL      = fmt(stats$ytd$normal, 1),
+  YTD_SENTENCE    = ytd_sentence
 )
 
 html <- template

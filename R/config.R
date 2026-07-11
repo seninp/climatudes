@@ -45,6 +45,10 @@ CLIMATOLOGY_STATION <- "Toulouse-Blagnac"    # longest record -> best daily curv
 # ---- analysis constants -----------------------------------------------------
 MIN_DAYS <- 330L    # a year needs >= this many valid days to count as "complete"
 SMOOTH_WINDOW <- 3L # centred rolling-mean window (days) for the daily climatology
+# For the year-to-date comparison (current partial year vs the same Jan 1 -> cutoff
+# window of every prior year), a year needs >= this many valid days IN that window
+# to be comparable — keeps sparse early records from distorting the ranking.
+MIN_YTD_DAYS <- 150L
 
 # ---- shared palette ---------------------------------------------------------
 COL <- list(

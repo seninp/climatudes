@@ -4,15 +4,21 @@ A small, reproducible analytics project that turns Météo-France daily
 climatological records into a readable report on local warming around
 **Castanet-Tolosan** (Haute-Garonne, France).
 
-It produces two figures and a self-contained HTML report:
+It produces three figures and a self-contained HTML report:
 
 1. **Annual means** of daily min / max / mean temperature, from the first
-   available year to the present.
-2. **Daily climatology ("spaghetti")** — every year's daily curve from January
+   available year to the present. The in-progress year appears as a hollow
+   "to date" marker (a partial year is not comparable to full-year means).
+2. **Year-to-date** — each year's mean over the *same* calendar window
+   (Jan 1 → the current year's last available day), so a year still in progress
+   can be ranked fairly against history. This is where a record-breaking current
+   year stands out.
+3. **Daily climatology ("spaghetti")** — every year's daily curve from January
    to December, with the current year drawn bold against the historical bundle
    and the long-term daily normal.
 
 ![Annual series](outputs/figures/temperature_series.png)
+![Year-to-date](outputs/figures/temperature_ytd.png)
 ![Daily climatology](outputs/figures/temperature_climatology.png)
 
 ## Data source
@@ -49,7 +55,7 @@ climatudes/
 ├── R/
 │   ├── config.R               shared paths, station codes, constants, palette
 │   ├── 00_prepare_data.R      slice raw .csv.gz -> small gzipped station extract
-│   ├── 01_plot.R              build the two figures + annual table + stats
+│   ├── 01_plot.R              build the three figures + annual table + stats
 │   └── 02_report.R            assemble the self-contained HTML report
 ├── data/
 │   ├── raw/                   source of truth: original .csv.gz (kept compressed) + field docs
