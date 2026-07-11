@@ -18,3 +18,8 @@ outputs/temperature_report.html
 
 # macOS
 .DS_Store
+
+# AI assistant & editor helper artifacts — never commit (local configs / home setup)
+.claude/
+.cursor/
+.aider*
