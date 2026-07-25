@@ -1,0 +1,37 @@
+# Nothing regenerable is tracked. `make all` rebuilds this project end to end
+# from the R scripts alone (~6 s, ~10 MB downloaded) — see R/00_prepare_data.R.
+
+# Raw Météo-France source data — downloaded on demand by stage 00 from the
+# mirror in R/config.R (MF_BASE_URL). Public, Licence Ouverte, no credentials.
+# NOTE: the upstream filenames encode years and rotate each January; bump
+#       MF_ERAS in R/config.R when the cycle turns.
+data/raw/
+
+# Cached station extract + intermediates — regenerable via `make prepare`
+data/processed/
+
+# Generated analysis outputs — rebuilt by `make all`.
+# The report is the shareable artifact: copy it out, do not commit it (a 2 MB
+# base64 HTML re-inflates the history on every refresh).
+# EXCEPTION: the three PNG figures ARE tracked. README.md renders the report
+# inline (see R/03_readme.R) and GitHub can only show the figures if they live
+# in the repository. Keep the figure commit as an amend of the existing history
+# entry rather than a new commit, so refreshes don't stack up PNG blobs.
+outputs/*
+!outputs/figures/
+outputs/figures/*
+!outputs/figures/*.png
+
+# R session cruft
+.Rhistory
+.RData
+.Rproj.user/
+*.Rproj
+
+# macOS
+.DS_Store
+
+# AI assistant & editor helper artifacts — never commit (local configs / home setup)
+.claude/
+.cursor/
+.aider*
