@@ -25,7 +25,7 @@ steadily and continuously.
 | Total rise over 78 years (1947 → 2025) | **+2.7 °C** |
 | Mean of the last decade (vs 12.9 °C in the 1940s) | **15.2 °C** |
 | Complete station-years analysed | **101** |
-| 2026 year-to-date (Jan 1 – Jul 27), against 80 years | **#1 of 80 — record** |
+| 2026 year-to-date (Jan 1 – Aug 1), against 80 years | **#1 of 80 — record** |
 
 ### The long view: annual means
 
@@ -47,13 +47,13 @@ and regional signals are the same.
 
 ![Per-year mean over the same Jan-to-cutoff window, as a departure from the long-term normal, with 2026 the largest bar](outputs/figures/temperature_ytd.png)
 
-<sub>Each bar is a year’s mean over the <em>same window</em> — <strong>Jan 1 – Jul 27</strong> —
-shown as its departure from the long-term normal (12.9 °C): red above, blue
+<sub>Each bar is a year’s mean over the <em>same window</em> — <strong>Jan 1 – Aug 1</strong> —
+shown as its departure from the long-term normal (13.1 °C): red above, blue
 below. Comparing each year over the identical part-of-year is the only fair way to place
 a year that is still in progress against history. The bars swing from blue to red over
 the decades — the warming.</sub>
 
-Measured like-for-like, **2026 is the warmest Jan 1 – Jul 27 in 80 years** at Toulouse-Blagnac: **16.1 °C** — +0.8 °C above the previous record (2025, 15.3 °C) and **+3.1 °C above the long-term normal** (12.9 °C). This is exactly the point of the chart: a year still in progress can already stand out against the whole record.
+Measured like-for-like, **2026 is the warmest Jan 1 – Aug 1 in 80 years** at Toulouse-Blagnac: **16.3 °C** — +0.8 °C above the previous record (2025, 15.5 °C) and **+3.2 °C above the long-term normal** (13.1 °C). This is exactly the point of the chart: a year still in progress can already stand out against the whole record.
 
 > [!NOTE]
 > A partial year cannot be compared to other years’ *full-year* means — it is still
@@ -113,7 +113,7 @@ decades old (Feb 1956 at Blagnac) — the same warming signature seen above.
 | 2023 | 10.7 | 20.8 | **15.8** |
 | 2024 | 10.5 | 19.6 | **15.1** |
 | 2025 | 10.7 | 20.6 | **15.7** |
-| 2026 *(to date)* | 10.9 | 21.2 | **16.1** |
+| 2026 *(to date)* | 11.1 | 21.5 | **16.3** |
 
 ### Methodology
 
