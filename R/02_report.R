@@ -20,15 +20,20 @@ source("R/config.R")
 fig_series <- file.path(PATHS$figures, "temperature_series.png")
 fig_clim   <- file.path(PATHS$figures, "temperature_climatology.png")
 fig_ytd    <- file.path(PATHS$figures, "temperature_ytd.png")
+fig_rain   <- file.path(PATHS$figures, "rain_series.png")
+fig_rainc  <- file.path(PATHS$figures, "rain_climatology.png")
 annual_csv <- file.path(PATHS$outputs, "annual_temperatures.csv")
 stats_rds  <- file.path(PATHS$processed, "trend_stats.rds")
 
 stopifnot(file.exists(fig_series), file.exists(fig_clim), file.exists(fig_ytd),
+          file.exists(fig_rain), file.exists(fig_rainc),
           file.exists(annual_csv), file.exists(stats_rds))
 
 img_series <- base64encode(fig_series)
 img_clim   <- base64encode(fig_clim)
 img_ytd    <- base64encode(fig_ytd)
+img_rain   <- base64encode(fig_rain)
+img_rainc  <- base64encode(fig_rainc)
 stats      <- readRDS(stats_rds)
 annual     <- fread(annual_csv)
 
@@ -60,7 +65,10 @@ for (r in stats$records) {
 record_rows_html <- paste(record_rows, collapse = "\n")
 
 fmt <- function(x, d = 2) formatC(x, format = "f", digits = d)
-early_decade <- (stats$yr0 %/% 10) * 10
+# The "early" baseline is the first ten complete years (yr0 .. yr0+9), e.g.
+# 1947-1956 — NOT "the 1940s" (that floored 1947 to 1940 and misread as a
+# 1940-1949 decade the data does not fully cover). Label it as the real span.
+early_span <- sprintf("%d&ndash;%d", stats$yr0, stats$yr0 + 9)
 
 template <- '<!DOCTYPE html>
 <html lang="en">
@@ -140,7 +148,7 @@ template <- '<!DOCTYPE html>
     <div class="stat"><div class="num">+{{RISE}}&nbsp;&deg;C</div>
       <div class="lab">total rise over {{NYEARS}} years ({{YR0}} &rarr; {{YR1}})</div></div>
     <div class="stat"><div class="num">{{MEAN_RECENT}}&nbsp;&deg;C</div>
-      <div class="lab">mean of the last decade<br>(vs {{MEAN_EARLY}}&nbsp;&deg;C in the {{EARLY_DECADE}}s)</div></div>
+      <div class="lab">mean of the last decade<br>(vs {{MEAN_EARLY}}&nbsp;&deg;C in {{EARLY_SPAN}})</div></div>
     <div class="stat"><div class="num">{{N_STATION_YEARS}}</div>
       <div class="lab">complete station-years analysed</div></div>
   </div>
@@ -161,8 +169,11 @@ template <- '<!DOCTYPE html>
     mean temperature rises by <strong>+{{SLOPE_DEC}}&nbsp;&deg;C per decade</strong>, about
     <strong>+{{RISE}}&nbsp;&deg;C</strong> over the whole period. The local
     Auzeville-Tolosane-INRAE station, on the edge of Castanet-Tolosan, only covers
-    {{AUZ_YR0}}&rarr;{{AUZ_YR1}} but shows a consistent slope (+{{SLOPE_DEC_AUZ}}&nbsp;&deg;C/decade) and sits almost exactly
-    on the regional mean: the local and regional signals are the same.
+    {{AUZ_YR0}}&rarr;{{AUZ_YR1}}. Its slope over that shorter, more recent window is
+    steeper (+{{SLOPE_DEC_AUZ}}&nbsp;&deg;C/decade) &mdash; but so is Blagnac&rsquo;s over the
+    <em>same</em> years (+{{SLOPE_DEC_BLAG_AUZWIN}}&nbsp;&deg;C/decade): recent decades
+    warm faster, and the local station tracks the regional one almost exactly. The
+    local and regional signals are the same.
   </p>
 
   <h2>This year, against every year before it</h2>
@@ -204,12 +215,11 @@ template <- '<!DOCTYPE html>
   <div class="note">
     <strong>Hottest and coldest years.</strong> Measured on the smoothed daily-mean
     curve, <strong>{{N_HOT}}</strong> years pushed above +{{HOT_THR}}&nbsp;&deg;C
-    ({{HOT_YEARS}}) &mdash; all of them recent &mdash; while <strong>{{N_COLD}}</strong> years
-    dropped below {{COLD_THR}}&nbsp;&deg;C ({{COLD_YEARS}}), all but one before 2000.
+    ({{HOT_YEARS}}){{HOT_RECENT_CLAUSE}} while <strong>{{N_COLD}}</strong> years
+    dropped below {{COLD_THR}}&nbsp;&deg;C ({{COLD_YEARS}}){{COLD_ERA_CLAUSE}}.
     <strong>{{BOTH_SENTENCE}}</strong> The hot extremes and the cold extremes fall in
     different eras, which is itself a fingerprint of the warming trend.
-    <span style="color:#8A97A0;">(If the threshold is applied instead to the raw,
-    unsmoothed daily mean, 1947 and 1987 each touch both extremes.)</span>
+    <span style="color:#8A97A0;">{{RAW_BOTH_SENTENCE}}</span>
   </div>
 
   <h2>The record days</h2>
@@ -248,6 +258,64 @@ template <- '<!DOCTYPE html>
     </tbody>
   </table>
 
+  <h2>Frost days halved, hot days doubled</h2>
+  <p>
+    A degree of warming is abstract; the count of extreme days is not. Comparing
+    Toulouse-Blagnac&rsquo;s first complete decade ({{EXT_SPAN0}}) with its last
+    ({{EXT_SPAN1}}), the everyday texture of the year has changed sharply:
+  </p>
+  <div class="stats">
+    <div class="stat"><div class="num" style="color:var(--blue)">{{FROST_EARLY}}&nbsp;&rarr;&nbsp;{{FROST_RECENT}}</div>
+      <div class="lab">frost days per year<br>(min below&nbsp;0&nbsp;&deg;C) &mdash; roughly halved</div></div>
+    <div class="stat"><div class="num">{{HOT_EARLY}}&nbsp;&rarr;&nbsp;{{HOT_RECENT}}</div>
+      <div class="lab">hot days per year<br>(max&nbsp;&ge;&nbsp;{{HOT_TX}}&nbsp;&deg;C) &mdash; roughly doubled</div></div>
+    <div class="stat"><div class="num">{{VHOT_EARLY}}&nbsp;&rarr;&nbsp;{{VHOT_RECENT}}</div>
+      <div class="lab">very hot days per year<br>(max&nbsp;&ge;&nbsp;{{VHOT_TX}}&nbsp;&deg;C)</div></div>
+    <div class="stat"><div class="num">{{TROP_EARLY}}&nbsp;&rarr;&nbsp;{{TROP_RECENT}}</div>
+      <div class="lab">tropical nights per year<br>(min&nbsp;&ge;&nbsp;{{TROP_TX}}&nbsp;&deg;C)</div></div>
+  </div>
+  <p style="color:#8A97A0; font-size:0.9rem;">
+    Counts of days per year crossing each threshold, averaged over the first and
+    last complete decades of the record. Frost is retreating just as heat advances
+    &mdash; the same warming, read off the calendar instead of the thermometer.
+  </p>
+
+  <h2>What about the rain?</h2>
+  <p>
+    Temperature is only half of a climate. Rainfall, it turns out, tells a very
+    different &mdash; and much quieter &mdash; story: over the same {{RAIN_NYEARS}}&nbsp;years,
+    annual precipitation at Toulouse-Blagnac shows <strong>no statistically
+    significant trend</strong>.
+  </p>
+  <figure>
+    <img src="data:image/png;base64,{{IMG_RAIN}}" alt="Annual rainfall totals, Toulouse-Blagnac and Auzeville, {{RAIN_YR0}}-{{RAIN_YR1}}, with a flat trend">
+    <figcaption>
+      Annual total precipitation. The dashed line is Toulouse-Blagnac&rsquo;s
+      long-term mean ({{RAIN_MEAN}}&nbsp;mm/yr); the thick curves are LOESS
+      smoothings. The year-to-year swings are large &mdash; from
+      {{DRIEST_MM}}&nbsp;mm ({{DRIEST_YEAR}}) to {{WETTEST_MM}}&nbsp;mm
+      ({{WETTEST_YEAR}}) &mdash; but the long-run slope
+      ({{RAIN_SLOPE}}&nbsp;mm/decade) is flat and not significant (p&nbsp;=&nbsp;{{RAIN_P}}).
+    </figcaption>
+  </figure>
+  <p>
+    That contrast is the point. The very same daily records that show an
+    unmistakable, statistically strong warming signal show <em>no</em> comparable
+    signal in how much it rains. A dataset that manufactured trends would have
+    produced one here too; this one does not.
+  </p>
+  <figure>
+    <img src="data:image/png;base64,{{IMG_RAINC}}" alt="Monthly rainfall through the year at Toulouse-Blagnac, one line per year, with the long-term normal and the current year">
+    <figcaption>
+      Rain through the year: each grey line is one year&rsquo;s monthly totals,
+      the dark line the long-term monthly normal, the bold blue line
+      {{CUR_YEAR}} so far. {{WET_MONTH}} is the wettest month on average
+      ({{WET_MONTH_MM}}&nbsp;mm), {{DRY_MONTH}} the driest
+      ({{DRY_MONTH_MM}}&nbsp;mm) &mdash; but the spread between years dwarfs the
+      seasonal cycle, which is exactly why no annual trend emerges.
+    </figcaption>
+  </figure>
+
   <h2>Methodology</h2>
   <ul class="meth">
     <li><strong>Source.</strong> M&eacute;t&eacute;o-France &mdash; daily climatological data
@@ -255,7 +323,16 @@ template <- '<!DOCTYPE html>
         department&nbsp;31 (Haute-Garonne). Full citation below.</li>
     <li><strong>Variables.</strong> Minimum&nbsp;=&nbsp;<code>TN</code>,
         maximum&nbsp;=&nbsp;<code>TX</code>, mean&nbsp;=&nbsp;<code>(TN+TX)/2</code>
-        (field <code>TNTXM</code>), in&nbsp;&deg;C.</li>
+        (field <code>TNTXM</code>), in&nbsp;&deg;C; rainfall&nbsp;=&nbsp;<code>RR</code>
+        (daily precipitation, in&nbsp;mm).</li>
+    <li><strong>Threshold days.</strong> Frost&nbsp;=&nbsp;<code>TN&nbsp;&lt;&nbsp;0</code>,
+        hot&nbsp;day&nbsp;=&nbsp;<code>TX&nbsp;&ge;&nbsp;{{HOT_TX}}</code>,
+        very&nbsp;hot&nbsp;=&nbsp;<code>TX&nbsp;&ge;&nbsp;{{VHOT_TX}}</code>,
+        tropical&nbsp;night&nbsp;=&nbsp;<code>TN&nbsp;&ge;&nbsp;{{TROP_TX}}</code>,
+        counted per complete year and averaged over the first/last complete decade.</li>
+    <li><strong>Rainfall.</strong> Annual total of daily <code>RR</code> over complete
+        years; the trend is a least-squares slope with its two-sided p-value.
+        Monthly climatology keeps only months with&nbsp;&ge;&nbsp;27 valid days.</li>
     <li><strong>Annual aggregation.</strong> Arithmetic mean of daily values over each
         calendar year. The long-term trend uses only complete years (&ge;&nbsp;330 valid
         days). The in-progress year is shown separately &mdash; as a hollow
@@ -269,9 +346,10 @@ template <- '<!DOCTYPE html>
         across years. The normal is the per-day average over all prior years.</li>
     <li><strong>Trend.</strong> Slope estimated by linear regression (least squares);
         the line-chart curves use LOESS smoothing (span&nbsp;=&nbsp;0.7).</li>
-    <li><strong>Reproducibility.</strong> A 3-stage R pipeline
+    <li><strong>Reproducibility.</strong> A 4-stage R pipeline
         (<code>R/00_prepare_data.R</code> &rarr; <code>R/01_plot.R</code> &rarr;
-        <code>R/02_report.R</code>), driven by <code>make all</code> (R&nbsp;{{R_VERSION}}, ggplot2).</li>
+        <code>R/02_report.R</code> &rarr; <code>R/03_readme.R</code>), driven by
+        <code>make all</code> (R&nbsp;{{R_VERSION}}, ggplot2).</li>
   </ul>
 
   <h2>Data source &amp; citation</h2>
@@ -300,6 +378,17 @@ both_sentence <- if (length(stats$both_years) == 0)
   "No single year managed to hit both extremes." else
   sprintf("Years hitting both extremes: %s.", paste(stats$both_years, collapse = ", "))
 
+# These three clauses used to be frozen prose ("all of them recent", "all but one
+# before 2000", "1947 and 1987"). They are now derived from the data every run, so
+# a future record can never silently falsify them.
+hot_recent_clause <- if (isTRUE(stats$hot_all_recent)) " &mdash; all of them recent &mdash;" else " &mdash;"
+cold_era_clause   <- if (isTRUE(stats$cold_all_but_one)) ", all but one before 2000" else ""
+raw_both_sentence <- if (length(stats$raw_both_years) == 0)
+  "(On the raw, unsmoothed daily mean, no year touches both extremes.)" else
+  sprintf("(If the threshold is applied instead to the raw, unsmoothed daily mean, %s %s touch both extremes.)",
+          paste(stats$raw_both_years, collapse = " and "),
+          if (length(stats$raw_both_years) == 1) "alone" else "each")
+
 # ---- year-to-date sentence (record vs not) ----------------------------------
 y <- stats$ytd
 ytd_sentence <- if (isTRUE(y$is_record))
@@ -323,10 +412,11 @@ fills <- c(
   NYEARS          = stats$yr1 - stats$yr0,
   SLOPE_DEC       = fmt(stats$slope_dec_blag),
   SLOPE_DEC_AUZ   = fmt(stats$slope_dec_auz),
+  SLOPE_DEC_BLAG_AUZWIN = fmt(stats$slope_dec_blag_auzwin),
   RISE            = fmt(stats$rise_blag, 1),
   MEAN_RECENT     = fmt(stats$mean_recent, 1),
   MEAN_EARLY      = fmt(stats$mean_early, 1),
-  EARLY_DECADE    = early_decade,
+  EARLY_SPAN      = early_span,
   N_STATION_YEARS = stats$n_station_years,
   AUZ_YR0         = stats$auz_yr0,
   AUZ_YR1         = stats$auz_yr1,
@@ -343,15 +433,39 @@ fills <- c(
   HOT_YEARS       = paste(stats$hot_years,  collapse = ", "),
   COLD_YEARS      = paste(stats$cold_years, collapse = ", "),
   BOTH_SENTENCE   = both_sentence,
+  HOT_RECENT_CLAUSE = hot_recent_clause,
+  COLD_ERA_CLAUSE   = cold_era_clause,
+  RAW_BOTH_SENTENCE = raw_both_sentence,
   R_VERSION       = paste(R.version$major, R.version$minor, sep = "."),
   ROWS            = rows_html,
   RECORD_ROWS     = record_rows_html,
   IMG_SERIES      = img_series,
   IMG_CLIM        = img_clim,
   IMG_YTD         = img_ytd,
+  IMG_RAIN        = img_rain,
+  IMG_RAINC       = img_rainc,
   YTD_WINDOW      = stats$ytd$window,
   YTD_NORMAL      = fmt(stats$ytd$normal, 1),
-  YTD_SENTENCE    = ytd_sentence
+  YTD_SENTENCE    = ytd_sentence,
+  # extremes (threshold-day counts)
+  EXT_SPAN0       = sprintf("%d&ndash;%d", stats$extremes$yr0, stats$extremes$yr0 + 9),
+  EXT_SPAN1       = sprintf("%d&ndash;%d", stats$extremes$yr1 - 9, stats$extremes$yr1),
+  HOT_TX          = stats$extremes$hot_thr,
+  VHOT_TX         = stats$extremes$vhot_thr,
+  TROP_TX         = stats$extremes$trop_thr,
+  FROST_EARLY     = stats$extremes$frost_early,  FROST_RECENT = stats$extremes$frost_recent,
+  HOT_EARLY       = stats$extremes$hot_early,    HOT_RECENT   = stats$extremes$hot_recent,
+  VHOT_EARLY      = stats$extremes$vhot_early,   VHOT_RECENT  = stats$extremes$vhot_recent,
+  TROP_EARLY      = stats$extremes$trop_early,   TROP_RECENT  = stats$extremes$trop_recent,
+  # rainfall
+  RAIN_YR0        = stats$rain$yr0,     RAIN_YR1 = stats$rain$yr1,
+  RAIN_NYEARS     = stats$rain$n_years, RAIN_MEAN = stats$rain$mean_blag,
+  RAIN_SLOPE      = sprintf("%+.0f", stats$rain$slope_dec),
+  RAIN_P          = fmt(stats$rain$p, 2),
+  WETTEST_YEAR    = stats$rain$wettest_year, WETTEST_MM = stats$rain$wettest_mm,
+  DRIEST_YEAR     = stats$rain$driest_year,  DRIEST_MM  = stats$rain$driest_mm,
+  WET_MONTH       = stats$rain$wet_month, WET_MONTH_MM = stats$rain$wet_month_mm,
+  DRY_MONTH       = stats$rain$dry_month, DRY_MONTH_MM = stats$rain$dry_month_mm
 )
 
 html <- template
@@ -360,7 +474,7 @@ for (key in names(fills)) {
 }
 
 # safety: warn if any placeholder went unfilled
-leftover <- regmatches(html, gregexpr("\\{\\{[A-Z_]+\\}\\}", html))[[1]]
+leftover <- regmatches(html, gregexpr("\\{\\{[A-Z_0-9]+\\}\\}", html))[[1]]
 if (length(leftover) > 0)
   warning("Unfilled placeholders: ", paste(unique(leftover), collapse = ", "))
 

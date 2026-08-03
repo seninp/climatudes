@@ -4,7 +4,11 @@
 # Reads the processed daily CSVs and produces:
 #   * outputs/figures/temperature_series.png      — annual series, first->current
 #   * outputs/figures/temperature_climatology.png — every year day-by-day
+#   * outputs/figures/temperature_ytd.png         — year-to-date race
+#   * outputs/figures/rain_series.png             — annual rainfall totals
+#   * outputs/figures/rain_climatology.png        — monthly rainfall seasonal cycle
 #   * outputs/annual_temperatures.csv             — the annual table
+#   * outputs/annual_rainfall.csv                 — annual rainfall totals
 #   * data/processed/trend_stats.rds              — numbers reused by the report
 # =============================================================================
 
@@ -101,6 +105,14 @@ rise_blag <- unname(coef(fit_blag)[2]) * (yr1 - yr0)
 
 fit_auz <- lm(TMEAN ~ year, data = auz)
 slope_dec_auz <- unname(coef(fit_auz)[2]) * 10
+
+# Blagnac's slope over the SAME window as Auzeville — so the two local/regional
+# slopes are compared like-for-like. (Over 2004-> Blagnac warms faster than over
+# its full 1947-> record: recent decades warm faster, so this is the honest
+# number to set beside Auzeville's, not the whole-period 0.34.)
+auz_span <- range(auz$year)
+slope_dec_blag_auzwin <- unname(
+  coef(lm(TMEAN ~ year, data = blag[year >= auz_span[1] & year <= auz_span[2]]))[2]) * 10
 
 trend_txt <- sprintf(
   "Toulouse-Blagnac, annual mean temperature\n+%.2f °C / decade  ·  +%.1f °C over %d years (%d–%d)",
@@ -225,6 +237,17 @@ message(sprintf("Hot years (>%d°C): %s", HOT_THR, paste(hot_years, collapse=", 
 message(sprintf("Cold years (<%d°C): %s", COLD_THR, paste(cold_years, collapse=", ")))
 message(sprintf("Years doing BOTH: %s",
                 if (length(both_years)) paste(both_years, collapse=", ") else "none"))
+
+# Same thresholds on the RAW (unsmoothed) daily mean — a few volatile early years
+# cross both lines once the smoothing is removed. Computed, not hard-coded, so the
+# report's footnote can never drift from the data.
+raw_ext <- prev_years[, .(ymax = max(tmean, na.rm = TRUE),
+                          ymin = min(tmean, na.rm = TRUE)), by = year]
+raw_both_years <- sort(intersect(raw_ext[ymax > HOT_THR, year],
+                                  raw_ext[ymin < COLD_THR, year]))
+# Flags behind the two hand-written clauses, so they self-check on every run.
+hot_all_recent   <- length(hot_years)  > 0 && min(hot_years) >= 2000
+cold_all_but_one <- length(cold_years) > 1 && sum(cold_years >= 2000) <= 1
 
 hot_lines  <- prev_years[year %in% hot_years]
 cold_lines <- prev_years[year %in% cold_years]
@@ -408,11 +431,196 @@ for (r in records)
   message(sprintf("%-26s hottest %s = %.1f°C (TX) | coldest %s = %.1f°C (TN)",
                   r$station, r$hot$date, r$hot$value, r$cold$date, r$cold$value))
 
+# ---- temperature-extremes: threshold-day counts (Toulouse-Blagnac) ----------
+# Counts of days per year crossing a fixed line. These make the warming tangible:
+# their first-decade vs last-decade change is the "frost days halved, hot days
+# doubled" story. Complete years only, so a partial year cannot deflate a count.
+tb <- dat[station == CLIMATOLOGY_STATION]
+ext_ann <- tb[, .(
+  frost = sum(TN <  FROST_TX,  na.rm = TRUE),
+  hot   = sum(TX >= HOT_TX,    na.rm = TRUE),
+  vhot  = sum(TX >= VHOT_TX,   na.rm = TRUE),
+  trop  = sum(TN >= TROPNIGHT, na.rm = TRUE),
+  n     = sum(!is.na(TNTXM))
+), by = year][n >= MIN_DAYS]
+setorder(ext_ann, year)
+edec1 <- ext_ann[year <= min(year) + 9]   # first complete decade
+edec2 <- ext_ann[year >= max(year) - 9]   # last complete decade
+extremes <- list(
+  yr0 = min(ext_ann$year), yr1 = max(ext_ann$year),
+  frost_thr = FROST_TX, hot_thr = HOT_TX, vhot_thr = VHOT_TX, trop_thr = TROPNIGHT,
+  frost_early = round(mean(edec1$frost)), frost_recent = round(mean(edec2$frost)),
+  hot_early   = round(mean(edec1$hot)),   hot_recent   = round(mean(edec2$hot)),
+  vhot_early  = round(mean(edec1$vhot)),  vhot_recent  = round(mean(edec2$vhot)),
+  trop_early  = round(mean(edec1$trop)),  trop_recent  = round(mean(edec2$trop))
+)
+message(sprintf("Extremes (%d-%d decade vs last): frost %d->%d | hot %d->%d | v.hot %d->%d | trop.nights %d->%d",
+                extremes$yr0, extremes$yr0 + 9,
+                extremes$frost_early, extremes$frost_recent,
+                extremes$hot_early, extremes$hot_recent,
+                extremes$vhot_early, extremes$vhot_recent,
+                extremes$trop_early, extremes$trop_recent))
+
+# =============================================================================
+# PLOT 4 — annual rainfall totals (both stations)
+# The honest headline is a NULL result: unlike temperature, annual precipitation
+# shows no statistically significant trend. Showing it is a credibility point —
+# the same data that proves the warming does not manufacture a rainfall trend.
+# =============================================================================
+mm_label <- function(x) paste0(format(x, trim = TRUE, big.mark = ","), " mm")
+
+rain <- dat[!is.na(RR)]
+rain_ann_all <- rain[, .(total = sum(RR), n = .N), by = .(station, year)]
+rain_ann_all[, complete := n >= MIN_DAYS]
+setorder(rain_ann_all, station, year)
+rain_ann <- rain_ann_all[complete == TRUE]
+fwrite(rain_ann_all[complete == TRUE | year == cur_year],
+       file.path(PATHS$outputs, "annual_rainfall.csv"))
+
+rain_blag <- rain_ann[station == "Toulouse-Blagnac"]
+rain_auz  <- rain_ann[station == "Auzeville-Tolosane-INRAE"]
+
+# Trend + significance on the long Blagnac record (the one worth a slope).
+fit_rain       <- lm(total ~ year, data = rain_blag)
+rain_slope_dec <- unname(coef(fit_rain)[2]) * 10
+rain_p         <- summary(fit_rain)$coefficients[2, 4]
+rain_sig       <- rain_p < 0.05
+rain_mean_blag <- mean(rain_blag$total)
+rain_wettest   <- rain_blag[which.max(total)]
+rain_driest    <- rain_blag[which.min(total)]
+
+rain_levels <- c("Toulouse-Blagnac", "Auzeville-Tolosane-INRAE")
+rain_pal <- c(COL$rain_blag, COL$rain_auz); names(rain_pal) <- rain_levels
+rain_shp <- c(16, 18);                      names(rain_shp) <- rain_levels
+rain_ann[, station := factor(station, levels = rain_levels)]
+
+rain_txt <- sprintf(
+  "Toulouse-Blagnac, annual total rainfall\nmean %.0f mm/yr  ·  %+.0f mm/decade — not significant (p = %.2f)",
+  rain_mean_blag, rain_slope_dec, rain_p)
+
+p4 <- ggplot(rain_ann, aes(year, total, colour = station, shape = station)) +
+  geom_hline(yintercept = rain_mean_blag, colour = COL$rain_blag,
+             linetype = "dashed", linewidth = 0.4, alpha = 0.6) +
+  geom_line(aes(group = station), alpha = 0.28, linewidth = 0.4) +
+  geom_point(size = 1.7, alpha = 0.85) +
+  geom_smooth(aes(group = station), method = "loess", formula = y ~ x, se = FALSE,
+              linewidth = 1.3, span = 0.75) +
+  annotate("label", x = yr0 + 0.5, y = max(rain_blag$total) + 30,
+           label = rain_txt, hjust = 0, vjust = 1,
+           size = 3.2, colour = "#3D4A54", lineheight = 0.98, fontface = "italic",
+           fill = "white", alpha = 0.7, label.padding = unit(0.4, "lines")) +
+  scale_colour_manual(values = rain_pal, name = NULL, breaks = rain_levels) +
+  scale_shape_manual(values = rain_shp, name = NULL, breaks = rain_levels) +
+  scale_x_continuous(breaks = x_breaks, limits = c(yr0, max(yr1, cur_year)),
+                     expand = expansion(mult = c(0.01, 0.04))) +
+  scale_y_continuous(labels = mm_label, limits = c(0, max(rain_blag$total) + 60),
+                     expand = expansion(mult = c(0, 0.02))) +
+  guides(colour = guide_legend(override.aes = list(alpha = 1, linewidth = 1.4))) +
+  labs(
+    title = "Rainfall around Castanet-Tolosan — no clear trend",
+    subtitle = sprintf("Annual total precipitation, %d → %d  ·  highly variable year to year, but flat over the long run",
+                       yr0, yr1),
+    x = NULL, y = NULL,
+    caption = paste0(
+      "Source: Météo-France, Données climatologiques de base – quotidiennes (meteo.data.gouv.fr, dataset 6569b51a…), dept. 31. Licence Ouverte / Etalab.\n",
+      "Annual total of daily rainfall (RR, mm).  Dashed line = Toulouse-Blagnac long-term mean.  ",
+      sprintf("Incomplete years (< %d valid days) excluded. Curves: LOESS smoothing.", MIN_DAYS)
+    )
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(
+    plot.title    = element_text(face = "bold", size = 17, colour = "#1A2530"),
+    plot.subtitle = element_text(size = 12, colour = "#566573", margin = margin(b = 12)),
+    plot.caption  = element_text(size = 8, colour = "#7F8C8D", hjust = 0,
+                                 margin = margin(t = 14), lineheight = 1.05),
+    plot.caption.position = "plot", plot.title.position = "plot",
+    legend.position = "bottom", legend.text = element_text(size = 10),
+    legend.key.width = unit(1.6, "lines"),
+    panel.grid.minor = element_blank(),
+    panel.grid.major = element_line(colour = "#ECEFF1", linewidth = 0.4),
+    axis.text = element_text(colour = "#566573"),
+    plot.margin = margin(18, 22, 12, 18),
+    plot.background = element_rect(fill = "white", colour = NA)
+  )
+
+agg_png(file.path(PATHS$figures, "rain_series.png"),
+        width = 2400, height = 1400, res = 200, background = "white")
+print(p4); invisible(dev.off())
+message("Wrote rain_series.png")
+
+# =============================================================================
+# PLOT 5 — monthly rainfall climatology (Toulouse-Blagnac): one line per year,
+#          normal bold, current year bold — the seasonal shape, mirroring the
+#          daily temperature climatology.
+# =============================================================================
+rain_clim <- dat[station == CLIMATOLOGY_STATION & !is.na(RR)]
+# monthly totals, keeping only near-complete months (>= 27 valid days) so a month
+# with missing days is not mistaken for a dry one. This also drops the current,
+# still-incomplete month of the in-progress year automatically.
+rmon      <- rain_clim[, .(mm = sum(RR), nd = .N), by = .(year, month)][nd >= 27]
+rmon_prev <- rmon[year <  cur_year]
+rmon_cur  <- rmon[year == cur_year]
+rain_norm <- rmon_prev[, .(mm = mean(mm)), by = month][order(month)]
+rain_nyears <- uniqueN(rmon_prev$year)
+
+# wettest and driest calendar month on record (normal), for the caption
+rain_wet_mon <- rain_norm[which.max(mm)]
+rain_dry_mon <- rain_norm[which.min(mm)]
+
+p5 <- ggplot() +
+  geom_line(data = rmon_prev, aes(month, mm, group = year),
+            colour = COL$spaghetti, alpha = 0.20, linewidth = 0.35) +
+  geom_line(data = rain_norm, aes(month, mm),
+            colour = COL$normal, linewidth = 1.1, alpha = 0.95) +
+  geom_line(data = rmon_cur, aes(month, mm),
+            colour = COL$wet, linewidth = 1.6) +
+  geom_point(data = rmon_cur, aes(month, mm),
+             colour = COL$wet, size = 1.9) +
+  annotate("text", x = max(rmon_cur$month) + 0.15, y = tail(rmon_cur$mm, 1),
+           label = as.character(cur_year), hjust = 0, vjust = 0.5,
+           colour = COL$wet, fontface = "bold", size = 4) +
+  scale_x_continuous(breaks = 1:12, labels = month.abb,
+                     expand = expansion(mult = c(0.02, 0.06))) +
+  scale_y_continuous(labels = mm_label, limits = c(0, NA),
+                     expand = expansion(mult = c(0, 0.04))) +
+  labs(
+    title = sprintf("Rain through the year — %s", CLIMATOLOGY_STATION),
+    subtitle = sprintf(
+      "Monthly rainfall total, one grey line per year (%d–%d, %d years).  Dark line = long-term monthly normal; bold blue = %d so far.\nMay is the wettest month on average (%.0f mm), July the driest (%.0f mm) — but any month can swing widely from year to year.",
+      min(rmon_prev$year), max(rmon_prev$year), rain_nyears, cur_year,
+      rain_wet_mon$mm, rain_dry_mon$mm),
+    x = NULL, y = NULL,
+    caption = paste0(
+      "Source: Météo-France, Données climatologiques de base – quotidiennes (meteo.data.gouv.fr, dataset 6569b51a…). Licence Ouverte / Etalab.  Station: Toulouse-Blagnac (31069001).\n",
+      "Each line = one year's monthly rainfall totals (RR, mm); months with < 27 valid days omitted."
+    )
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(
+    plot.title    = element_text(face = "bold", size = 17, colour = "#1A2530"),
+    plot.subtitle = element_text(size = 11, colour = "#566573", margin = margin(b = 12)),
+    plot.caption  = element_text(size = 8, colour = "#7F8C8D", hjust = 0,
+                                 margin = margin(t = 14), lineheight = 1.05),
+    plot.caption.position = "plot", plot.title.position = "plot",
+    panel.grid.minor = element_blank(),
+    panel.grid.major.x = element_line(colour = "#EDF0F2", linewidth = 0.4),
+    panel.grid.major.y = element_line(colour = "#ECEFF1", linewidth = 0.4),
+    axis.text = element_text(colour = "#566573"),
+    plot.margin = margin(18, 22, 12, 18),
+    plot.background = element_rect(fill = "white", colour = NA)
+  )
+
+agg_png(file.path(PATHS$figures, "rain_climatology.png"),
+        width = 2400, height = 1250, res = 200, background = "white")
+print(p5); invisible(dev.off())
+message("Wrote rain_climatology.png")
+
 # ---- stash numbers for the HTML report --------------------------------------
 stats <- list(
   yr0 = yr0, yr1 = yr1,
   slope_dec_blag = slope_dec_blag, rise_blag = rise_blag,
   slope_dec_auz = slope_dec_auz,
+  slope_dec_blag_auzwin = slope_dec_blag_auzwin,
   auz_yr0 = min(auz$year), auz_yr1 = max(auz$year),
   mean_recent = round(mean(blag[year >= yr1 - 9]$TMEAN), 2),
   mean_early  = round(mean(blag[year <= yr0 + 9]$TMEAN), 2),
@@ -421,6 +629,8 @@ stats <- list(
   n_station_years = nrow(annual),
   hot_thr = HOT_THR, cold_thr = COLD_THR,
   hot_years = hot_years, cold_years = cold_years, both_years = both_years,
+  raw_both_years = raw_both_years,
+  hot_all_recent = hot_all_recent, cold_all_but_one = cold_all_but_one,
   smooth_window = SMOOTH_WINDOW,
   records = records,
   ytd = list(
@@ -434,6 +644,21 @@ stats <- list(
     delta     = round(delta, 1),
     normal    = round(normal, 1),
     cur_anom  = round(cur_anom, 1)
+  ),
+  extremes = extremes,
+  rain = list(
+    yr0 = min(rain_blag$year), yr1 = max(rain_blag$year),
+    n_years = nrow(rain_blag),
+    mean_blag = round(rain_mean_blag),
+    slope_dec = round(rain_slope_dec, 1),
+    p = round(rain_p, 2),
+    significant = rain_sig,
+    wettest_year = rain_wettest$year, wettest_mm = round(rain_wettest$total),
+    driest_year  = rain_driest$year,  driest_mm  = round(rain_driest$total),
+    wet_month = month.name[rain_wet_mon$month], wet_month_mm = round(rain_wet_mon$mm),
+    dry_month = month.name[rain_dry_mon$month], dry_month_mm = round(rain_dry_mon$mm),
+    auz_yr0 = min(rain_auz$year), auz_yr1 = max(rain_auz$year),
+    auz_mean = round(mean(rain_auz$total))
   )
 )
 saveRDS(stats, file.path(PATHS$processed, "trend_stats.rds"))

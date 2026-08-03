@@ -44,8 +44,9 @@ FIELD_DOCS <- c("RR-T-Vent")   # add "autres-parametres" if ever needed
 # here, also gzipped (~0.35 MB). Stage 01 reads this small extract.
 STATION_EXTRACT <- "stations_daily.csv.gz"
 
-# Columns we keep from the raw CSVs.
-KEEP_COLS <- c("NUM_POSTE", "NOM_USUEL", "AAAAMMJJ", "TN", "TX", "TM", "TNTXM")
+# Columns we keep from the raw CSVs. RR = daily precipitation (mm) — used for the
+# rainfall figures; the rest drive the temperature analysis.
+KEEP_COLS <- c("NUM_POSTE", "NOM_USUEL", "AAAAMMJJ", "TN", "TX", "TM", "TNTXM", "RR")
 
 # Read a gzipped semicolon CSV directly (no temp file) via a streaming pipe.
 read_gz <- function(path, ...) {
@@ -80,12 +81,28 @@ SMOOTH_WINDOW <- 3L # centred rolling-mean window (days) for the daily climatolo
 # to be comparable — keeps sparse early records from distorting the ranking.
 MIN_YTD_DAYS <- 150L
 
+# ---- temperature-extremes day-count thresholds (Toulouse-Blagnac) -----------
+# "Threshold days" per year that make warming tangible. Each is the count of days
+# in a year crossing a fixed line; their decade-over-decade change is the story
+# ("frost days halved, hot days doubled").
+FROST_TX  <- 0    # frost day:      daily minimum TN <  0 °C
+HOT_TX    <- 30   # hot day:        daily maximum TX >= 30 °C
+VHOT_TX   <- 35   # very hot day:   daily maximum TX >= 35 °C
+TROPNIGHT <- 20   # tropical night: daily minimum TN >= 20 °C
+
 # ---- shared palette ---------------------------------------------------------
+# Colourblind-safe (validated with the dataviz palette checker). The rain colours
+# reuse the temperature blue/green for station identity so the two analyses read
+# as one system; ochre is the "dry" pole, opposite the wet blue.
 COL <- list(
   tx     = "#C0392B",  # warm red   — daily maximum / current year
   mean   = "#566573",  # slate      — daily mean
   tn     = "#2471A3",  # blue       — daily minimum
   auz    = "#1E8449",  # green      — Auzeville (Castanet) mean
   normal = "#34495E",  # dark slate — long-term daily normal
-  spaghetti = "#7E93A1" # grey-blue — individual historical years
+  spaghetti = "#7E93A1",# grey-blue — individual historical years
+  wet    = "#2471A3",  # blue       — rain / wetter than normal (= tn)
+  dry    = "#B9770E",  # ochre      — drier than normal (diverging pole vs wet)
+  rain_blag = "#2471A3",# blue      — Toulouse-Blagnac annual rainfall (= tn)
+  rain_auz  = "#1E8449" # green     — Auzeville annual rainfall       (= auz)
 )

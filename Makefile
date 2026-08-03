@@ -17,8 +17,11 @@ PROCESSED   := data/processed
 EXTRACT     := data/processed/stations_daily.csv.gz
 FIGURES     := outputs/figures/temperature_series.png \
                outputs/figures/temperature_climatology.png \
-               outputs/figures/temperature_ytd.png
-ANNUAL      := outputs/annual_temperatures.csv
+               outputs/figures/temperature_ytd.png \
+               outputs/figures/rain_series.png \
+               outputs/figures/rain_climatology.png
+ANNUAL      := outputs/annual_temperatures.csv \
+               outputs/annual_rainfall.csv
 STATS       := data/processed/trend_stats.rds
 REPORT      := outputs/temperature_report.html
 README      := README.md
