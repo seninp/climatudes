@@ -27,7 +27,7 @@ steadily and continuously.
 | Frost days per year, 1947–1956 → 2016–2025 | **46 → 18** |
 | Hot days (≥ 30 °C) per year, 1947–1956 → 2016–2025 | **24 → 47** |
 | Complete station-years analysed | **101** |
-| 2026 year-to-date (Jan 1 – Aug 6), against 79 prior years | **#1 of 80 — record** |
+| 2026 year-to-date (Jan 1 – Aug 8), against 79 prior years | **#1 of 80 — record** |
 
 ### The long view: annual means
 
@@ -51,13 +51,13 @@ signals are the same.
 
 ![Per-year mean over the same Jan-to-cutoff window, as a departure from the long-term normal, with 2026 the largest bar](outputs/figures/temperature_ytd.png)
 
-<sub>Each bar is a year’s mean over the <em>same window</em> — <strong>Jan 1 – Aug 6</strong> —
+<sub>Each bar is a year’s mean over the <em>same window</em> — <strong>Jan 1 – Aug 8</strong> —
 shown as its departure from the long-term normal (13.4 °C): red above, blue
 below. Comparing each year over the identical part-of-year is the only fair way to place
 a year that is still in progress against history. The bars swing from blue to red over
 the decades — the warming.</sub>
 
-Measured like-for-like, **2026 is the warmest Jan 1 – Aug 6 in 80 years** at Toulouse-Blagnac: **16.6 °C** — +0.9 °C above the previous record (2025, 15.7 °C) and **+3.2 °C above the long-term normal** (13.4 °C). This is exactly the point of the chart: a year still in progress can already stand out against the whole record.
+Measured like-for-like, **2026 is the warmest Jan 1 – Aug 8 in 80 years** at Toulouse-Blagnac: **16.7 °C** — +0.9 °C above the previous record (2025, 15.8 °C) and **+3.2 °C above the long-term normal** (13.4 °C). This is exactly the point of the chart: a year still in progress can already stand out against the whole record.
 
 > [!NOTE]
 > A partial year cannot be compared to other years’ *full-year* means — it is still
@@ -115,7 +115,7 @@ decades old (Feb 1956 at Blagnac) — the same warming signature seen above.
 | 2023 | 10.7 | 20.8 | **15.8** |
 | 2024 | 10.5 | 19.6 | **15.1** |
 | 2025 | 10.7 | 20.6 | **15.7** |
-| 2026 *(to date)* | 11.3 | 21.8 | **16.6** |
+| 2026 *(to date)* | 11.4 | 21.9 | **16.7** |
 
 ### Frost days halved, hot days doubled
 
