@@ -586,9 +586,10 @@ p5 <- ggplot() +
   labs(
     title = sprintf("Rain through the year — %s", CLIMATOLOGY_STATION),
     subtitle = sprintf(
-      "Monthly rainfall total, one grey line per year (%d–%d, %d years).  Dark line = long-term monthly normal; bold blue = %d so far.\nMay is the wettest month on average (%.0f mm), July the driest (%.0f mm) — but any month can swing widely from year to year.",
+      "Monthly rainfall total, one grey line per year (%d–%d, %d years).  Dark line = long-term monthly normal; bold blue = %d so far.\n%s is the wettest month on average (%.0f mm), %s the driest (%.0f mm) — but any month can swing widely from year to year.",
       min(rmon_prev$year), max(rmon_prev$year), rain_nyears, cur_year,
-      rain_wet_mon$mm, rain_dry_mon$mm),
+      month.name[rain_wet_mon$month], rain_wet_mon$mm,
+      month.name[rain_dry_mon$month], rain_dry_mon$mm),
     x = NULL, y = NULL,
     caption = paste0(
       "Source: Météo-France, Données climatologiques de base – quotidiennes (meteo.data.gouv.fr, dataset 6569b51a…). Licence Ouverte / Etalab.  Station: Toulouse-Blagnac (31069001).\n",
