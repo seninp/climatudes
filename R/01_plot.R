@@ -1,15 +1,15 @@
 #!/usr/bin/env Rscript
 # =============================================================================
-# Stage 01 — build the figures
+# Stage 01 — build the figures (generic across sites; SITE env var selects one)
 # Reads the processed daily CSVs and produces:
-#   * outputs/figures/temperature_series.png      — annual series, first->current
-#   * outputs/figures/temperature_climatology.png — every year day-by-day
-#   * outputs/figures/temperature_ytd.png         — year-to-date race
-#   * outputs/figures/rain_series.png             — annual rainfall totals
-#   * outputs/figures/rain_climatology.png        — monthly rainfall seasonal cycle
-#   * outputs/annual_temperatures.csv             — the annual table
-#   * outputs/annual_rainfall.csv                 — annual rainfall totals
-#   * data/processed/trend_stats.rds              — numbers reused by the report
+#   * <figures>/temperature_series.png      — annual series, first->current
+#   * <figures>/temperature_climatology.png — every year day-by-day
+#   * <figures>/temperature_ytd.png         — year-to-date race
+#   * <figures>/rain_series.png             — annual rainfall totals
+#   * <figures>/rain_climatology.png        — monthly rainfall seasonal cycle
+#   * <outputs>/annual_temperatures.csv     — the annual table
+#   * <outputs>/annual_rainfall.csv         — annual rainfall totals
+#   * <processed>/trend_stats.rds           — numbers reused by the report
 # =============================================================================
 
 suppressPackageStartupMessages({
@@ -19,13 +19,20 @@ suppressPackageStartupMessages({
   library(ragg)
 })
 
-source("R/config.R")
+source("R/lib/common.R")
+source("R/lib/narrative.R")
+site_key <- Sys.getenv("SITE", "castanet")
+source(sprintf("R/sites/%s.R", site_key))   # defines SITE
+
+PATHS <- SITE$paths
+STATIONS <- SITE$stations
+CLIMATOLOGY_STATION <- SITE$reference_station
 dir.create(PATHS$figures, recursive = TRUE, showWarnings = FALSE)
 
 # ---- read the small gzipped station extract produced by stage 00 ------------
 extract_gz <- file.path(PATHS$processed, STATION_EXTRACT)
 if (!file.exists(extract_gz))
-  stop("Missing ", extract_gz, " — run stage 00 first (make prepare).")
+  stop("Missing ", extract_gz, " — run stage 00 first (SITE=", site_key, " make prepare).")
 
 dat <- read_gz(extract_gz, colClasses = list(character = "NUM_POSTE"))
 dat[, station := factor(STATIONS[NUM_POSTE], levels = STATIONS)]
@@ -73,55 +80,74 @@ message(sprintf("Annual table: %d complete station-years (%d..%d)%s.",
                 if (any(!annual_out$complete))
                   sprintf(" + %d partial (in progress)", sum(!annual_out$complete)) else ""))
 
-blag <- annual[station == "Toulouse-Blagnac"]
-auz  <- annual[station == "Auzeville-Tolosane-INRAE"]
+ref   <- annual[station == SITE$reference_station]
+local <- if (SITE$local_has_temp) annual[station == SITE$local_station] else annual[0]
 
 # current partial-year row (for the hollow "to date" marker on plot 1)
-blag_cur <- annual_all[station == "Toulouse-Blagnac" & year == cur_year & complete == FALSE]
+ref_cur <- annual_all[station == SITE$reference_station & year == cur_year & complete == FALSE]
 
-L_TX   <- "Toulouse-Blagnac — daily maximum (TX)"
-L_MEAN <- "Toulouse-Blagnac — daily mean"
-L_TN   <- "Toulouse-Blagnac — daily minimum (TN)"
-L_AUZ  <- "Auzeville-INRAE (≈ Castanet-Tolosan) — mean"
-series_levels <- c(L_TX, L_MEAN, L_TN, L_AUZ)
+L_TX   <- sprintf("%s — daily maximum (TX)", SITE$reference_station)
+L_MEAN <- sprintf("%s — daily mean",         SITE$reference_station)
+L_TN   <- sprintf("%s — daily minimum (TN)", SITE$reference_station)
+series_levels <- c(L_TX, L_MEAN, L_TN)
+pal <- c(COL$tx, COL$mean, COL$tn)
+shp <- c(16, 16, 16)
 
 mk <- function(d, col, label) data.table(year = d$year, value = d[[col]], series = label)
-plotdat <- rbindlist(list(
-  mk(blag, "TX",    L_TX),
-  mk(blag, "TMEAN", L_MEAN),
-  mk(blag, "TN",    L_TN),
-  mk(auz,  "TMEAN", L_AUZ)
-))
+plotdat_list <- list(mk(ref, "TX", L_TX), mk(ref, "TMEAN", L_MEAN), mk(ref, "TN", L_TN))
+
+if (SITE$local_has_temp) {
+  L_LOCAL <- sprintf("%s — mean", SITE$local_station)
+  series_levels <- c(series_levels, L_LOCAL)
+  plotdat_list  <- c(plotdat_list, list(mk(local, "TMEAN", L_LOCAL)))
+  pal <- c(pal, COL$auz)
+  shp <- c(shp, 18)
+}
+names(pal) <- series_levels
+names(shp) <- series_levels
+
+plotdat <- rbindlist(plotdat_list)
 plotdat[, series := factor(series, levels = series_levels)]
 
-pal <- c(COL$tx, COL$mean, COL$tn, COL$auz); names(pal) <- series_levels
-shp <- c(16, 16, 16, 18);                    names(shp) <- series_levels
-
 # ---- linear-trend statistics ------------------------------------------------
-fit_blag <- lm(TMEAN ~ year, data = blag)
-slope_dec_blag <- unname(coef(fit_blag)[2]) * 10
-yr0 <- min(blag$year); yr1 <- max(blag$year)
-rise_blag <- unname(coef(fit_blag)[2]) * (yr1 - yr0)
+fit_ref <- lm(TMEAN ~ year, data = ref)
+slope_dec_ref <- unname(coef(fit_ref)[2]) * 10
+yr0 <- min(ref$year); yr1 <- max(ref$year)
+rise_ref <- unname(coef(fit_ref)[2]) * (yr1 - yr0)
 
-fit_auz <- lm(TMEAN ~ year, data = auz)
-slope_dec_auz <- unname(coef(fit_auz)[2]) * 10
+if (SITE$local_has_temp) {
+  fit_local <- lm(TMEAN ~ year, data = local)
+  slope_dec_local <- unname(coef(fit_local)[2]) * 10
 
-# Blagnac's slope over the SAME window as Auzeville — so the two local/regional
-# slopes are compared like-for-like. (Over 2004-> Blagnac warms faster than over
-# its full 1947-> record: recent decades warm faster, so this is the honest
-# number to set beside Auzeville's, not the whole-period 0.34.)
-auz_span <- range(auz$year)
-slope_dec_blag_auzwin <- unname(
-  coef(lm(TMEAN ~ year, data = blag[year >= auz_span[1] & year <= auz_span[2]]))[2]) * 10
+  # Reference station's slope over the SAME window as the local station — so the
+  # two local/regional slopes are compared like-for-like (recent decades warm
+  # faster, so this is the honest number to set beside the local one, not the
+  # whole-period slope).
+  local_span <- range(local$year)
+  slope_dec_ref_localwin <- unname(
+    coef(lm(TMEAN ~ year, data = ref[year >= local_span[1] & year <= local_span[2]]))[2]) * 10
+  local_yr0 <- local_span[1]; local_yr1 <- local_span[2]
+} else {
+  slope_dec_local <- NA_real_
+  slope_dec_ref_localwin <- NA_real_
+  local_yr0 <- NA_integer_; local_yr1 <- NA_integer_
+}
 
 trend_txt <- sprintf(
-  "Toulouse-Blagnac, annual mean temperature\n+%.2f °C / decade  ·  +%.1f °C over %d years (%d–%d)",
-  slope_dec_blag, rise_blag, yr1 - yr0, yr0, yr1)
+  "%s, annual mean temperature\n+%.2f °C / decade  ·  +%.1f °C over %d years (%d–%d)",
+  SITE$reference_station, slope_dec_ref, rise_ref, yr1 - yr0, yr0, yr1)
 
-x_breaks <- seq(1950, 2030, by = 10)
+x_breaks <- seq(1860, 2030, by = 10)
+
+stations_line_temp <- if (SITE$local_has_temp)
+  sprintf("Stations: %s (%s) and %s (%s, long-term reference).",
+          SITE$local_station, station_id(SITE, SITE$local_station),
+          SITE$reference_station, station_id(SITE, SITE$reference_station)) else
+  sprintf("Station: %s (%s, long-term reference).",
+          SITE$reference_station, station_id(SITE, SITE$reference_station))
 
 p1 <- ggplot() +
-  geom_ribbon(data = blag, aes(year, ymin = TN, ymax = TX),
+  geom_ribbon(data = ref, aes(year, ymin = TN, ymax = TX),
               fill = COL$tx, alpha = 0.05) +
   geom_line(data = plotdat, aes(year, value, colour = series, group = series),
             alpha = 0.28, linewidth = 0.4) +
@@ -130,7 +156,7 @@ p1 <- ggplot() +
   geom_smooth(data = plotdat, aes(year, value, colour = series, group = series),
               method = "loess", formula = y ~ x, se = FALSE,
               linewidth = 1.3, span = 0.7) +
-  annotate("label", x = yr0 + 0.5, y = max(blag$TX) + 1.2,
+  annotate("label", x = yr0 + 0.5, y = max(ref$TX) + 1.2,
            label = trend_txt, hjust = 0, vjust = 1,
            size = 3.2, colour = "#3D4A54", lineheight = 0.98, fontface = "italic",
            fill = "white", alpha = 0.7, label.padding = unit(0.4, "lines")) +
@@ -138,21 +164,20 @@ p1 <- ggplot() +
   scale_shape_manual(values = shp, name = NULL, breaks = series_levels) +
   scale_x_continuous(breaks = x_breaks, limits = c(yr0, max(yr1, cur_year)),
                      expand = expansion(mult = c(0.01, 0.04))) +
-  scale_y_continuous(breaks = seq(-5, 30, 2),
-                     limits = c(min(blag$TN) - 0.5, max(blag$TX) + 1.6),
+  scale_y_continuous(breaks = seq(-15, 30, 2),
+                     limits = c(min(ref$TN) - 0.5, max(ref$TX) + 1.6),
                      labels = deg_label) +
   guides(colour = guide_legend(nrow = 2, byrow = TRUE,
                                override.aes = list(alpha = 1, linewidth = 1.4)),
          shape = guide_legend(nrow = 2, byrow = TRUE)) +
   labs(
-    title = "Temperatures around Castanet-Tolosan (Haute-Garonne, France)",
+    title = sprintf("Temperatures around %s (%s, %s)", SITE$city, SITE$region, SITE$country),
     subtitle = sprintf("Annual means of daily temperatures, %d → %d  ·  a clear and continuous warming",
                        yr0, yr1),
     x = NULL, y = NULL,
     caption = paste0(
-      "Source: Météo-France, Données climatologiques de base – quotidiennes (meteo.data.gouv.fr, dataset 6569b51a…), dept. 31. Licence Ouverte / Etalab.\n",
-      "Min = TN, Max = TX, Mean = (TN+TX)/2.  ",
-      "Stations: Auzeville-Tolosane-INRAE (31035001, edge of Castanet-Tolosan) and Toulouse-Blagnac (31069001, long-term reference).\n",
+      caption_source_line(SITE$citation), "\n",
+      "Min = TN, Max = TX, Mean = (TN+TX)/2.  ", stations_line_temp, "\n",
       sprintf("Incomplete years (< %d days) excluded. Curves: LOESS smoothing.", MIN_DAYS)
     )
   ) +
@@ -176,11 +201,11 @@ p1 <- ggplot() +
 # visually distinct because a partial-year mean is NOT comparable to full years —
 # its true, like-for-like standing is the year-to-date figure. Drawn in the
 # "current year" red used for the climatology, so the eye links the two charts.
-if (nrow(blag_cur)) {
+if (nrow(ref_cur)) {
   p1 <- p1 +
-    geom_point(data = blag_cur, aes(year, TMEAN),
+    geom_point(data = ref_cur, aes(year, TMEAN),
                shape = 23, size = 3, fill = "white", colour = COL$tx, stroke = 1.2) +
-    annotate("text", x = blag_cur$year, y = blag_cur$TMEAN - 0.75,
+    annotate("text", x = ref_cur$year, y = ref_cur$TMEAN - 0.75,
              label = sprintf("%d\nto date", cur_year),
              colour = COL$tx, size = 3, fontface = "italic",
              hjust = 0.7, vjust = 1, lineheight = 0.95)
@@ -263,7 +288,7 @@ both_txt <- if (length(both_years) == 0) "No year did both." else
   sprintf("Year(s) doing both: %s.", paste(both_years, collapse = ", "))
 
 p2 <- ggplot() +
-  # one line per past year — pronounced enough to read the spread, still subordinate to 2026
+  # one line per past year — pronounced enough to read the spread, still subordinate to the current year
   geom_line(data = prev_years, aes(doy, tsmooth, group = year),
             colour = COL$spaghetti, alpha = 0.22, linewidth = 0.35) +
   # reference threshold lines
@@ -308,7 +333,8 @@ p2 <- ggplot() +
       min(prev_years$year), max(prev_years$year), n_years, SMOOTH_WINDOW, cur_year, both_txt),
     x = NULL, y = NULL,
     caption = paste0(
-      "Source: Météo-France, Données climatologiques de base – quotidiennes (meteo.data.gouv.fr, dataset 6569b51a…). Licence Ouverte / Etalab.  Station: Toulouse-Blagnac (31069001).\n",
+      caption_source_line(SITE$citation), "\n",
+      sprintf("Station: %s (%s).  ", SITE$reference_station, station_id(SITE, SITE$reference_station)),
       sprintf("Daily mean = (TN+TX)/2, smoothed with a centred %d-day rolling mean; thresholds apply to this smoothed daily mean.  Leap days aligned across years.", SMOOTH_WINDOW)
     )
   ) +
@@ -338,12 +364,12 @@ message("Wrote temperature_climatology.png")
 # year over the identical calendar window (Jan 1 -> the current year's last day).
 # =============================================================================
 
-blagd <- dat[station == CLIMATOLOGY_STATION & !is.na(TNTXM)]
-cutM <- max(blagd[year == cur_year]$month)
-cutD <- max(blagd[year == cur_year & month == cutM]$day)
+refd <- dat[station == CLIMATOLOGY_STATION & !is.na(TNTXM)]
+cutM <- max(refd[year == cur_year]$month)
+cutD <- max(refd[year == cur_year & month == cutM]$day)
 in_window <- function(m, d) (m < cutM) | (m == cutM & d <= cutD)
 
-ytd <- blagd[in_window(month, day), .(ytd = mean(TNTXM), n = .N), by = year][n >= MIN_YTD_DAYS]
+ytd <- refd[in_window(month, day), .(ytd = mean(TNTXM), n = .N), by = year][n >= MIN_YTD_DAYS]
 setorder(ytd, year)
 ytd[, is_cur := year == cur_year]
 
@@ -388,7 +414,8 @@ p3 <- ggplot(ytd, aes(year, anom, fill = anom > 0)) +
       win_lab, min(ytd$year), norm_yr1, normal, cur_year, cur_anom, delta_disp, best_oth$year),
     x = NULL, y = NULL,
     caption = paste0(
-      "Source: Météo-France, Données climatologiques de base – quotidiennes (meteo.data.gouv.fr, dataset 6569b51a…). Licence Ouverte / Etalab.  Station: Toulouse-Blagnac (31069001).\n",
+      caption_source_line(SITE$citation), "\n",
+      sprintf("Station: %s (%s).  ", SITE$reference_station, station_id(SITE, SITE$reference_station)),
       sprintf("Each bar = mean of daily mean (TN+TX)/2 over %s of that year, minus the %d–%d average of the same window; years with < %d valid days in the window are omitted.",
               win_lab, min(ytd$year), norm_yr1, MIN_YTD_DAYS))
   ) +
@@ -413,14 +440,17 @@ print(p3); invisible(dev.off())
 message("Wrote temperature_ytd.png")
 
 # ---- all-time record days (per station) -------------------------------------
-# Hottest = highest daily max (TX); coldest = lowest daily min (TN).
+# Hottest = highest daily max (TX); coldest = lowest daily min (TN). Only for
+# stations that actually carry temperature — a rain-only local station (e.g.
+# Karlsruhe's Wolfartsweier) has no TX/TN to report a record for.
 record_day <- function(st, col, decreasing) {
   d <- dat[station == st & !is.na(get(col))]
   d <- d[order(if (decreasing) -get(col) else get(col))][1]
   list(date = sprintf("%04d-%02d-%02d", d$year, d$month, d$day),
        value = d[[col]], tn = d$TN, tx = d$TX)
 }
-records <- lapply(levels(dat$station), function(st) {
+record_stations <- if (SITE$local_has_temp) levels(dat$station) else SITE$reference_station
+records <- lapply(record_stations, function(st) {
   list(station = st,
        span_yr0 = min(dat[station == st]$year),
        span_yr1 = max(dat[station == st]$year),
@@ -431,7 +461,7 @@ for (r in records)
   message(sprintf("%-26s hottest %s = %.1f°C (TX) | coldest %s = %.1f°C (TN)",
                   r$station, r$hot$date, r$hot$value, r$cold$date, r$cold$value))
 
-# ---- temperature-extremes: threshold-day counts (Toulouse-Blagnac) ----------
+# ---- temperature-extremes: threshold-day counts (reference station) --------
 # Counts of days per year crossing a fixed line. These make the warming tangible:
 # their first-decade vs last-decade change is the "frost days halved, hot days
 # doubled" story. Complete years only, so a partial year cannot deflate a count.
@@ -462,7 +492,9 @@ message(sprintf("Extremes (%d-%d decade vs last): frost %d->%d | hot %d->%d | v.
                 extremes$trop_early, extremes$trop_recent))
 
 # =============================================================================
-# PLOT 4 — annual rainfall totals (both stations)
+# PLOT 4 — annual rainfall totals (both stations). Rainfall pairs normally for
+# every site, even Karlsruhe, whose local station is rain-only: this plot never
+# needed the local station's temperature, so `local_has_temp` doesn't apply here.
 # The honest headline is a NULL result: unlike temperature, annual precipitation
 # shows no statistically significant trend. Showing it is a credibility point —
 # the same data that proves the warming does not manufacture a rainfall trend.
@@ -477,35 +509,35 @@ rain_ann <- rain_ann_all[complete == TRUE]
 fwrite(rain_ann_all[complete == TRUE | year == cur_year],
        file.path(PATHS$outputs, "annual_rainfall.csv"))
 
-rain_blag <- rain_ann[station == "Toulouse-Blagnac"]
-rain_auz  <- rain_ann[station == "Auzeville-Tolosane-INRAE"]
+rain_ref   <- rain_ann[station == SITE$reference_station]
+rain_local <- rain_ann[station == SITE$local_station]
 
-# Trend + significance on the long Blagnac record (the one worth a slope).
-fit_rain       <- lm(total ~ year, data = rain_blag)
+# Trend + significance on the long reference-station record (the one worth a slope).
+fit_rain       <- lm(total ~ year, data = rain_ref)
 rain_slope_dec <- unname(coef(fit_rain)[2]) * 10
 rain_p         <- summary(fit_rain)$coefficients[2, 4]
 rain_sig       <- rain_p < 0.05
-rain_mean_blag <- mean(rain_blag$total)
-rain_wettest   <- rain_blag[which.max(total)]
-rain_driest    <- rain_blag[which.min(total)]
+rain_mean_ref  <- mean(rain_ref$total)
+rain_wettest   <- rain_ref[which.max(total)]
+rain_driest    <- rain_ref[which.min(total)]
 
-rain_levels <- c("Toulouse-Blagnac", "Auzeville-Tolosane-INRAE")
+rain_levels <- c(SITE$reference_station, SITE$local_station)
 rain_pal <- c(COL$rain_blag, COL$rain_auz); names(rain_pal) <- rain_levels
 rain_shp <- c(16, 18);                      names(rain_shp) <- rain_levels
 rain_ann[, station := factor(station, levels = rain_levels)]
 
 rain_txt <- sprintf(
-  "Toulouse-Blagnac, annual total rainfall\nmean %.0f mm/yr  ·  %+.0f mm/decade — not significant (p = %.2f)",
-  rain_mean_blag, rain_slope_dec, rain_p)
+  "%s, annual total rainfall\nmean %.0f mm/yr  ·  %+.0f mm/decade — not significant (p = %.2f)",
+  SITE$reference_station, rain_mean_ref, rain_slope_dec, rain_p)
 
 p4 <- ggplot(rain_ann, aes(year, total, colour = station, shape = station)) +
-  geom_hline(yintercept = rain_mean_blag, colour = COL$rain_blag,
+  geom_hline(yintercept = rain_mean_ref, colour = COL$rain_blag,
              linetype = "dashed", linewidth = 0.4, alpha = 0.6) +
   geom_line(aes(group = station), alpha = 0.28, linewidth = 0.4) +
   geom_point(size = 1.7, alpha = 0.85) +
   geom_smooth(aes(group = station), method = "loess", formula = y ~ x, se = FALSE,
               linewidth = 1.3, span = 0.75) +
-  annotate("label", x = yr0 + 0.5, y = max(rain_blag$total) + 30,
+  annotate("label", x = yr0 + 0.5, y = max(rain_ref$total) + 30,
            label = rain_txt, hjust = 0, vjust = 1,
            size = 3.2, colour = "#3D4A54", lineheight = 0.98, fontface = "italic",
            fill = "white", alpha = 0.7, label.padding = unit(0.4, "lines")) +
@@ -513,17 +545,17 @@ p4 <- ggplot(rain_ann, aes(year, total, colour = station, shape = station)) +
   scale_shape_manual(values = rain_shp, name = NULL, breaks = rain_levels) +
   scale_x_continuous(breaks = x_breaks, limits = c(yr0, max(yr1, cur_year)),
                      expand = expansion(mult = c(0.01, 0.04))) +
-  scale_y_continuous(labels = mm_label, limits = c(0, max(rain_blag$total) + 60),
+  scale_y_continuous(labels = mm_label, limits = c(0, max(rain_ref$total) + 60),
                      expand = expansion(mult = c(0, 0.02))) +
   guides(colour = guide_legend(override.aes = list(alpha = 1, linewidth = 1.4))) +
   labs(
-    title = "Rainfall around Castanet-Tolosan — no clear trend",
+    title = sprintf("Rainfall around %s — no clear trend", SITE$city),
     subtitle = sprintf("Annual total precipitation, %d → %d  ·  highly variable year to year, but flat over the long run",
                        yr0, yr1),
     x = NULL, y = NULL,
     caption = paste0(
-      "Source: Météo-France, Données climatologiques de base – quotidiennes (meteo.data.gouv.fr, dataset 6569b51a…), dept. 31. Licence Ouverte / Etalab.\n",
-      "Annual total of daily rainfall (RR, mm).  Dashed line = Toulouse-Blagnac long-term mean.  ",
+      caption_source_line(SITE$citation), "\n",
+      sprintf("Annual total of daily rainfall (RR, mm).  Dashed line = %s long-term mean.  ", SITE$reference_station),
       sprintf("Incomplete years (< %d valid days) excluded. Curves: LOESS smoothing.", MIN_DAYS)
     )
   ) +
@@ -549,7 +581,7 @@ print(p4); invisible(dev.off())
 message("Wrote rain_series.png")
 
 # =============================================================================
-# PLOT 5 — monthly rainfall climatology (Toulouse-Blagnac): one line per year,
+# PLOT 5 — monthly rainfall climatology (reference station): one line per year,
 #          normal bold, current year bold — the seasonal shape, mirroring the
 #          daily temperature climatology.
 # =============================================================================
@@ -592,7 +624,8 @@ p5 <- ggplot() +
       month.name[rain_dry_mon$month], rain_dry_mon$mm),
     x = NULL, y = NULL,
     caption = paste0(
-      "Source: Météo-France, Données climatologiques de base – quotidiennes (meteo.data.gouv.fr, dataset 6569b51a…). Licence Ouverte / Etalab.  Station: Toulouse-Blagnac (31069001).\n",
+      caption_source_line(SITE$citation), "\n",
+      sprintf("Station: %s (%s).  ", SITE$reference_station, station_id(SITE, SITE$reference_station)),
       "Each line = one year's monthly rainfall totals (RR, mm); months with < 27 valid days omitted."
     )
   ) +
@@ -616,15 +649,15 @@ agg_png(file.path(PATHS$figures, "rain_climatology.png"),
 print(p5); invisible(dev.off())
 message("Wrote rain_climatology.png")
 
-# ---- stash numbers for the HTML report --------------------------------------
+# ---- stash numbers for the HTML report / README ------------------------------
 stats <- list(
   yr0 = yr0, yr1 = yr1,
-  slope_dec_blag = slope_dec_blag, rise_blag = rise_blag,
-  slope_dec_auz = slope_dec_auz,
-  slope_dec_blag_auzwin = slope_dec_blag_auzwin,
-  auz_yr0 = min(auz$year), auz_yr1 = max(auz$year),
-  mean_recent = round(mean(blag[year >= yr1 - 9]$TMEAN), 2),
-  mean_early  = round(mean(blag[year <= yr0 + 9]$TMEAN), 2),
+  slope_dec_ref = slope_dec_ref, rise_ref = rise_ref,
+  slope_dec_local = slope_dec_local,
+  slope_dec_ref_localwin = slope_dec_ref_localwin,
+  local_yr0 = local_yr0, local_yr1 = local_yr1,
+  mean_recent = round(mean(ref[year >= yr1 - 9]$TMEAN), 2),
+  mean_early  = round(mean(ref[year <= yr0 + 9]$TMEAN), 2),
   clim_yr0 = min(prev_years$year), clim_yr1 = max(prev_years$year),
   clim_nyears = n_years, cur_year = cur_year,
   n_station_years = nrow(annual),
@@ -648,9 +681,9 @@ stats <- list(
   ),
   extremes = extremes,
   rain = list(
-    yr0 = min(rain_blag$year), yr1 = max(rain_blag$year),
-    n_years = nrow(rain_blag),
-    mean_blag = round(rain_mean_blag),
+    yr0 = min(rain_ref$year), yr1 = max(rain_ref$year),
+    n_years = nrow(rain_ref),
+    mean_ref = round(rain_mean_ref),
     slope_dec = round(rain_slope_dec, 1),
     p = round(rain_p, 2),
     significant = rain_sig,
@@ -658,8 +691,8 @@ stats <- list(
     driest_year  = rain_driest$year,  driest_mm  = round(rain_driest$total),
     wet_month = month.name[rain_wet_mon$month], wet_month_mm = round(rain_wet_mon$mm),
     dry_month = month.name[rain_dry_mon$month], dry_month_mm = round(rain_dry_mon$mm),
-    auz_yr0 = min(rain_auz$year), auz_yr1 = max(rain_auz$year),
-    auz_mean = round(mean(rain_auz$total))
+    local_yr0 = min(rain_local$year), local_yr1 = max(rain_local$year),
+    local_mean = round(mean(rain_local$total))
   )
 )
 saveRDS(stats, file.path(PATHS$processed, "trend_stats.rds"))

@@ -10,17 +10,31 @@ data/raw/
 # Cached station extract + intermediates — regenerable via `make prepare`
 data/processed/
 
-# Generated analysis outputs — rebuilt by `make all`.
-# The report is the shareable artifact: copy it out, do not commit it (a 2 MB
-# base64 HTML re-inflates the history on every refresh).
-# EXCEPTION: the three PNG figures ARE tracked. README.md renders the report
-# inline (see R/03_readme.R) and GitHub can only show the figures if they live
-# in the repository. Keep the figure commit as an amend of the existing history
-# entry rather than a new commit, so refreshes don't stack up PNG blobs.
+# Generated analysis outputs — rebuilt by `make all` / `make all SITE=<site>`.
+# Each report is the shareable artifact: copy it out, do not commit it (a
+# multi-MB base64 HTML re-inflates the history on every refresh).
+# EXCEPTION: every site's five PNG figures ARE tracked. README.md renders each
+# site's report inline (see R/03_readme.R) and GitHub can only show the
+# figures if they live in the repository. Figure refreshes are ordinary
+# sequential commits (no amend/force-push) — see the climatudes-release-workflow
+# memory. git requires each intermediate directory re-included explicitly,
+# hence one block per site (castanet keeps its legacy root path).
 outputs/*
 !outputs/figures/
 outputs/figures/*
 !outputs/figures/*.png
+
+!outputs/zurich/
+outputs/zurich/*
+!outputs/zurich/figures/
+outputs/zurich/figures/*
+!outputs/zurich/figures/*.png
+
+!outputs/karlsruhe/
+outputs/karlsruhe/*
+!outputs/karlsruhe/figures/
+outputs/karlsruhe/figures/*
+!outputs/karlsruhe/figures/*.png
 
 # R session cruft
 .Rhistory
