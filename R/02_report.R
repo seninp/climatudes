@@ -44,10 +44,12 @@ annual     <- fread(annual_csv)
 ref <- annual[station == SITE$reference_station]
 
 recent <- ref[year >= stats$yr1 - 9,
-             .(year, TN = round(TN, 1), TX = round(TX, 1), Mean = round(TMEAN, 1))]
+             .(year, TN = round(TN, 1), TX = round(TX, 1), Mean = round(TMEAN, 1), complete)]
 rows_html <- paste(sprintf(
-  "<tr><td>%d</td><td>%.1f</td><td>%.1f</td><td><strong>%.1f</strong></td></tr>",
-  recent$year, recent$TN, recent$TX, recent$Mean), collapse = "\n")
+  "<tr><td>%d%s</td><td>%.1f</td><td>%.1f</td><td><strong>%.1f</strong></td></tr>",
+  recent$year,
+  ifelse(recent$complete, "", " <span style=\"color:#8A97A0;font-size:0.85em\">(to date)</span>"),
+  recent$TN, recent$TX, recent$Mean), collapse = "\n")
 
 # ---- record-days table rows (hottest / coldest per station with a temp record) --
 rec_row <- function(label, span, date, tn, tx, colour, val_col) {
@@ -268,25 +270,21 @@ template <- '<!DOCTYPE html>
   <p>
     Temperature is only half of a climate. Rainfall, it turns out, tells a very
     different — and much quieter — story: over the same {{RAIN_NYEARS}}&nbsp;years,
-    annual precipitation at {{REF_STATION}} shows <strong>no statistically
-    significant trend</strong>.
+    annual precipitation at {{REF_STATION}} shows {{RAIN_SIG_CLAUSE}}.
   </p>
   <figure>
-    <img src="data:image/png;base64,{{IMG_RAIN}}" alt="Annual rainfall totals, {{REF_STATION}} and {{LOCAL_STATION}}, {{RAIN_YR0}}-{{RAIN_YR1}}, with a flat trend">
+    <img src="data:image/png;base64,{{IMG_RAIN}}" alt="Annual rainfall totals, {{REF_STATION}} and {{LOCAL_STATION}}, {{RAIN_YR0}}-{{RAIN_YR1}}">
     <figcaption>
       Annual total precipitation. The dashed line is {{REF_STATION}}&rsquo;s
       long-term mean ({{RAIN_MEAN}}&nbsp;mm/yr); the thick curves are LOESS
       smoothings. The year-to-year swings are large — from
       {{DRIEST_MM}}&nbsp;mm ({{DRIEST_YEAR}}) to {{WETTEST_MM}}&nbsp;mm
       ({{WETTEST_YEAR}}) — but the long-run slope
-      ({{RAIN_SLOPE}}&nbsp;mm/decade) is flat and not significant (p&nbsp;=&nbsp;{{RAIN_P}}).
+      ({{RAIN_SLOPE}}&nbsp;mm/decade) {{RAIN_FLAT_CLAUSE}}.
     </figcaption>
   </figure>
   <p>
-    That contrast is the point. The very same daily records that show an
-    unmistakable, statistically strong warming signal show <em>no</em> comparable
-    signal in how much it rains. A dataset that manufactured trends would have
-    produced one here too; this one does not.
+    {{RAIN_CLOSING_PARAGRAPH}}
   </p>
   <figure>
     <img src="data:image/png;base64,{{IMG_RAINC}}" alt="Monthly rainfall through the year at {{REF_STATION}}, one line per year, with the long-term normal and the current year">
@@ -357,6 +355,7 @@ template <- '<!DOCTYPE html>
 
 fills <- build_common_fills(stats, SITE)
 fills <- vapply(fills, resolve_bold_html, character(1))
+fills <- vapply(fills, resolve_italic_html, character(1))
 
 fills <- c(fills,
   R_VERSION   = paste(R.version$major, R.version$minor, sep = "."),

@@ -182,19 +182,16 @@ off the calendar instead of the thermometer.</sub>
 
 Temperature is only half of a climate. Rainfall tells a very different — and much
 quieter — story: over the same {{RAIN_NYEARS}} years, annual precipitation at
-{{REF_STATION}} shows **no statistically significant trend**.
+{{REF_STATION}} shows {{RAIN_SIG_CLAUSE}}.
 
-![Annual rainfall totals around {{CITY}}, with a flat long-term trend]({{FIG_RAIN}})
+![Annual rainfall totals around {{CITY}}]({{FIG_RAIN}})
 
 <sub>Annual total precipitation. The dashed line is {{REF_STATION}}’s long-term mean
 ({{RAIN_MEAN}} mm/yr); the thick curves are LOESS smoothings. The year-to-year swings are
 large — from {{DRIEST_MM}} mm ({{DRIEST_YEAR}}) to {{WETTEST_MM}} mm ({{WETTEST_YEAR}}) —
-but the long-run slope ({{RAIN_SLOPE}} mm/decade) is flat and not significant
-(p = {{RAIN_P}}).</sub>
+but the long-run slope ({{RAIN_SLOPE}} mm/decade) {{RAIN_FLAT_CLAUSE}}.</sub>
 
-That contrast is the point. The very same daily records that show an unmistakable,
-statistically strong warming signal show *no* comparable signal in how much it rains. A
-dataset that manufactured trends would have produced one here too; this one does not.
+{{RAIN_CLOSING_PARAGRAPH}}
 
 ![Monthly rainfall through the year at {{REF_STATION}}, one line per year]({{FIG_RAINC}})
 
@@ -238,6 +235,7 @@ exactly why no annual trend emerges.</sub>
 # ---- fill placeholders (single gsub pass, no length limit) ------------------
 fills <- build_common_fills(stats, SITE)
 fills <- vapply(fills, resolve_bold_md, character(1))
+fills <- vapply(fills, resolve_italic_md, character(1))
 
 fills <- c(fills,
   SITE_KEY  = SITE$key,

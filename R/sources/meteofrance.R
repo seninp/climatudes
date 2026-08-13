@@ -48,11 +48,16 @@ prepare_data <- function(site) {
   message("Slicing ", length(gz_paths), " raw .gz files to stations: ",
           paste(names(site$stations), collapse = ", "))
 
-  keep_cols <- c("NUM_POSTE", "AAAAMMJJ", "TN", "TX", "TNTXM", "RR")
+  # TNTXM is always derived as (TN+TX)/2 here, never Météo-France's own
+  # TNTXM field, for methodological consistency with the other sites' source
+  # modules (see R/sources/dwd.R, R/sources/meteoswiss.R).
+  keep_cols <- c("NUM_POSTE", "AAAAMMJJ", "TN", "TX", "RR")
   slice <- rbindlist(lapply(gz_paths, function(f) {
     message("  reading ", basename(f), " ...")
     d <- read_gz(f, select = keep_cols, colClasses = list(character = "NUM_POSTE"))
-    d[NUM_POSTE %in% names(site$stations)]
+    d <- d[NUM_POSTE %in% names(site$stations)]
+    d[, TNTXM := (TN + TX) / 2]
+    d
   }))
 
   write_extract(slice, extract_gz)

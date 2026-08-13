@@ -38,6 +38,12 @@ bold <- function(x) paste0(BOLD_OPEN, x, BOLD_CLOSE)
 resolve_bold_html <- function(x) gsub(BOLD_CLOSE, "</strong>", gsub(BOLD_OPEN, "<strong>", x, fixed = TRUE), fixed = TRUE)
 resolve_bold_md   <- function(x) gsub(BOLD_CLOSE, "**",         gsub(BOLD_OPEN, "**",        x, fixed = TRUE), fixed = TRUE)
 
+ITALIC_OPEN  <- "ITALIC_OPEN"
+ITALIC_CLOSE <- "ITALIC_CLOSE"
+italic <- function(x) paste0(ITALIC_OPEN, x, ITALIC_CLOSE)
+resolve_italic_html <- function(x) gsub(ITALIC_CLOSE, "</em>", gsub(ITALIC_OPEN, "<em>", x, fixed = TRUE), fixed = TRUE)
+resolve_italic_md   <- function(x) gsub(ITALIC_CLOSE, "*",     gsub(ITALIC_OPEN, "*",    x, fixed = TRUE), fixed = TRUE)
+
 # ---- fields shared verbatim by both the HTML report and the README section --
 # Everything here is prose/number logic common to both output formats; each
 # stage adds its own format-specific bits (image embeds vs figure paths, HTML
@@ -113,6 +119,28 @@ build_common_fills <- function(stats, site) {
     "At %s, the all-time heat (%s) is far more recent than the all-time cold (%s) — the same warming signature seen throughout this report.",
     site$reference_station, ref_rec$hot$date, ref_rec$cold$date)
 
+  # Rainfall trend text must branch on rn$significant: this was previously
+  # hardcoded to "no statistically significant trend" everywhere, which is
+  # wrong wherever it isn't true (e.g. Karlsruhe/Rheinstetten: -11 mm/decade,
+  # p = 0.00 — actually significant).
+  rain_sig_clause <- if (isTRUE(rn$significant))
+    bold(sprintf("a statistically significant trend (%+.0f mm/decade, p = %s)", rn$slope_dec, fmt(rn$p, 2))) else
+    bold("no statistically significant trend")
+
+  rain_flat_clause <- if (isTRUE(rn$significant))
+    sprintf("is measurable and statistically significant (p = %s)", fmt(rn$p, 2)) else
+    sprintf("is flat and not significant (p = %s)", fmt(rn$p, 2))
+
+  rain_closing_paragraph <- if (isTRUE(rn$significant))
+    sprintf(paste0("Rainfall tells its own story here: unlike most of the sites in this series, %s shows a real, ",
+                   "if much smaller and slower, long-run trend toward %s conditions (%+.0f mm/decade, p = %s) — ",
+                   "alongside the much larger and faster warming signal above."),
+            site$reference_station, if (rn$slope_dec < 0) "drier" else "wetter", rn$slope_dec, fmt(rn$p, 2)) else
+    sprintf(paste0("That contrast is the point. The very same daily records that show an unmistakable, ",
+                   "statistically strong warming signal show %s comparable signal in how much it rains. A dataset ",
+                   "that manufactured trends would have produced one here too; this one does not."),
+            italic("no"))
+
   c(
     YR0 = stats$yr0, YR1 = stats$yr1, NYEARS = stats$yr1 - stats$yr0,
     SLOPE_DEC = fmt(stats$slope_dec_ref),
@@ -147,6 +175,8 @@ build_common_fills <- function(stats, site) {
     TROP_EARLY = ex$trop_early, TROP_RECENT = ex$trop_recent,
     RAIN_YR0 = rn$yr0, RAIN_YR1 = rn$yr1, RAIN_NYEARS = rn$n_years, RAIN_MEAN = rn$mean_ref,
     RAIN_SLOPE = sprintf("%+.0f", rn$slope_dec), RAIN_P = fmt(rn$p, 2),
+    RAIN_SIG_CLAUSE = rain_sig_clause, RAIN_FLAT_CLAUSE = rain_flat_clause,
+    RAIN_CLOSING_PARAGRAPH = rain_closing_paragraph,
     WETTEST_YEAR = rn$wettest_year, WETTEST_MM = rn$wettest_mm,
     DRIEST_YEAR = rn$driest_year, DRIEST_MM = rn$driest_mm,
     WET_MONTH = rn$wet_month, WET_MONTH_MM = rn$wet_month_mm,

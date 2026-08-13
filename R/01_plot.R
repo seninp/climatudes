@@ -394,6 +394,28 @@ cur_anom <- ytd[year == cur_year]$anom
 delta_disp <- round(cur_ytd, 1) - round(best_oth$ytd, 1)   # matches the report's rounding
 norm_yr1 <- max(ytd[is_cur == FALSE]$year)
 
+# Display-only roundings — deg_label() has no digits control (unlike the old
+# "%.1f" sprintf it replaces below), so unrounded floats would otherwise bake
+# into the chart as e.g. "+2.446988 °C" instead of "+2.4 °C". cur_anom itself
+# stays unrounded where used for bar/label y-position.
+cur_anom_disp  <- round(cur_anom, 1)
+best_oth_disp  <- round(best_oth$ytd, 1)
+
+# Title/subtitle must branch on is_record: an in-progress year is not always the
+# warmest on record (e.g. Karlsruhe 2026 ranks #2, behind 2007) — a hard-coded
+# "is the warmest on record" + unconditional "+" sign previously printed a false
+# record claim and a garbled "+-0.3 °C" whenever the current year fell short.
+title_txt <- if (is_record)
+  sprintf("The year so far, warmer than any before it — %s", CLIMATOLOGY_STATION) else
+  sprintf("The year so far, among the warmest on record — %s", CLIMATOLOGY_STATION)
+
+subtitle_lead <- if (is_record)
+  sprintf("%d is the warmest such period on record: %s above normal, %s over the previous record (%d).",
+          cur_year, deg_label(cur_anom_disp, signed = TRUE), deg_label(delta_disp, signed = TRUE), best_oth$year) else
+  sprintf("%d ranks #%d of %d for this period: %s above normal, %s behind the record (%d, %s).",
+          cur_year, ytd_rank, nrow(ytd), deg_label(cur_anom_disp, signed = TRUE), deg_label(abs(delta_disp)),
+          best_oth$year, deg_label(best_oth_disp))
+
 p3 <- ggplot(ytd, aes(year, anom, fill = anom > 0)) +
   geom_col(width = 0.72, alpha = 0.85) +
   geom_hline(yintercept = 0, colour = "#8A97A0", linewidth = 0.4) +
@@ -401,17 +423,17 @@ p3 <- ggplot(ytd, aes(year, anom, fill = anom > 0)) +
   geom_col(data = ytd[is_cur == TRUE], aes(year, anom),
            fill = COL$tx, colour = "#7B241C", linewidth = 0.4, width = 0.92) +
   annotate("text", x = cur_year, y = cur_anom, vjust = -0.35, hjust = 0.65,
-           label = sprintf("%d\n+%.1f °C", cur_year, cur_anom),
+           label = sprintf("%d\n%s", cur_year, deg_label(cur_anom_disp, signed = TRUE)),
            colour = COL$tx, fontface = "bold", size = 3.7, lineheight = 0.92) +
   scale_fill_manual(values = c(`TRUE` = COL$tx, `FALSE` = COL$tn), guide = "none") +
   scale_x_continuous(breaks = x_breaks, expand = expansion(mult = c(0.01, 0.04))) +
   scale_y_continuous(labels = function(x) deg_label(x, signed = TRUE),
                      expand = expansion(mult = c(0.04, 0.20))) +
   labs(
-    title = sprintf("The year so far, warmer than any before it — %s", CLIMATOLOGY_STATION),
+    title = title_txt,
     subtitle = sprintf(
-      "Each bar is a year's mean over the same window (%s) as its departure from the %d–%d normal (%.1f °C).\nRed = warmer than normal, blue = cooler.  %d is the warmest such period on record: +%.1f °C above normal, +%.1f °C over the previous record (%d).",
-      win_lab, min(ytd$year), norm_yr1, normal, cur_year, cur_anom, delta_disp, best_oth$year),
+      "Each bar is a year's mean over the same window (%s) as its departure from the %d–%d normal (%.1f °C).\nRed = warmer than normal, blue = cooler.  %s",
+      win_lab, min(ytd$year), norm_yr1, normal, subtitle_lead),
     x = NULL, y = NULL,
     caption = paste0(
       caption_source_line(SITE$citation), "\n",
@@ -512,6 +534,13 @@ fwrite(rain_ann_all[complete == TRUE | year == cur_year],
 rain_ref   <- rain_ann[station == SITE$reference_station]
 rain_local <- rain_ann[station == SITE$local_station]
 
+# The rain series' own year range — NOT the temperature series' yr0/yr1 above.
+# Reusing the temperature range previously clipped Zurich's rain chart (rain
+# data from 1864, temperature from 1882 -> scale_x_continuous(limits=) silently
+# dropped 18 years of valid rainfall, since `limits` filters rows, unlike
+# coord_cartesian which only pads the view).
+yr0_rain <- min(rain_ref$year); yr1_rain <- max(rain_ref$year)
+
 # Trend + significance on the long reference-station record (the one worth a slope).
 fit_rain       <- lm(total ~ year, data = rain_ref)
 rain_slope_dec <- unname(coef(fit_rain)[2]) * 10
@@ -526,9 +555,13 @@ rain_pal <- c(COL$rain_blag, COL$rain_auz); names(rain_pal) <- rain_levels
 rain_shp <- c(16, 18);                      names(rain_shp) <- rain_levels
 rain_ann[, station := factor(station, levels = rain_levels)]
 
+# Significance clause must branch like the report text (see R/lib/narrative.R)
+# — this was previously hardcoded to "not significant" regardless of rain_sig.
+rain_sig_txt <- if (rain_sig) sprintf("significant (p = %.2f)", rain_p) else
+                               sprintf("not significant (p = %.2f)", rain_p)
 rain_txt <- sprintf(
-  "%s, annual total rainfall\nmean %.0f mm/yr  ·  %+.0f mm/decade — not significant (p = %.2f)",
-  SITE$reference_station, rain_mean_ref, rain_slope_dec, rain_p)
+  "%s, annual total rainfall\nmean %.0f mm/yr  ·  %+.0f mm/decade — %s",
+  SITE$reference_station, rain_mean_ref, rain_slope_dec, rain_sig_txt)
 
 p4 <- ggplot(rain_ann, aes(year, total, colour = station, shape = station)) +
   geom_hline(yintercept = rain_mean_ref, colour = COL$rain_blag,
@@ -537,21 +570,24 @@ p4 <- ggplot(rain_ann, aes(year, total, colour = station, shape = station)) +
   geom_point(size = 1.7, alpha = 0.85) +
   geom_smooth(aes(group = station), method = "loess", formula = y ~ x, se = FALSE,
               linewidth = 1.3, span = 0.75) +
-  annotate("label", x = yr0 + 0.5, y = max(rain_ref$total) + 30,
+  annotate("label", x = yr0_rain + 0.5, y = max(rain_ref$total) + 30,
            label = rain_txt, hjust = 0, vjust = 1,
            size = 3.2, colour = "#3D4A54", lineheight = 0.98, fontface = "italic",
            fill = "white", alpha = 0.7, label.padding = unit(0.4, "lines")) +
   scale_colour_manual(values = rain_pal, name = NULL, breaks = rain_levels) +
   scale_shape_manual(values = rain_shp, name = NULL, breaks = rain_levels) +
-  scale_x_continuous(breaks = x_breaks, limits = c(yr0, max(yr1, cur_year)),
+  scale_x_continuous(breaks = x_breaks, limits = c(yr0_rain, max(yr1_rain, cur_year)),
                      expand = expansion(mult = c(0.01, 0.04))) +
   scale_y_continuous(labels = mm_label, limits = c(0, max(rain_ref$total) + 60),
                      expand = expansion(mult = c(0, 0.02))) +
   guides(colour = guide_legend(override.aes = list(alpha = 1, linewidth = 1.4))) +
   labs(
-    title = sprintf("Rainfall around %s — no clear trend", SITE$city),
-    subtitle = sprintf("Annual total precipitation, %d → %d  ·  highly variable year to year, but flat over the long run",
-                       yr0, yr1),
+    title = sprintf(if (rain_sig) "Rainfall around %s — a slow long-run trend" else "Rainfall around %s — no clear trend",
+                    SITE$city),
+    subtitle = sprintf(if (rain_sig)
+                    "Annual total precipitation, %d → %d  ·  highly variable year to year, with a measurable long-run trend"
+                  else "Annual total precipitation, %d → %d  ·  highly variable year to year, but flat over the long run",
+                       yr0_rain, yr1_rain),
     x = NULL, y = NULL,
     caption = paste0(
       caption_source_line(SITE$citation), "\n",

@@ -29,12 +29,12 @@ steadily and continuously.
 | Headline number | Value |
 |---|---:|
 | Warming rate, mean temperature (Toulouse-Blagnac) | **+0.34 °C / decade** |
-| Total rise over 78 years (1947 → 2025) | **+2.7 °C** |
+| Total rise over 78 years (1947 → 2025) | **+2.6 °C** |
 | Mean of the last decade (vs 12.9 °C in 1947–1956) | **15.2 °C** |
 | Frost days per year, 1947–1956 → 2016–2025 | **46 → 18** |
 | Hot days (≥ 30 °C) per year, 1947–1956 → 2016–2025 | **24 → 47** |
 | Complete station-years analysed | **101** |
-| 2026 year-to-date (Jan 1 – Aug 8), against 79 prior years | **#1 of 80 — record** |
+| 2026 year-to-date (Jan 1 – Aug 11), against 79 prior years | **#1 of 80 — record** |
 
 ### The long view: annual means
 
@@ -44,20 +44,20 @@ steadily and continuously.
 highlight the climate trend; the points are annual means. The green series (Auzeville-Tolosane-INRAE) is the station on the edge of Castanet-Tolosan; it tracks the long Toulouse-Blagnac reference mean almost exactly.</sub>
 
 At Toulouse-Blagnac — the station with the longest record (1947→2025) — the annual
-mean temperature rises by **+0.34 °C per decade**, about **+2.7 °C** over the
+mean temperature rises by **+0.34 °C per decade**, about **+2.6 °C** over the
 whole period. The local Auzeville-Tolosane-INRAE station, which is the station on the edge of Castanet-Tolosan, only covers 2004→2025. Its slope over that shorter, more recent window is steeper (+0.83 °C/decade) — but so is Toulouse-Blagnac’s over the same years (+0.91 °C/decade): recent decades warm faster, and the local station sits almost exactly on the regional mean. The local and regional signals are the same.
 
 ### This year, against every year before it
 
 ![Per-year mean over the same Jan-to-cutoff window, as a departure from the long-term normal, with 2026 the largest bar](outputs/figures/temperature_ytd.png)
 
-<sub>Each bar is a year’s mean over the <em>same window</em> — <strong>Jan 1 – Aug 8</strong> —
-shown as its departure from the long-term normal (13.4 °C): red above, blue
+<sub>Each bar is a year’s mean over the <em>same window</em> — <strong>Jan 1 – Aug 11</strong> —
+shown as its departure from the long-term normal (13.5 °C): red above, blue
 below. Comparing each year over the identical part-of-year is the only fair way to place
 a year that is still in progress against history. The bars swing from blue to red over
 the decades — the warming.</sub>
 
-Measured like-for-like, **2026 is the warmest Jan 1 – Aug 8 in 80 years** at Toulouse-Blagnac: **16.7 °C** — +0.9 °C above the previous record (2025, 15.8 °C) and **+3.2 °C above the long-term normal** (13.4 °C). This is exactly the point of the chart: a year still in progress can already stand out against the whole record.
+Measured like-for-like, **2026 is the warmest Jan 1 – Aug 11 in 80 years** at Toulouse-Blagnac: **16.8 °C** — +0.8 °C above the previous record (2025, 16.0 °C) and **+3.3 °C above the long-term normal** (13.5 °C). This is exactly the point of the chart: a year still in progress can already stand out against the whole record.
 
 > [!NOTE]
 > A partial year cannot be compared to other years’ *full-year* means — it is still
@@ -107,17 +107,17 @@ At Toulouse-Blagnac, the all-time heat (2023-08-23) is far more recent than the 
 
 | Year | Min (TN) | Max (TX) | Mean |
 |---|---:|---:|---:|
-| 2016 | 10.0 | 19.3 | **14.7** |
+| 2016 | 10.0 | 19.3 | **14.6** |
 | 2017 | 9.7 | 19.5 | **14.6** |
 | 2018 | 10.7 | 19.5 | **15.1** |
 | 2019 | 10.0 | 19.9 | **15.0** |
 | 2020 | 10.6 | 20.2 | **15.4** |
 | 2021 | 9.7 | 19.1 | **14.4** |
 | 2022 | 11.2 | 21.3 | **16.3** |
-| 2023 | 10.7 | 20.8 | **15.8** |
+| 2023 | 10.7 | 20.8 | **15.7** |
 | 2024 | 10.5 | 19.6 | **15.1** |
-| 2025 | 10.7 | 20.6 | **15.7** |
-| 2026 *(to date)* | 11.4 | 21.9 | **16.7** |
+| 2025 | 10.7 | 20.6 | **15.6** |
+| 2026 *(to date)* | 11.5 | 22.1 | **16.8** |
 
 ### Frost days halved, hot days doubled
 
@@ -142,17 +142,14 @@ Temperature is only half of a climate. Rainfall tells a very different — and m
 quieter — story: over the same 79 years, annual precipitation at
 Toulouse-Blagnac shows **no statistically significant trend**.
 
-![Annual rainfall totals around Castanet-Tolosan, with a flat long-term trend](outputs/figures/rain_series.png)
+![Annual rainfall totals around Castanet-Tolosan](outputs/figures/rain_series.png)
 
 <sub>Annual total precipitation. The dashed line is Toulouse-Blagnac’s long-term mean
 (633 mm/yr); the thick curves are LOESS smoothings. The year-to-year swings are
 large — from 378 mm (1967) to 915 mm (1993) —
-but the long-run slope (-8 mm/decade) is flat and not significant
-(p = 0.16).</sub>
+but the long-run slope (-8 mm/decade) is flat and not significant (p = 0.16).</sub>
 
-That contrast is the point. The very same daily records that show an unmistakable,
-statistically strong warming signal show *no* comparable signal in how much it rains. A
-dataset that manufactured trends would have produced one here too; this one does not.
+That contrast is the point. The very same daily records that show an unmistakable, statistically strong warming signal show *no* comparable signal in how much it rains. A dataset that manufactured trends would have produced one here too; this one does not.
 
 ![Monthly rainfall through the year at Toulouse-Blagnac, one line per year](outputs/figures/rain_climatology.png)
 
@@ -213,7 +210,7 @@ steadily and continuously.
 | Frost days per year, 1882–1891 → 2016–2025 | **111 → 61** |
 | Hot days (≥ 30 °C) per year, 1882–1891 → 2016–2025 | **4 → 12** |
 | Complete station-years analysed | **190** |
-| 2026 year-to-date (Jan 1 – Aug 9), against 143 prior years | **#1 of 144 — record** |
+| 2026 year-to-date (Jan 1 – Aug 12), against 143 prior years | **#1 of 144 — record** |
 
 ### The long view: annual means
 
@@ -230,13 +227,13 @@ whole period. The local Zürich-Affoltern station, which is MeteoSwiss’s autom
 
 ![Per-year mean over the same Jan-to-cutoff window, as a departure from the long-term normal, with 2026 the largest bar](outputs/zurich/figures/temperature_ytd.png)
 
-<sub>Each bar is a year’s mean over the <em>same window</em> — <strong>Jan 1 – Aug 9</strong> —
-shown as its departure from the long-term normal (9.2 °C): red above, blue
+<sub>Each bar is a year’s mean over the <em>same window</em> — <strong>Jan 1 – Aug 12</strong> —
+shown as its departure from the long-term normal (9.3 °C): red above, blue
 below. Comparing each year over the identical part-of-year is the only fair way to place
 a year that is still in progress against history. The bars swing from blue to red over
 the decades — the warming.</sub>
 
-Measured like-for-like, **2026 is the warmest Jan 1 – Aug 9 in 144 years** at Zürich-Fluntern: **12.6 °C** — +0.5 °C above the previous record (2022, 12.1 °C) and **+3.4 °C above the long-term normal** (9.2 °C). This is exactly the point of the chart: a year still in progress can already stand out against the whole record.
+Measured like-for-like, **2026 is the warmest Jan 1 – Aug 12 in 144 years** at Zürich-Fluntern: **12.8 °C** — +0.6 °C above the previous record (2022, 12.2 °C) and **+3.5 °C above the long-term normal** (9.3 °C). This is exactly the point of the chart: a year still in progress can already stand out against the whole record.
 
 > [!NOTE]
 > A partial year cannot be compared to other years’ *full-year* means — it is still
@@ -296,7 +293,7 @@ At Zürich-Fluntern, the all-time heat (2026-06-27) is far more recent than the 
 | 2023 | 7.8 | 15.8 | **11.8** |
 | 2024 | 7.7 | 15.0 | **11.4** |
 | 2025 | 7.0 | 14.9 | **11.0** |
-| 2026 *(to date)* | 7.7 | 17.5 | **12.6** |
+| 2026 *(to date)* | 7.8 | 17.7 | **12.8** |
 
 ### Frost days halved, hot days doubled
 
@@ -321,17 +318,14 @@ Temperature is only half of a climate. Rainfall tells a very different — and m
 quieter — story: over the same 162 years, annual precipitation at
 Zürich-Fluntern shows **no statistically significant trend**.
 
-![Annual rainfall totals around Zurich, with a flat long-term trend](outputs/zurich/figures/rain_series.png)
+![Annual rainfall totals around Zurich](outputs/zurich/figures/rain_series.png)
 
 <sub>Annual total precipitation. The dashed line is Zürich-Fluntern’s long-term mean
 (1104 mm/yr); the thick curves are LOESS smoothings. The year-to-year swings are
 large — from 674 mm (1949) to 1988 mm (1876) —
-but the long-run slope (-1 mm/decade) is flat and not significant
-(p = 0.77).</sub>
+but the long-run slope (-1 mm/decade) is flat and not significant (p = 0.77).</sub>
 
-That contrast is the point. The very same daily records that show an unmistakable,
-statistically strong warming signal show *no* comparable signal in how much it rains. A
-dataset that manufactured trends would have produced one here too; this one does not.
+That contrast is the point. The very same daily records that show an unmistakable, statistically strong warming signal show *no* comparable signal in how much it rains. A dataset that manufactured trends would have produced one here too; this one does not.
 
 ![Monthly rainfall through the year at Zürich-Fluntern, one line per year](outputs/zurich/figures/rain_climatology.png)
 
@@ -392,7 +386,7 @@ steadily and continuously.
 | Frost days per year, 1876–1885 → 2016–2025 | **67 → 59** |
 | Hot days (≥ 30 °C) per year, 1876–1885 → 2016–2025 | **7 → 26** |
 | Complete station-years analysed | **148** |
-| 2026 year-to-date (Jan 1 – Aug 9), against 149 prior years | **#2 of 150** |
+| 2026 year-to-date (Jan 1 – Aug 12), against 149 prior years | **#2 of 150** |
 
 ### The long view: annual means
 
@@ -409,13 +403,13 @@ whole period. Karlsruhe-Wolfartsweier carries no temperature record; Rheinstette
 
 ![Per-year mean over the same Jan-to-cutoff window, as a departure from the long-term normal, with 2026 the largest bar](outputs/karlsruhe/figures/temperature_ytd.png)
 
-<sub>Each bar is a year’s mean over the <em>same window</em> — <strong>Jan 1 – Aug 9</strong> —
-shown as its departure from the long-term normal (10.8 °C): red above, blue
+<sub>Each bar is a year’s mean over the <em>same window</em> — <strong>Jan 1 – Aug 12</strong> —
+shown as its departure from the long-term normal (10.9 °C): red above, blue
 below. Comparing each year over the identical part-of-year is the only fair way to place
 a year that is still in progress against history. The bars swing from blue to red over
 the decades — the warming.</sub>
 
-Measured like-for-like over Jan 1 – Aug 9, 2026 currently ranks **#2 of 150** at Rheinstetten (13.1 °C). The warmest such window on record remains 2007 (13.5 °C).
+Measured like-for-like over Jan 1 – Aug 12, 2026 currently ranks **#2 of 150** at Rheinstetten (13.3 °C). The warmest such window on record remains 2007 (13.6 °C).
 
 > [!NOTE]
 > A partial year cannot be compared to other years’ *full-year* means — it is still
@@ -473,7 +467,7 @@ At Rheinstetten, the all-time heat (2026-06-27) is far more recent than the all-
 | 2023 | 7.9 | 17.6 | **12.8** |
 | 2024 | 7.7 | 16.9 | **12.3** |
 | 2025 | 6.3 | 17.0 | **11.6** |
-| 2026 *(to date)* | 6.9 | 19.3 | **13.1** |
+| 2026 *(to date)* | 7.1 | 19.4 | **13.3** |
 
 ### Frost days halved, hot days doubled
 
@@ -496,19 +490,16 @@ off the calendar instead of the thermometer.</sub>
 
 Temperature is only half of a climate. Rainfall tells a very different — and much
 quieter — story: over the same 148 years, annual precipitation at
-Rheinstetten shows **no statistically significant trend**.
+Rheinstetten shows **a statistically significant trend (-11 mm/decade, p = 0.00)**.
 
-![Annual rainfall totals around Karlsruhe, with a flat long-term trend](outputs/karlsruhe/figures/rain_series.png)
+![Annual rainfall totals around Karlsruhe](outputs/karlsruhe/figures/rain_series.png)
 
 <sub>Annual total precipitation. The dashed line is Rheinstetten’s long-term mean
 (793 mm/yr); the thick curves are LOESS smoothings. The year-to-year swings are
 large — from 456 mm (1959) to 1452 mm (1882) —
-but the long-run slope (-11 mm/decade) is flat and not significant
-(p = 0.00).</sub>
+but the long-run slope (-11 mm/decade) is measurable and statistically significant (p = 0.00).</sub>
 
-That contrast is the point. The very same daily records that show an unmistakable,
-statistically strong warming signal show *no* comparable signal in how much it rains. A
-dataset that manufactured trends would have produced one here too; this one does not.
+Rainfall tells its own story here: unlike most of the sites in this series, Rheinstetten shows a real, if much smaller and slower, long-run trend toward drier conditions (-11 mm/decade, p = 0.00) — alongside the much larger and faster warming signal above.
 
 ![Monthly rainfall through the year at Rheinstetten, one line per year](outputs/karlsruhe/figures/rain_climatology.png)
 
