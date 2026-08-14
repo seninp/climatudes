@@ -7,6 +7,13 @@
 #       MF_ERAS in R/config.R when the cycle turns.
 data/raw/
 
+# Moscow and Voronezh's raw data is a MANUAL export from Roshydromet's
+# AISORI-M — login-gated, no stable URL, so unlike every other site `make
+# all` cannot regenerate it. NOT committed anyway: its licence says personal,
+# non-commercial use only, and redistributing the raw file goes beyond that.
+# A fresh clone needs the export re-placed in data/raw/<site>/ by hand — see
+# each site's "Why only one station?" note and R/sources/meteoru.R.
+
 # Cached station extract + intermediates — regenerable via `make prepare`
 data/processed/
 
@@ -35,6 +42,42 @@ outputs/karlsruhe/*
 !outputs/karlsruhe/figures/
 outputs/karlsruhe/figures/*
 !outputs/karlsruhe/figures/*.png
+
+!outputs/santafe/
+outputs/santafe/*
+!outputs/santafe/figures/
+outputs/santafe/figures/*
+!outputs/santafe/figures/*.png
+
+!outputs/honolulu/
+outputs/honolulu/*
+!outputs/honolulu/figures/
+outputs/honolulu/figures/*
+!outputs/honolulu/figures/*.png
+
+!outputs/noumea/
+outputs/noumea/*
+!outputs/noumea/figures/
+outputs/noumea/figures/*
+!outputs/noumea/figures/*.png
+
+!outputs/moscow/
+outputs/moscow/*
+!outputs/moscow/figures/
+outputs/moscow/figures/*
+!outputs/moscow/figures/*.png
+
+!outputs/voronezh/
+outputs/voronezh/*
+!outputs/voronezh/figures/
+outputs/voronezh/figures/*
+!outputs/voronezh/figures/*.png
+
+!outputs/compare/
+outputs/compare/*
+!outputs/compare/figures/
+outputs/compare/figures/*
+!outputs/compare/figures/*.png
 
 # R session cruft
 .Rhistory

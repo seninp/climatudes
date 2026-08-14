@@ -2,7 +2,8 @@
 # Climate temperature analysis — reproducible, multi-site pipeline
 #   make all               run the full pipeline for one site (prepare -> plots -> report)
 #   make all SITE=zurich   ... for a different site (default: castanet)
-#   make all-sites         run the full pipeline for every site in R/sites/
+#   make all-sites         run the full pipeline for every site in R/sites/, then compare
+#   make compare           rebuild the cross-site comparison (needs every site's stats already built)
 #   make prepare           fetch missing raw data -> small gzipped station extract
 #   make refresh           re-download the current/rolling raw data and rebuild everything
 #   make plots             build the figures + annual table + stats
@@ -48,12 +49,20 @@ REPORT      := $(OUTDIR)/temperature_report.html
 README      := README.md
 SITE_CONFIG := R/sites/$(SITE).R
 
-.PHONY: all all-sites prepare refresh plots report readme open clean
+.PHONY: all all-sites compare prepare refresh plots report readme open clean
 
 all: report readme
 
 all-sites:
 	@for s in $(SITES); do $(MAKE) SITE=$$s all; done
+	$(MAKE) compare
+
+# ---- cross-site comparison — not parameterized by SITE, needs every site's --
+# trend_stats.rds already on disk (run all-sites, or each site's `make plots`,
+# first). See R/04_compare.R's own header for why the site list there is
+# hand-maintained rather than reusing $(SITES).
+compare:
+	$(RSCRIPT) R/04_compare.R
 
 # ---- stage 00: fetch raw data (if absent) -> small gzipped station extract --
 # RAW_FILES is a wildcard, so on a fresh clone (empty raw dir) it expands to

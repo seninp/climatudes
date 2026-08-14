@@ -153,7 +153,7 @@ maximum (TX), “coldest” the lowest daily minimum (TN).
 {{CLOSING_RECORD_NOTE}}
 
 > [!NOTE]
-> **Why {{LOCAL_STATION}}?** {{LOCAL_RATIONALE}}
+> {{LOCAL_NOTE_HEADER}} {{LOCAL_RATIONALE}}
 
 ### The last decade ({{REF_STATION}})
 

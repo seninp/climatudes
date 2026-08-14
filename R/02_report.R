@@ -233,7 +233,7 @@ template <- '<!DOCTYPE html>
   <p style="color:#8A97A0; font-size:0.9rem;">{{CLOSING_RECORD_NOTE}}</p>
 
   <div class="note">
-    <strong>Why {{LOCAL_STATION}}?</strong> {{LOCAL_RATIONALE}}
+    {{LOCAL_NOTE_HEADER}} {{LOCAL_RATIONALE}}
   </div>
 
   <h2>The last decade ({{REF_STATION}})</h2>
@@ -273,7 +273,7 @@ template <- '<!DOCTYPE html>
     annual precipitation at {{REF_STATION}} shows {{RAIN_SIG_CLAUSE}}.
   </p>
   <figure>
-    <img src="data:image/png;base64,{{IMG_RAIN}}" alt="Annual rainfall totals, {{REF_STATION}} and {{LOCAL_STATION}}, {{RAIN_YR0}}-{{RAIN_YR1}}">
+    <img src="data:image/png;base64,{{IMG_RAIN}}" alt="Annual rainfall totals, {{RAIN_STATIONS_ALT}}, {{RAIN_YR0}}-{{RAIN_YR1}}">
     <figcaption>
       Annual total precipitation. The dashed line is {{REF_STATION}}&rsquo;s
       long-term mean ({{RAIN_MEAN}}&nbsp;mm/yr); the thick curves are LOESS
@@ -345,7 +345,7 @@ template <- '<!DOCTYPE html>
     Data © {{SOURCE_NAME}}, <em>{{LICENCE}}</em> —
     <a href="{{CITATION_URL}}">{{CITATION_URL}}</a>.<br>
     Analysis and charts built with R&nbsp;+&nbsp;ggplot2.
-    Stations: {{LOCAL_STATION}} ({{LOCAL_ID}}) and {{REF_STATION}} ({{REF_ID}}).
+    {{STATIONS_LINE}}
     Period covered: {{YR0}}&ndash;{{YR1}}.
   </footer>
 

@@ -27,6 +27,10 @@ source(sprintf("R/sites/%s.R", site_key))   # defines SITE
 PATHS <- SITE$paths
 STATIONS <- SITE$stations
 CLIMATOLOGY_STATION <- SITE$reference_station
+# A site may have no second station at all (Moscow/Voronezh: a single WMO
+# index, manually exported from AISORI-M) — distinct from local_has_temp =
+# FALSE, which still implies a real rain-only local station.
+HAS_LOCAL <- !is.null(SITE$local_station)
 dir.create(PATHS$figures, recursive = TRUE, showWarnings = FALSE)
 
 # ---- read the small gzipped station extract produced by stage 00 ------------
@@ -368,29 +372,63 @@ refd <- dat[station == CLIMATOLOGY_STATION & !is.na(TNTXM)]
 cutM <- max(refd[year == cur_year]$month)
 cutD <- max(refd[year == cur_year & month == cutM]$day)
 in_window <- function(m, d) (m < cutM) | (m == cutM & d <= cutD)
+win_lab  <- sprintf("Jan 1 – %s %d", month.abb[cutM], cutD)   # e.g. "Jan 1 – Jul 9"
 
-ytd <- refd[in_window(month, day), .(ytd = mean(TNTXM), n = .N), by = year][n >= MIN_YTD_DAYS]
+# MIN_YTD_DAYS (150) was picked assuming a typical cutoff deep in the year
+# (the six original sites all cut off in July/August, ~200+ days in) — a
+# fixed floor of "150 real days," full stop. For a site whose current year
+# stops much earlier (Voronezh's 2026 export ends 2026-02-28 — a 59-day
+# window), 150 is unreachable by ANY year, not just the current one, which
+# would empty `ytd` entirely. Scale the floor to the window itself (never
+# ABOVE 150, so every already-shipped site is unaffected: their windows are
+# all well over 150/0.85 days long).
+cutoff_doy <- as.integer(strftime(as.Date(sprintf("2001-%02d-%02d", cutM, cutD)), "%j"))
+YTD_MIN_DAYS <- min(MIN_YTD_DAYS, floor(0.85 * cutoff_doy))
+
+ytd <- refd[in_window(month, day), .(ytd = mean(TNTXM), n = .N), by = year][n >= YTD_MIN_DAYS]
 setorder(ytd, year)
 ytd[, is_cur := year == cur_year]
 
-win_lab  <- sprintf("Jan 1 – %s %d", month.abb[cutM], cutD)   # e.g. "Jan 1 – Jul 9"
-cur_ytd  <- ytd[year == cur_year]$ytd
-best_oth <- ytd[year != cur_year][order(-ytd)][1]   # warmest of all OTHER years
-ytd_rank <- match(cur_year, ytd[order(-ytd)]$year)
-delta    <- cur_ytd - best_oth$ytd                  # + if the current year is the record
-is_record <- ytd_rank == 1L
+if (nrow(ytd) == 0)
+  stop(sprintf(paste0("YTD window (%s) has no year — including the current one — with >= %d ",
+                       "valid days; %s's data may have real gaps even within this short window. ",
+                       "Not something to render around silently — investigate the source data."),
+               win_lab, YTD_MIN_DAYS, CLIMATOLOGY_STATION))
 
-message(sprintf("YTD (%s): %d = %.2f°C, rank %d/%d%s",
-                win_lab, cur_year, cur_ytd, ytd_rank, nrow(ytd),
-                if (is_record) sprintf(" — RECORD, +%.2f°C over %d", delta, best_oth$year) else
-                  sprintf(" — record held by %d (%.2f°C)", best_oth$year, best_oth$ytd)))
+# Even the scaled floor above can leave `ytd` without the current year (e.g.
+# real gaps in its own window) — degrade to "too early to rank" rather than
+# crash on a current year absent from `ytd`.
+HAS_YTD <- cur_year %in% ytd$year
+
+if (HAS_YTD) {
+  cur_ytd  <- ytd[year == cur_year]$ytd
+  best_oth <- ytd[year != cur_year][order(-ytd)][1]   # warmest of all OTHER years
+  ytd_rank <- match(cur_year, ytd[order(-ytd)]$year)
+  delta    <- cur_ytd - best_oth$ytd                  # + if the current year is the record
+  is_record <- ytd_rank == 1L
+
+  message(sprintf("YTD (%s): %d = %.2f°C, rank %d/%d%s",
+                  win_lab, cur_year, cur_ytd, ytd_rank, nrow(ytd),
+                  if (is_record) sprintf(" — RECORD, +%.2f°C over %d", delta, best_oth$year) else
+                    sprintf(" — record held by %d (%.2f°C)", best_oth$year, best_oth$ytd)))
+} else {
+  cur_ytd   <- NA_real_
+  best_oth  <- ytd[order(-ytd)][1]   # still the record holder among the years that DO qualify
+  ytd_rank  <- NA_integer_
+  delta     <- NA_real_
+  is_record <- FALSE
+  n_window_days <- nrow(refd[year == cur_year][in_window(month, day)])
+
+  message(sprintf("YTD (%s): %d has only %d valid day(s) in this window (< %d) — too early to rank.",
+                  win_lab, cur_year, n_window_days, YTD_MIN_DAYS))
+}
 
 # each year's window mean as a DEPARTURE from the long-term (prior-years) normal —
 # blue below, red above; the warming shows as the swing from blue to red, and the
 # current year stands out as the tallest bar (no floating point, real time axis).
 normal   <- mean(ytd[year != cur_year]$ytd)
 ytd[, anom := ytd - normal]
-cur_anom <- ytd[year == cur_year]$anom
+cur_anom <- if (HAS_YTD) ytd[year == cur_year]$anom else NA_real_
 delta_disp <- round(cur_ytd, 1) - round(best_oth$ytd, 1)   # matches the report's rounding
 norm_yr1 <- max(ytd[is_cur == FALSE]$year)
 
@@ -405,11 +443,19 @@ best_oth_disp  <- round(best_oth$ytd, 1)
 # warmest on record (e.g. Karlsruhe 2026 ranks #2, behind 2007) — a hard-coded
 # "is the warmest on record" + unconditional "+" sign previously printed a false
 # record claim and a garbled "+-0.3 °C" whenever the current year fell short.
-title_txt <- if (is_record)
+# A THIRD case — too little of the current year recorded yet to rank at all
+# (HAS_YTD == FALSE) — must come first, since is_record/cur_anom_disp/etc. are
+# NA in that case and would otherwise print "NA °C".
+title_txt <- if (!HAS_YTD)
+  sprintf("Too early in %d to compare — %s", cur_year, CLIMATOLOGY_STATION) else
+  if (is_record)
   sprintf("The year so far, warmer than any before it — %s", CLIMATOLOGY_STATION) else
   sprintf("The year so far, among the warmest on record — %s", CLIMATOLOGY_STATION)
 
-subtitle_lead <- if (is_record)
+subtitle_lead <- if (!HAS_YTD)
+  sprintf("Only %d day(s) of %d recorded in this data so far — short of the %d needed for a fair like-for-like comparison against history. Check back once more of the year is recorded.",
+          n_window_days, cur_year, YTD_MIN_DAYS) else
+  if (is_record)
   sprintf("%d is the warmest such period on record: %s above normal, %s over the previous record (%d).",
           cur_year, deg_label(cur_anom_disp, signed = TRUE), deg_label(delta_disp, signed = TRUE), best_oth$year) else
   sprintf("%d ranks #%d of %d for this period: %s above normal, %s behind the record (%d, %s).",
@@ -418,13 +464,21 @@ subtitle_lead <- if (is_record)
 
 p3 <- ggplot(ytd, aes(year, anom, fill = anom > 0)) +
   geom_col(width = 0.72, alpha = 0.85) +
-  geom_hline(yintercept = 0, colour = "#8A97A0", linewidth = 0.4) +
-  # current year emphasised: full-opacity red bar with a dark outline
-  geom_col(data = ytd[is_cur == TRUE], aes(year, anom),
-           fill = COL$tx, colour = "#7B241C", linewidth = 0.4, width = 0.92) +
-  annotate("text", x = cur_year, y = cur_anom, vjust = -0.35, hjust = 0.65,
-           label = sprintf("%d\n%s", cur_year, deg_label(cur_anom_disp, signed = TRUE)),
-           colour = COL$tx, fontface = "bold", size = 3.7, lineheight = 0.92) +
+  geom_hline(yintercept = 0, colour = "#8A97A0", linewidth = 0.4)
+
+# Current-year highlight bar + label only when it actually qualifies (HAS_YTD)
+# — otherwise `ytd[is_cur == TRUE]` is empty and cur_anom is NA, so there is
+# nothing honest to highlight yet.
+if (HAS_YTD) {
+  p3 <- p3 +
+    geom_col(data = ytd[is_cur == TRUE], aes(year, anom),
+             fill = COL$tx, colour = "#7B241C", linewidth = 0.4, width = 0.92) +
+    annotate("text", x = cur_year, y = cur_anom, vjust = -0.35, hjust = 0.65,
+             label = sprintf("%d\n%s", cur_year, deg_label(cur_anom_disp, signed = TRUE)),
+             colour = COL$tx, fontface = "bold", size = 3.7, lineheight = 0.92)
+}
+
+p3 <- p3 +
   scale_fill_manual(values = c(`TRUE` = COL$tx, `FALSE` = COL$tn), guide = "none") +
   scale_x_continuous(breaks = x_breaks, expand = expansion(mult = c(0.01, 0.04))) +
   scale_y_continuous(labels = function(x) deg_label(x, signed = TRUE),
@@ -439,7 +493,7 @@ p3 <- ggplot(ytd, aes(year, anom, fill = anom > 0)) +
       caption_source_line(SITE$citation), "\n",
       sprintf("Station: %s (%s).  ", SITE$reference_station, station_id(SITE, SITE$reference_station)),
       sprintf("Each bar = mean of daily mean (TN+TX)/2 over %s of that year, minus the %d–%d average of the same window; years with < %d valid days in the window are omitted.",
-              win_lab, min(ytd$year), norm_yr1, MIN_YTD_DAYS))
+              win_lab, min(ytd$year), norm_yr1, YTD_MIN_DAYS))
   ) +
   theme_minimal(base_size = 13) +
   theme(
@@ -532,7 +586,7 @@ fwrite(rain_ann_all[complete == TRUE | year == cur_year],
        file.path(PATHS$outputs, "annual_rainfall.csv"))
 
 rain_ref   <- rain_ann[station == SITE$reference_station]
-rain_local <- rain_ann[station == SITE$local_station]
+rain_local <- if (HAS_LOCAL) rain_ann[station == SITE$local_station] else rain_ann[0]
 
 # The rain series' own year range — NOT the temperature series' yr0/yr1 above.
 # Reusing the temperature range previously clipped Zurich's rain chart (rain
@@ -550,9 +604,11 @@ rain_mean_ref  <- mean(rain_ref$total)
 rain_wettest   <- rain_ref[which.max(total)]
 rain_driest    <- rain_ref[which.min(total)]
 
-rain_levels <- c(SITE$reference_station, SITE$local_station)
-rain_pal <- c(COL$rain_blag, COL$rain_auz); names(rain_pal) <- rain_levels
-rain_shp <- c(16, 18);                      names(rain_shp) <- rain_levels
+rain_levels <- if (HAS_LOCAL) c(SITE$reference_station, SITE$local_station) else SITE$reference_station
+rain_pal <- if (HAS_LOCAL) c(COL$rain_blag, COL$rain_auz) else c(COL$rain_blag)
+rain_shp <- if (HAS_LOCAL) c(16, 18)                      else c(16)
+names(rain_pal) <- rain_levels
+names(rain_shp) <- rain_levels
 rain_ann[, station := factor(station, levels = rain_levels)]
 
 # Significance clause must branch like the report text (see R/lib/narrative.R)
@@ -705,7 +761,11 @@ stats <- list(
   records = records,
   ytd = list(
     window    = win_lab,
+    window_days = cutoff_doy,   # length of the Jan-1-to-cutoff window, in days
+    cutoff_month = cutM, cutoff_day = cutD,   # structured cutoff — don't regex-parse `window`
+    min_days  = YTD_MIN_DAYS,
     n_years   = nrow(ytd),
+    has_ytd   = HAS_YTD,
     cur       = round(cur_ytd, 1),
     rank      = ytd_rank,
     is_record = is_record,
@@ -727,8 +787,9 @@ stats <- list(
     driest_year  = rain_driest$year,  driest_mm  = round(rain_driest$total),
     wet_month = month.name[rain_wet_mon$month], wet_month_mm = round(rain_wet_mon$mm),
     dry_month = month.name[rain_dry_mon$month], dry_month_mm = round(rain_dry_mon$mm),
-    local_yr0 = min(rain_local$year), local_yr1 = max(rain_local$year),
-    local_mean = round(mean(rain_local$total))
+    local_yr0 = if (HAS_LOCAL) min(rain_local$year) else NA_integer_,
+    local_yr1 = if (HAS_LOCAL) max(rain_local$year) else NA_integer_,
+    local_mean = if (HAS_LOCAL) round(mean(rain_local$total)) else NA_real_
   )
 )
 saveRDS(stats, file.path(PATHS$processed, "trend_stats.rds"))

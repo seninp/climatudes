@@ -7,6 +7,15 @@
 # ---- station id lookup (reverse of SITE$stations) ---------------------------
 station_id <- function(site, name) names(site$stations)[match(name, site$stations)]
 
+# ---- YTD standing, as plain text (shared by every per-site chapter AND the
+# cross-site comparison table in R/04_compare.R — one wording, so they can
+# never silently disagree) ----------------------------------------------------
+ytd_standing_text <- function(y) {
+  if (!isTRUE(y$has_ytd)) "too early to rank"
+  else if (isTRUE(y$is_record)) sprintf("#1 of %d — record", y$n_years)
+  else sprintf("#%d of %d", y$rank, y$n_years)
+}
+
 # ---- one-line upstream citation, shared by every plot caption ---------------
 caption_source_line <- function(cite) {
   scope <- if (nzchar(cite$scope_label)) paste0(", ", cite$scope_label) else ""
@@ -54,6 +63,11 @@ build_common_fills <- function(stats, site) {
   ex <- stats$extremes
   rn <- stats$rain
   y  <- stats$ytd
+  # A site may have no second station at all (e.g. Moscow/Voronezh, manually
+  # exported from AISORI-M with a single WMO index) — distinct from
+  # local_has_temp = FALSE, which still implies a real rain-only local station
+  # (e.g. Karlsruhe-Wolfartsweier).
+  HAS_LOCAL <- !is.null(site$local_station)
 
   both_sentence <- if (length(stats$both_years) == 0)
     "No single year managed to hit both extremes." else
@@ -72,7 +86,12 @@ build_common_fills <- function(stats, site) {
             paste(stats$raw_both_years, collapse = " and "),
             if (length(stats$raw_both_years) == 1) "alone" else "each")
 
-  ytd_sentence <- if (isTRUE(y$is_record)) {
+  ytd_sentence <- if (!isTRUE(y$has_ytd)) {
+    sprintf(paste0("%s's %d data covers too little of the year so far for a fair comparison ",
+                   "against every prior year's same window (fewer than %d days). ",
+                   "Check back once more of the year is recorded."),
+            site$reference_station, stats$cur_year, y$min_days)
+  } else if (isTRUE(y$is_record)) {
     lead      <- bold(sprintf("%d is the warmest %s in %d years", stats$cur_year, y$window, y$n_years))
     cur_val   <- bold(sprintf("%s °C", fmt(y$cur, 1)))
     anom_val  <- bold(sprintf("+%s °C above the long-term normal", fmt(y$cur_anom, 1)))
@@ -94,10 +113,16 @@ build_common_fills <- function(stats, site) {
 
   early_span <- sprintf("%d–%d", stats$yr0, stats$yr0 + 9)
 
-  # The local-station comparison paragraph: only meaningful where the local
-  # station actually carries a temperature record (Karlsruhe's does not — its
-  # local tier is rain-only, see R/sites/karlsruhe.R).
-  local_temp_paragraph <- if (site$local_has_temp)
+  # The local-station comparison paragraph: only meaningful where a local
+  # station exists AND actually carries a temperature record. Karlsruhe has a
+  # local station but no local temperature (its local tier is rain-only, see
+  # R/sites/karlsruhe.R); Moscow/Voronezh have no local station at all
+  # (manually exported from AISORI-M with a single WMO index).
+  local_temp_paragraph <- if (!HAS_LOCAL)
+    sprintf(paste0("This site has no second station — %s alone provides the temperature ",
+                   "trend and the daily climatology."),
+            site$reference_station) else
+  if (site$local_has_temp)
     sprintf(paste0("The local %s station, which %s, only covers %d→%d. Its slope over ",
                    "that shorter, more recent window is steeper (+%s °C/decade) — but so is ",
                    "%s’s over the same years (+%s °C/decade): recent decades warm faster, and ",
@@ -109,9 +134,21 @@ build_common_fills <- function(stats, site) {
                    "for this area. The local comparison here uses rainfall instead — see below."),
             site$local_station, site$reference_station)
 
-  fig1_local_caption <- if (site$local_has_temp)
+  fig1_local_caption <- if (HAS_LOCAL && site$local_has_temp)
     sprintf(" The green series (%s) %s; it tracks the long %s reference mean almost exactly.",
             site$local_station, site$local_relation_clause, site$reference_station) else ""
+
+  local_note_header <- bold(if (HAS_LOCAL) sprintf("Why %s?", site$local_station) else
+                             "Why only one station?")
+
+  rain_stations_alt <- if (HAS_LOCAL) sprintf("%s and %s", site$reference_station, site$local_station) else
+                        site$reference_station
+
+  stations_line <- if (HAS_LOCAL)
+    sprintf("Stations: %s (%s) and %s (%s).",
+            site$local_station, station_id(site, site$local_station),
+            site$reference_station, station_id(site, site$reference_station)) else
+    sprintf("Station: %s (%s).", site$reference_station, station_id(site, site$reference_station))
 
   ref_rec <- stats$records[[which(vapply(stats$records, function(r) r$station, character(1)) ==
                                    site$reference_station)]]
@@ -164,8 +201,7 @@ build_common_fills <- function(stats, site) {
     RAW_BOTH_SENTENCE = raw_both_sentence,
     YTD_WINDOW = y$window, YTD_NORMAL = fmt(y$normal, 1), YTD_SENTENCE = ytd_sentence,
     YTD_NYEARS = y$n_years, YTD_NYEARS_PRIOR = y$n_years - 1,
-    YTD_STANDING = if (isTRUE(y$is_record)) bold(sprintf("#1 of %d — record", y$n_years))
-                   else bold(sprintf("#%d of %d", y$rank, y$n_years)),
+    YTD_STANDING = bold(ytd_standing_text(y)),
     EXT_SPAN0 = sprintf("%d–%d", ex$yr0, ex$yr0 + 9),
     EXT_SPAN1 = sprintf("%d–%d", ex$yr1 - 9, ex$yr1),
     HOT_TX = ex$hot_thr, VHOT_TX = ex$vhot_thr, TROP_TX = ex$trop_thr,
@@ -181,20 +217,24 @@ build_common_fills <- function(stats, site) {
     DRIEST_YEAR = rn$driest_year, DRIEST_MM = rn$driest_mm,
     WET_MONTH = rn$wet_month, WET_MONTH_MM = rn$wet_month_mm,
     DRY_MONTH = rn$dry_month, DRY_MONTH_MM = rn$dry_month_mm,
-    MIN_DAYS = MIN_DAYS, MIN_YTD_DAYS = MIN_YTD_DAYS,
+    MIN_DAYS = MIN_DAYS, MIN_YTD_DAYS = y$min_days,
     # site facts
     CITY = site$city, REGION = site$region, COUNTRY = site$country,
-    REF_STATION = site$reference_station, LOCAL_STATION = site$local_station,
+    REF_STATION = site$reference_station,
+    LOCAL_STATION = if (HAS_LOCAL) site$local_station else "",
     REF_ID = station_id(site, site$reference_station),
-    LOCAL_ID = station_id(site, site$local_station),
+    LOCAL_ID = if (HAS_LOCAL) station_id(site, site$local_station) else "",
     SOURCE_NAME = site$citation$source_name,
     DATASET_LABEL = site$citation$dataset_label,
     CITATION_URL = site$citation$url,
     LICENCE = site$citation$licence,
     SINCE_PHRASE = since_phrase(stats$yr0),
     LOCAL_RATIONALE = site$local_rationale,
+    LOCAL_NOTE_HEADER = local_note_header,
+    RAIN_STATIONS_ALT = rain_stations_alt,
+    STATIONS_LINE = stations_line,
     LOCAL_TEMP_PARAGRAPH = local_temp_paragraph,
-    LOCAL_RELATION_CLAUSE = if (site$local_has_temp) site$local_relation_clause else "",
+    LOCAL_RELATION_CLAUSE = if (HAS_LOCAL && site$local_has_temp) site$local_relation_clause else "",
     FIG1_LOCAL_CAPTION = fig1_local_caption,
     CLOSING_RECORD_NOTE = closing_record_note
   )
