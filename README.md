@@ -15,8 +15,45 @@ eight sites, each from its own national open-data source:
 | [Moscow](#a-warming-climate-seen-from-moscow) | Russia | Roshydromet (AISORI-M, manual export) |
 | [Voronezh](#a-warming-climate-seen-from-voronezh) | Russia | Roshydromet (AISORI-M, manual export) |
 
-See also: [all eight, side by side](#all-eight-cities-side-by-side) — one comparison
-table and chart pulling each city's headline numbers together.
+<!-- BEGIN COMPARE -->
+
+## All eight cities, side by side
+
+Every chapter below uses the same variables, the same completeness rule (>= 330 valid
+days/year) and the same trend method (least-squares on annual means) — the numbers below are those
+same headline figures, gathered in one place rather than recomputed. These are raw warming rates:
+they are not adjusted for the very different length and era of each record. The record span in the
+table is the honest caveat, not a footnote to skip.
+
+![Warming rate compared across all eight cities, ranked fastest to slowest](outputs/compare/figures/warming_rate.png)
+
+<sub>Ranked fastest to slowest. Record span and length for each city are in the table below, not
+repeated on the bars — Santa Fe’s and Karlsruhe’s records run a century longer than Honolulu’s or
+Nouméa’s, so the same-looking rate rests on very different amounts of evidence.</sub>
+
+| City | Country | Record | Warming rate | Standing | Data current through |
+|---|---|---:|---:|---|---|
+| Voronezh | Russia | 1940→2025 (85 yr) | **+0.46 °C/decade** | #55 of 84 (2026, Jan 1 – Feb 28) | Feb 28, 2026 † |
+| Moscow | Russia | 1949→2025 (76 yr) | **+0.39 °C/decade** | #1 of 77 — record (2025, full year) | Dec 31, 2025 † |
+| Castanet-Tolosan | France | 1947→2025 (78 yr) | **+0.34 °C/decade** | #1 of 80 — record (2026, Jan 1 – Aug 12) | Aug 12, 2026 |
+| Honolulu | USA | 1950→2025 (75 yr) | **+0.20 °C/decade** | #18 of 84 (2026, Jan 1 – Aug 11) | Aug 11, 2026 |
+| Nouméa | France | 1951→2025 (74 yr) | **+0.19 °C/decade** | #5 of 76 (2026, Jan 1 – Aug 13) | Aug 13, 2026 |
+| Zurich | Switzerland | 1882→2025 (143 yr) | **+0.18 °C/decade** | #1 of 144 — record (2026, Jan 1 – Aug 12) | Aug 12, 2026 |
+| Karlsruhe | Germany | 1876→2025 (149 yr) | **+0.14 °C/decade** | #2 of 150 (2026, Jan 1 – Aug 12) | Aug 12, 2026 |
+| Santa Fe | USA | 1874→2025 (151 yr) | **+0.08 °C/decade** | #1 of 149 — record (2026, Jan 1 – Jun 30) | Jun 30, 2026 |
+
+† Moscow and Voronezh are manually exported from Roshydromet’s AISORI-M (login-gated, no automated
+refresh) — their "current through" date is not "today" the way the other six sites’ automated feeds
+are; see each city’s own "Why only one station?" note in its chapter below.
+
+Each row’s standing also names its own year and window in parentheses, since they are not all the
+same claim: the six automated sites all rank 2026 over comparable multi-month windows, but Moscow’s
+row ranks a complete, already-finished 2025 and Voronezh’s ranks a 59-day midwinter fragment — a
+"#55 of 84" over two months of winter is not the same kind of statement as an 8-month "#5 of 76".
+
+<sub>Figures and numbers above are generated — edit `R/04_compare.R`, not this block.</sub>
+
+<!-- END COMPARE -->
 
 Each site's report below is generated. `make all SITE=<site>` (a few seconds,
 including the download) refreshes that site's data, rebuilds its five
@@ -53,7 +90,7 @@ highlight the climate trend; the points are annual means. The green series (Auze
 
 At Toulouse-Blagnac — the station with the longest record (1947→2025) — the annual
 mean temperature rises by **+0.34 °C per decade**, about **+2.6 °C** over the
-whole period. The local Auzeville-Tolosane-INRAE station, which is the station on the edge of Castanet-Tolosan, only covers 2004→2025. Its slope over that shorter, more recent window is steeper (+0.83 °C/decade) — but so is Toulouse-Blagnac’s over the same years (+0.91 °C/decade): recent decades warm faster, and the local station sits almost exactly on the regional mean. The local and regional signals are the same.
+whole period. The local Auzeville-Tolosane-INRAE station only covers 2004→2025. Its slope over that shorter, more recent window is steeper (+0.83 °C/decade) — but so is Toulouse-Blagnac’s over the same years (+0.91 °C/decade): recent decades warm faster, and the local station sits almost exactly on the regional mean.
 
 ### This year, against every year before it
 
@@ -62,17 +99,13 @@ whole period. The local Auzeville-Tolosane-INRAE station, which is the station o
 <sub>Each bar is a year’s mean over the <em>same window</em> — <strong>Jan 1 – Aug 12</strong> —
 shown as its departure from the long-term normal (13.6 °C): red above, blue
 below. Comparing each year over the identical part-of-year is the only fair way to place
-a year that is still in progress against history. The bars swing from blue to red over
-the decades — the warming.</sub>
+any one year against every other. The bars swing from blue to red over
+the decades — the warming — and 2026 is the tallest of all.</sub>
 
 Measured like-for-like, **2026 is the warmest Jan 1 – Aug 12 in 80 years** at Toulouse-Blagnac: **16.8 °C** — +0.8 °C above the previous record (2025, 16.0 °C) and **+3.3 °C above the long-term normal** (13.6 °C). This is exactly the point of the chart: a year still in progress can already stand out against the whole record.
 
 > [!NOTE]
-> A partial year cannot be compared to other years’ *full-year* means — it is still
-> missing the warm late-summer and autumn tail. That is why 2026 appears on the
-> long-view chart above only as a marked, hollow “to date” point (seasonally incomplete,
-> so lower than its eventual annual figure), while its real, like-for-like standing is
-> the chart here.
+> A partial year cannot be compared to other years' full-year means — it is still missing the rest of the year. That is why 2026 appears on the long-view chart above only as a marked, hollow "to date" point (seasonally incomplete, so lower than its eventual annual figure), while its real, like-for-like standing is the chart here.
 
 ### Every year, day by day
 
@@ -81,7 +114,7 @@ Measured like-for-like, **2026 is the warmest Jan 1 – Aug 12 in 80 years** at 
 <sub>Each thin line is a single year’s daily mean temperature from January to December
 (1947–2025, 79 years), smoothed with a centred
 <strong>3-day rolling mean</strong> (each day = the average of itself
-±1 day(s)) to tame day-to-day jitter while keeping the shape. The dark line
+±1 day) to tame day-to-day jitter while keeping the shape. The dark line
 is the long-term daily normal; the bold red line is <strong>2026 so far</strong>.
 Years whose smoothed daily mean ever rose above <strong>+30 °C</strong> are
 highlighted in red and labelled; years that ever fell below
@@ -91,8 +124,7 @@ highlighted in red and labelled; years that ever fell below
 > **Hottest and coldest years.** Measured on the smoothed daily-mean curve,
 > **5** years pushed above +30 °C (2003, 2019, 2022, 2023, 2025) — all of them recent —
 > while **10** years dropped below -5 °C (1947, 1954, 1956, 1960, 1962, 1963, 1971, 1985, 1987, 2012), all but one before 2000.
-> No single year managed to hit both extremes. The hot extremes and the cold extremes fall in different
-> eras, which is itself a fingerprint of the warming trend. <sub>(If the threshold is applied instead to the raw, unsmoothed daily mean, 1947 and 1987 each touch both extremes.)</sub>
+> No single year managed to hit both extremes. The hot extremes and the cold extremes fall in different eras, which is itself a fingerprint of the warming trend. <sub>(If the threshold is applied instead to the raw, unsmoothed daily mean, 1947 and 1987 each touch both extremes.)</sub>
 
 ### The record days
 
@@ -127,7 +159,7 @@ At Toulouse-Blagnac, the all-time heat (2023-08-23) is far more recent than the 
 | 2025 | 10.7 | 20.6 | **15.6** |
 | 2026 *(to date)* | 11.5 | 22.2 | **16.8** |
 
-### Frost days halved, hot days doubled
+### Frost days down, hot days up
 
 A degree of warming is abstract; the count of extreme days is not. Comparing
 Toulouse-Blagnac’s first complete decade (1947–1956) with its last (2016–2025),
@@ -141,8 +173,7 @@ the everyday texture of the year has changed sharply:
 | Tropical nights (min ≥ 20 °C) | 4 | **21** |
 
 <sub>Counts of days per year crossing each threshold, averaged over the first and last
-complete decades. Frost is retreating just as heat advances — the same warming, read
-off the calendar instead of the thermometer.</sub>
+complete decades. Frost is retreating just as heat advances — the same warming, read off the calendar instead of the thermometer.</sub>
 
 ### What about the rain?
 
@@ -164,8 +195,7 @@ That contrast is the point. The very same daily records that show an unmistakabl
 <sub>Rain through the year: each grey line is one year’s monthly totals, the dark line the
 long-term monthly normal, the bold blue line 2026 so far. May is the
 wettest month on average (72 mm), July the driest
-(41 mm) — but the spread between years dwarfs the seasonal cycle, which is
-exactly why no annual trend emerges.</sub>
+(41 mm) — but the spread between years dwarfs the seasonal cycle, which is exactly why no annual trend emerges.</sub>
 
 ### Methodology
 
@@ -174,13 +204,14 @@ exactly why no annual trend emerges.</sub>
 - **Variables.** Minimum = `TN`, maximum = `TX`, mean = `(TN+TX)/2`, in °C;
   rainfall = `RR` (daily precipitation, in mm).
 - **Annual aggregation.** Arithmetic mean of daily values over each calendar year. The
-  long-term trend uses only complete years (≥ 330 valid days). The in-progress
-  year is shown separately — as a hollow “to date” marker on the trend chart, and (for a
-  fair record comparison) against the same calendar window (Jan 1 → cutoff) of every
-  prior year, keeping only years with ≥ 150 valid days in that window.
+  long-term trend uses only complete years (≥ 330 valid days). Where the current
+  year is still in progress, it is shown separately — as a hollow “to date” marker on the
+  trend chart, and (for a fair record comparison) against the same calendar window
+  (Jan 1 → cutoff) of every prior year, keeping only years with ≥ 150 valid
+  days in that window.
 - **Daily climatology.** Each year’s daily mean is smoothed with a centred
   3-day rolling mean (unweighted moving average, computed per year so
-  December never bleeds into January; the first/last 1 day(s) keep their raw
+  December never bleeds into January; the first/last 1 day keep their raw
   value) for legibility; leap days are aligned across years. The normal is the per-day
   average over all prior years.
 - **Threshold days.** Frost = `TN < 0`, hot day = `TX ≥ 30`, very hot =
@@ -229,7 +260,7 @@ highlight the climate trend; the points are annual means. The green series (Zür
 
 At Zürich-Fluntern — the station with the longest record (1882→2025) — the annual
 mean temperature rises by **+0.18 °C per decade**, about **+2.6 °C** over the
-whole period. The local Zürich-Affoltern station, which is MeteoSwiss’s automatic station in Zurich’s Affoltern district, only covers 1979→2025. Its slope over that shorter, more recent window is steeper (+0.49 °C/decade) — but so is Zürich-Fluntern’s over the same years (+0.50 °C/decade): recent decades warm faster, and the local station sits almost exactly on the regional mean. The local and regional signals are the same.
+whole period. The local Zürich-Affoltern station only covers 1979→2025. Its slope over that shorter, more recent window is steeper (+0.49 °C/decade) — but so is Zürich-Fluntern’s over the same years (+0.50 °C/decade): recent decades warm faster, and the local station sits almost exactly on the regional mean.
 
 ### This year, against every year before it
 
@@ -238,17 +269,13 @@ whole period. The local Zürich-Affoltern station, which is MeteoSwiss’s autom
 <sub>Each bar is a year’s mean over the <em>same window</em> — <strong>Jan 1 – Aug 12</strong> —
 shown as its departure from the long-term normal (9.3 °C): red above, blue
 below. Comparing each year over the identical part-of-year is the only fair way to place
-a year that is still in progress against history. The bars swing from blue to red over
-the decades — the warming.</sub>
+any one year against every other. The bars swing from blue to red over
+the decades — the warming — and 2026 is the tallest of all.</sub>
 
 Measured like-for-like, **2026 is the warmest Jan 1 – Aug 12 in 144 years** at Zürich-Fluntern: **12.8 °C** — +0.6 °C above the previous record (2022, 12.2 °C) and **+3.5 °C above the long-term normal** (9.3 °C). This is exactly the point of the chart: a year still in progress can already stand out against the whole record.
 
 > [!NOTE]
-> A partial year cannot be compared to other years’ *full-year* means — it is still
-> missing the warm late-summer and autumn tail. That is why 2026 appears on the
-> long-view chart above only as a marked, hollow “to date” point (seasonally incomplete,
-> so lower than its eventual annual figure), while its real, like-for-like standing is
-> the chart here.
+> A partial year cannot be compared to other years' full-year means — it is still missing the rest of the year. That is why 2026 appears on the long-view chart above only as a marked, hollow "to date" point (seasonally incomplete, so lower than its eventual annual figure), while its real, like-for-like standing is the chart here.
 
 ### Every year, day by day
 
@@ -257,7 +284,7 @@ Measured like-for-like, **2026 is the warmest Jan 1 – Aug 12 in 144 years** at
 <sub>Each thin line is a single year’s daily mean temperature from January to December
 (1881–2025, 145 years), smoothed with a centred
 <strong>3-day rolling mean</strong> (each day = the average of itself
-±1 day(s)) to tame day-to-day jitter while keeping the shape. The dark line
+±1 day) to tame day-to-day jitter while keeping the shape. The dark line
 is the long-term daily normal; the bold red line is <strong>2026 so far</strong>.
 Years whose smoothed daily mean ever rose above <strong>+30 °C</strong> are
 highlighted in red and labelled; years that ever fell below
@@ -267,8 +294,7 @@ highlighted in red and labelled; years that ever fell below
 > **Hottest and coldest years.** Measured on the smoothed daily-mean curve,
 > **0** years pushed above +30 °C —
 > while **118** years dropped below -5 °C (1882, 1883, 1885, 1886, 1887, 1888, 1889, 1890, 1891, 1892, 1893, 1894, 1895, 1896, 1897, 1898, 1899, 1900, 1901, 1902, 1903, 1904, 1905, 1906, 1907, 1908, 1909, 1911, 1912, 1914, 1915, 1917, 1918, 1919, 1920, 1921, 1922, 1923, 1924, 1925, 1926, 1927, 1929, 1930, 1931, 1932, 1933, 1934, 1935, 1936, 1937, 1938, 1939, 1940, 1941, 1942, 1944, 1945, 1946, 1947, 1948, 1949, 1950, 1952, 1953, 1954, 1956, 1957, 1958, 1960, 1961, 1962, 1963, 1964, 1966, 1967, 1968, 1969, 1970, 1971, 1972, 1973, 1975, 1976, 1979, 1980, 1981, 1982, 1983, 1984, 1985, 1986, 1987, 1988, 1991, 1992, 1993, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2005, 2006, 2007, 2009, 2010, 2012, 2013, 2014, 2017, 2018, 2021, 2022).
-> No single year managed to hit both extremes. The hot extremes and the cold extremes fall in different
-> eras, which is itself a fingerprint of the warming trend. <sub>(On the raw, unsmoothed daily mean, no year touches both extremes.)</sub>
+> No single year managed to hit both extremes.  <sub>(On the raw, unsmoothed daily mean, no year touches both extremes.)</sub>
 
 ### The record days
 
@@ -303,7 +329,7 @@ At Zürich-Fluntern, the all-time heat (2026-06-27) is far more recent than the 
 | 2025 | 7.0 | 14.9 | **11.0** |
 | 2026 *(to date)* | 7.8 | 17.7 | **12.8** |
 
-### Frost days halved, hot days doubled
+### Frost days down, hot days up
 
 A degree of warming is abstract; the count of extreme days is not. Comparing
 Zürich-Fluntern’s first complete decade (1882–1891) with its last (2016–2025),
@@ -317,8 +343,7 @@ the everyday texture of the year has changed sharply:
 | Tropical nights (min ≥ 20 °C) | 0 | **2** |
 
 <sub>Counts of days per year crossing each threshold, averaged over the first and last
-complete decades. Frost is retreating just as heat advances — the same warming, read
-off the calendar instead of the thermometer.</sub>
+complete decades. Frost is retreating just as heat advances — the same warming, read off the calendar instead of the thermometer.</sub>
 
 ### What about the rain?
 
@@ -340,8 +365,7 @@ That contrast is the point. The very same daily records that show an unmistakabl
 <sub>Rain through the year: each grey line is one year’s monthly totals, the dark line the
 long-term monthly normal, the bold blue line 2026 so far. June is the
 wettest month on average (128 mm), February the driest
-(61 mm) — but the spread between years dwarfs the seasonal cycle, which is
-exactly why no annual trend emerges.</sub>
+(61 mm) — but the spread between years dwarfs the seasonal cycle, which is exactly why no annual trend emerges.</sub>
 
 ### Methodology
 
@@ -350,13 +374,14 @@ exactly why no annual trend emerges.</sub>
 - **Variables.** Minimum = `TN`, maximum = `TX`, mean = `(TN+TX)/2`, in °C;
   rainfall = `RR` (daily precipitation, in mm).
 - **Annual aggregation.** Arithmetic mean of daily values over each calendar year. The
-  long-term trend uses only complete years (≥ 330 valid days). The in-progress
-  year is shown separately — as a hollow “to date” marker on the trend chart, and (for a
-  fair record comparison) against the same calendar window (Jan 1 → cutoff) of every
-  prior year, keeping only years with ≥ 150 valid days in that window.
+  long-term trend uses only complete years (≥ 330 valid days). Where the current
+  year is still in progress, it is shown separately — as a hollow “to date” marker on the
+  trend chart, and (for a fair record comparison) against the same calendar window
+  (Jan 1 → cutoff) of every prior year, keeping only years with ≥ 150 valid
+  days in that window.
 - **Daily climatology.** Each year’s daily mean is smoothed with a centred
   3-day rolling mean (unweighted moving average, computed per year so
-  December never bleeds into January; the first/last 1 day(s) keep their raw
+  December never bleeds into January; the first/last 1 day keep their raw
   value) for legibility; leap days are aligned across years. The normal is the per-day
   average over all prior years.
 - **Threshold days.** Frost = `TN < 0`, hot day = `TX ≥ 30`, very hot =
@@ -409,22 +434,18 @@ whole period. Karlsruhe-Wolfartsweier carries no temperature record; Rheinstette
 
 ### This year, against every year before it
 
-![Per-year mean over the same Jan-to-cutoff window, as a departure from the long-term normal, with 2026 the largest bar](outputs/karlsruhe/figures/temperature_ytd.png)
+![Per-year mean over the same Jan-to-cutoff window, as a departure from the long-term normal, with 2026 highlighted](outputs/karlsruhe/figures/temperature_ytd.png)
 
 <sub>Each bar is a year’s mean over the <em>same window</em> — <strong>Jan 1 – Aug 12</strong> —
 shown as its departure from the long-term normal (10.9 °C): red above, blue
 below. Comparing each year over the identical part-of-year is the only fair way to place
-a year that is still in progress against history. The bars swing from blue to red over
+any one year against every other. The bars swing from blue to red over
 the decades — the warming.</sub>
 
 Measured like-for-like over Jan 1 – Aug 12, 2026 currently ranks **#2 of 150** at Rheinstetten (13.3 °C). The warmest such window on record remains 2007 (13.6 °C).
 
 > [!NOTE]
-> A partial year cannot be compared to other years’ *full-year* means — it is still
-> missing the warm late-summer and autumn tail. That is why 2026 appears on the
-> long-view chart above only as a marked, hollow “to date” point (seasonally incomplete,
-> so lower than its eventual annual figure), while its real, like-for-like standing is
-> the chart here.
+> A partial year cannot be compared to other years' full-year means — it is still missing the rest of the year. That is why 2026 appears on the long-view chart above only as a marked, hollow "to date" point (seasonally incomplete, so lower than its eventual annual figure), while its real, like-for-like standing is the chart here.
 
 ### Every year, day by day
 
@@ -433,7 +454,7 @@ Measured like-for-like over Jan 1 – Aug 12, 2026 currently ranks **#2 of 150**
 <sub>Each thin line is a single year’s daily mean temperature from January to December
 (1876–2025, 150 years), smoothed with a centred
 <strong>3-day rolling mean</strong> (each day = the average of itself
-±1 day(s)) to tame day-to-day jitter while keeping the shape. The dark line
+±1 day) to tame day-to-day jitter while keeping the shape. The dark line
 is the long-term daily normal; the bold red line is <strong>2026 so far</strong>.
 Years whose smoothed daily mean ever rose above <strong>+30 °C</strong> are
 highlighted in red and labelled; years that ever fell below
@@ -443,8 +464,7 @@ highlighted in red and labelled; years that ever fell below
 > **Hottest and coldest years.** Measured on the smoothed daily-mean curve,
 > **0** years pushed above +30 °C —
 > while **107** years dropped below -5 °C (1876, 1878, 1879, 1880, 1881, 1882, 1883, 1885, 1886, 1887, 1888, 1889, 1890, 1891, 1892, 1893, 1894, 1895, 1896, 1899, 1901, 1902, 1903, 1904, 1905, 1906, 1907, 1908, 1909, 1911, 1912, 1914, 1915, 1917, 1918, 1919, 1920, 1921, 1922, 1923, 1924, 1925, 1926, 1927, 1929, 1931, 1932, 1933, 1934, 1935, 1938, 1939, 1940, 1941, 1942, 1943, 1945, 1946, 1947, 1948, 1950, 1952, 1953, 1954, 1956, 1957, 1959, 1960, 1961, 1962, 1963, 1964, 1966, 1967, 1968, 1969, 1970, 1971, 1972, 1973, 1976, 1978, 1979, 1980, 1981, 1982, 1985, 1986, 1987, 1991, 1992, 1993, 1995, 1996, 1997, 2002, 2003, 2005, 2006, 2009, 2010, 2011, 2012, 2017, 2018, 2021, 2022).
-> No single year managed to hit both extremes. The hot extremes and the cold extremes fall in different
-> eras, which is itself a fingerprint of the warming trend. <sub>(If the threshold is applied instead to the raw, unsmoothed daily mean, 1952 and 2003 each touch both extremes.)</sub>
+> No single year managed to hit both extremes.  <sub>(If the threshold is applied instead to the raw, unsmoothed daily mean, 1952 and 2003 each touch both extremes.)</sub>
 
 ### The record days
 
@@ -477,7 +497,7 @@ At Rheinstetten, the all-time heat (2026-06-27) is far more recent than the all-
 | 2025 | 6.3 | 17.0 | **11.6** |
 | 2026 *(to date)* | 7.1 | 19.4 | **13.3** |
 
-### Frost days halved, hot days doubled
+### Frost days down, hot days up
 
 A degree of warming is abstract; the count of extreme days is not. Comparing
 Rheinstetten’s first complete decade (1876–1885) with its last (2016–2025),
@@ -491,8 +511,7 @@ the everyday texture of the year has changed sharply:
 | Tropical nights (min ≥ 20 °C) | 1 | **1** |
 
 <sub>Counts of days per year crossing each threshold, averaged over the first and last
-complete decades. Frost is retreating just as heat advances — the same warming, read
-off the calendar instead of the thermometer.</sub>
+complete decades. Frost is retreating just as heat advances — the same warming, read off the calendar instead of the thermometer.</sub>
 
 ### What about the rain?
 
@@ -507,15 +526,14 @@ Rheinstetten shows **a statistically significant trend (-11 mm/decade, p = 0.00)
 large — from 456 mm (1959) to 1452 mm (1882) —
 but the long-run slope (-11 mm/decade) is measurable and statistically significant (p = 0.00).</sub>
 
-Rainfall tells its own story here: unlike most of the sites in this series, Rheinstetten shows a real, if much smaller and slower, long-run trend toward drier conditions (-11 mm/decade, p = 0.00) — alongside the much larger and faster warming signal above.
+Rainfall tells its own story here: Rheinstetten shows a real, if much smaller and slower, long-run trend toward drier conditions (-11 mm/decade, p = 0.00) — alongside the much larger and faster warming signal above.
 
 ![Monthly rainfall through the year at Rheinstetten, one line per year](outputs/karlsruhe/figures/rain_climatology.png)
 
 <sub>Rain through the year: each grey line is one year’s monthly totals, the dark line the
 long-term monthly normal, the bold blue line 2026 so far. June is the
 wettest month on average (82 mm), February the driest
-(52 mm) — but the spread between years dwarfs the seasonal cycle, which is
-exactly why no annual trend emerges.</sub>
+(52 mm) — but the spread between years is why that slow trend is easy to miss from the monthly shape alone.</sub>
 
 ### Methodology
 
@@ -524,13 +542,14 @@ exactly why no annual trend emerges.</sub>
 - **Variables.** Minimum = `TN`, maximum = `TX`, mean = `(TN+TX)/2`, in °C;
   rainfall = `RR` (daily precipitation, in mm).
 - **Annual aggregation.** Arithmetic mean of daily values over each calendar year. The
-  long-term trend uses only complete years (≥ 330 valid days). The in-progress
-  year is shown separately — as a hollow “to date” marker on the trend chart, and (for a
-  fair record comparison) against the same calendar window (Jan 1 → cutoff) of every
-  prior year, keeping only years with ≥ 150 valid days in that window.
+  long-term trend uses only complete years (≥ 330 valid days). Where the current
+  year is still in progress, it is shown separately — as a hollow “to date” marker on the
+  trend chart, and (for a fair record comparison) against the same calendar window
+  (Jan 1 → cutoff) of every prior year, keeping only years with ≥ 150 valid
+  days in that window.
 - **Daily climatology.** Each year’s daily mean is smoothed with a centred
   3-day rolling mean (unweighted moving average, computed per year so
-  December never bleeds into January; the first/last 1 day(s) keep their raw
+  December never bleeds into January; the first/last 1 day keep their raw
   value) for legibility; leap days are aligned across years. The normal is the per-day
   average over all prior years.
 - **Threshold days.** Frost = `TN < 0`, hot day = `TX ≥ 30`, very hot =
@@ -579,7 +598,7 @@ highlight the climate trend; the points are annual means. The green series (Sant
 
 At Santa Fe — the station with the longest record (1874→2025) — the annual
 mean temperature rises by **+0.08 °C per decade**, about **+1.2 °C** over the
-whole period. The local Santa Fe Airport station, which is Santa Fe County Municipal Airport, a few miles southwest of downtown, only covers 1942→2025. Its slope over that shorter, more recent window is steeper (+0.16 °C/decade) — but so is Santa Fe’s over the same years (+0.11 °C/decade): recent decades warm faster, and the local station sits almost exactly on the regional mean. The local and regional signals are the same.
+whole period. The local Santa Fe Airport station only covers 1942→2025. Its slope over that shorter, more recent window is steeper (+0.16 °C/decade) — but so is Santa Fe’s over the same years (+0.11 °C/decade): recent decades warm faster, and the local station sits almost exactly on the regional mean.
 
 ### This year, against every year before it
 
@@ -588,17 +607,13 @@ whole period. The local Santa Fe Airport station, which is Santa Fe County Munic
 <sub>Each bar is a year’s mean over the <em>same window</em> — <strong>Jan 1 – Jun 30</strong> —
 shown as its departure from the long-term normal (7.7 °C): red above, blue
 below. Comparing each year over the identical part-of-year is the only fair way to place
-a year that is still in progress against history. The bars swing from blue to red over
-the decades — the warming.</sub>
+any one year against every other. The bars swing from blue to red over
+the decades — the warming — and 2026 is the tallest of all.</sub>
 
 Measured like-for-like, **2026 is the warmest Jan 1 – Jun 30 in 149 years** at Santa Fe: **10.9 °C** — +0.3 °C above the previous record (1879, 10.6 °C) and **+3.3 °C above the long-term normal** (7.7 °C). This is exactly the point of the chart: a year still in progress can already stand out against the whole record.
 
 > [!NOTE]
-> A partial year cannot be compared to other years’ *full-year* means — it is still
-> missing the warm late-summer and autumn tail. That is why 2026 appears on the
-> long-view chart above only as a marked, hollow “to date” point (seasonally incomplete,
-> so lower than its eventual annual figure), while its real, like-for-like standing is
-> the chart here.
+> A partial year cannot be compared to other years' full-year means — it is still missing the rest of the year. That is why 2026 appears on the long-view chart above only as a marked, hollow "to date" point (seasonally incomplete, so lower than its eventual annual figure), while its real, like-for-like standing is the chart here.
 
 ### Every year, day by day
 
@@ -607,7 +622,7 @@ Measured like-for-like, **2026 is the warmest Jan 1 – Jun 30 in 149 years** at
 <sub>Each thin line is a single year’s daily mean temperature from January to December
 (1874–2025, 152 years), smoothed with a centred
 <strong>3-day rolling mean</strong> (each day = the average of itself
-±1 day(s)) to tame day-to-day jitter while keeping the shape. The dark line
+±1 day) to tame day-to-day jitter while keeping the shape. The dark line
 is the long-term daily normal; the bold red line is <strong>2026 so far</strong>.
 Years whose smoothed daily mean ever rose above <strong>+30 °C</strong> are
 highlighted in red and labelled; years that ever fell below
@@ -617,8 +632,7 @@ highlighted in red and labelled; years that ever fell below
 > **Hottest and coldest years.** Measured on the smoothed daily-mean curve,
 > **0** years pushed above +30 °C —
 > while **148** years dropped below -5 °C (1874, 1875, 1876, 1877, 1878, 1879, 1880, 1881, 1882, 1883, 1884, 1885, 1886, 1887, 1888, 1889, 1890, 1891, 1892, 1893, 1894, 1895, 1896, 1897, 1898, 1899, 1900, 1901, 1902, 1903, 1904, 1905, 1906, 1907, 1908, 1909, 1910, 1911, 1912, 1913, 1914, 1915, 1916, 1917, 1918, 1919, 1920, 1921, 1922, 1923, 1924, 1925, 1926, 1927, 1928, 1929, 1930, 1931, 1932, 1933, 1934, 1935, 1936, 1937, 1938, 1939, 1940, 1941, 1942, 1944, 1945, 1946, 1947, 1948, 1949, 1950, 1951, 1952, 1953, 1954, 1955, 1956, 1957, 1958, 1959, 1960, 1961, 1962, 1963, 1964, 1965, 1966, 1967, 1968, 1969, 1970, 1971, 1972, 1973, 1974, 1975, 1976, 1977, 1978, 1979, 1982, 1983, 1984, 1985, 1986, 1987, 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025).
-> No single year managed to hit both extremes. The hot extremes and the cold extremes fall in different
-> eras, which is itself a fingerprint of the warming trend. <sub>(On the raw, unsmoothed daily mean, no year touches both extremes.)</sub>
+> No single year managed to hit both extremes.  <sub>(On the raw, unsmoothed daily mean, no year touches both extremes.)</sub>
 
 ### The record days
 
@@ -653,7 +667,7 @@ At Santa Fe, the all-time heat (1994-06-26) is far more recent than the all-time
 | 2025 | 2.8 | 20.2 | **11.5** |
 | 2026 *(to date)* | 1.7 | 20.2 | **10.9** |
 
-### Frost days halved, hot days doubled
+### Frost days up, hot days up
 
 A degree of warming is abstract; the count of extreme days is not. Comparing
 Santa Fe’s first complete decade (1874–1883) with its last (2016–2025),
@@ -667,8 +681,7 @@ the everyday texture of the year has changed sharply:
 | Tropical nights (min ≥ 20 °C) | 0 | **0** |
 
 <sub>Counts of days per year crossing each threshold, averaged over the first and last
-complete decades. Frost is retreating just as heat advances — the same warming, read
-off the calendar instead of the thermometer.</sub>
+complete decades. Both counts have risen here — a reminder that year-to-year extreme-day counts are noisy even where the underlying mean trend, shown above, is unambiguous.</sub>
 
 ### What about the rain?
 
@@ -683,15 +696,14 @@ Santa Fe shows **a statistically significant trend (-3 mm/decade, p = 0.04)**.
 large — from 70 mm (1883) to 553 mm (1881) —
 but the long-run slope (-3 mm/decade) is measurable and statistically significant (p = 0.04).</sub>
 
-Rainfall tells its own story here: unlike most of the sites in this series, Santa Fe shows a real, if much smaller and slower, long-run trend toward drier conditions (-3 mm/decade, p = 0.04) — alongside the much larger and faster warming signal above.
+Rainfall tells its own story here: Santa Fe shows a real, if much smaller and slower, long-run trend toward drier conditions (-3 mm/decade, p = 0.04) — alongside the much larger and faster warming signal above.
 
 ![Monthly rainfall through the year at Santa Fe, one line per year](outputs/santafe/figures/rain_climatology.png)
 
 <sub>Rain through the year: each grey line is one year’s monthly totals, the dark line the
 long-term monthly normal, the bold blue line 2026 so far. July is the
 wettest month on average (59 mm), January the driest
-(16 mm) — but the spread between years dwarfs the seasonal cycle, which is
-exactly why no annual trend emerges.</sub>
+(16 mm) — but the spread between years is why that slow trend is easy to miss from the monthly shape alone.</sub>
 
 ### Methodology
 
@@ -700,13 +712,14 @@ exactly why no annual trend emerges.</sub>
 - **Variables.** Minimum = `TN`, maximum = `TX`, mean = `(TN+TX)/2`, in °C;
   rainfall = `RR` (daily precipitation, in mm).
 - **Annual aggregation.** Arithmetic mean of daily values over each calendar year. The
-  long-term trend uses only complete years (≥ 330 valid days). The in-progress
-  year is shown separately — as a hollow “to date” marker on the trend chart, and (for a
-  fair record comparison) against the same calendar window (Jan 1 → cutoff) of every
-  prior year, keeping only years with ≥ 150 valid days in that window.
+  long-term trend uses only complete years (≥ 330 valid days). Where the current
+  year is still in progress, it is shown separately — as a hollow “to date” marker on the
+  trend chart, and (for a fair record comparison) against the same calendar window
+  (Jan 1 → cutoff) of every prior year, keeping only years with ≥ 150 valid
+  days in that window.
 - **Daily climatology.** Each year’s daily mean is smoothed with a centred
   3-day rolling mean (unweighted moving average, computed per year so
-  December never bleeds into January; the first/last 1 day(s) keep their raw
+  December never bleeds into January; the first/last 1 day keep their raw
   value) for legibility; leap days are aligned across years. The normal is the per-day
   average over all prior years.
 - **Threshold days.** Frost = `TN < 0`, hot day = `TX ≥ 30`, very hot =
@@ -759,22 +772,18 @@ whole period. Honolulu-Moanalua carries no temperature record; Honolulu Airport 
 
 ### This year, against every year before it
 
-![Per-year mean over the same Jan-to-cutoff window, as a departure from the long-term normal, with 2026 the largest bar](outputs/honolulu/figures/temperature_ytd.png)
+![Per-year mean over the same Jan-to-cutoff window, as a departure from the long-term normal, with 2026 highlighted](outputs/honolulu/figures/temperature_ytd.png)
 
 <sub>Each bar is a year’s mean over the <em>same window</em> — <strong>Jan 1 – Aug 11</strong> —
 shown as its departure from the long-term normal (24.8 °C): red above, blue
 below. Comparing each year over the identical part-of-year is the only fair way to place
-a year that is still in progress against history. The bars swing from blue to red over
+any one year against every other. The bars swing from blue to red over
 the decades — the warming.</sub>
 
 Measured like-for-like over Jan 1 – Aug 11, 2026 currently ranks **#18 of 84** at Honolulu Airport (25.3 °C). The warmest such window on record remains 2025 (26.0 °C).
 
 > [!NOTE]
-> A partial year cannot be compared to other years’ *full-year* means — it is still
-> missing the warm late-summer and autumn tail. That is why 2026 appears on the
-> long-view chart above only as a marked, hollow “to date” point (seasonally incomplete,
-> so lower than its eventual annual figure), while its real, like-for-like standing is
-> the chart here.
+> A partial year cannot be compared to other years' full-year means — it is still missing the rest of the year. That is why 2026 appears on the long-view chart above only as a marked, hollow "to date" point (seasonally incomplete, so lower than its eventual annual figure), while its real, like-for-like standing is the chart here.
 
 ### Every year, day by day
 
@@ -783,7 +792,7 @@ Measured like-for-like over Jan 1 – Aug 11, 2026 currently ranks **#18 of 84**
 <sub>Each thin line is a single year’s daily mean temperature from January to December
 (1940–2025, 86 years), smoothed with a centred
 <strong>3-day rolling mean</strong> (each day = the average of itself
-±1 day(s)) to tame day-to-day jitter while keeping the shape. The dark line
+±1 day) to tame day-to-day jitter while keeping the shape. The dark line
 is the long-term daily normal; the bold red line is <strong>2026 so far</strong>.
 Years whose smoothed daily mean ever rose above <strong>+30 °C</strong> are
 highlighted in red and labelled; years that ever fell below
@@ -793,8 +802,7 @@ highlighted in red and labelled; years that ever fell below
 > **Hottest and coldest years.** Measured on the smoothed daily-mean curve,
 > **2** years pushed above +30 °C (1987, 2019) —
 > while **0** years dropped below -5 °C.
-> No single year managed to hit both extremes. The hot extremes and the cold extremes fall in different
-> eras, which is itself a fingerprint of the warming trend. <sub>(On the raw, unsmoothed daily mean, no year touches both extremes.)</sub>
+> No single year managed to hit both extremes.  <sub>(On the raw, unsmoothed daily mean, no year touches both extremes.)</sub>
 
 ### The record days
 
@@ -827,7 +835,7 @@ At Honolulu Airport, the all-time heat (1994-09-19) is far more recent than the 
 | 2025 | 22.7 | 29.9 | **26.3** |
 | 2026 *(to date)* | 22.0 | 28.6 | **25.3** |
 
-### Frost days halved, hot days doubled
+### Frost days stay at zero, hot days up
 
 A degree of warming is abstract; the count of extreme days is not. Comparing
 Honolulu Airport’s first complete decade (1950–1959) with its last (2016–2025),
@@ -841,8 +849,7 @@ the everyday texture of the year has changed sharply:
 | Tropical nights (min ≥ 20 °C) | 272 | **317** |
 
 <sub>Counts of days per year crossing each threshold, averaged over the first and last
-complete decades. Frost is retreating just as heat advances — the same warming, read
-off the calendar instead of the thermometer.</sub>
+complete decades. There was never a frost season here to retreat; the change shows up entirely on the hot side of the ledger.</sub>
 
 ### What about the rain?
 
@@ -857,15 +864,14 @@ Honolulu Airport shows **a statistically significant trend (-24 mm/decade, p = 0
 large — from 116 mm (1998) to 1087 mm (1965) —
 but the long-run slope (-24 mm/decade) is measurable and statistically significant (p = 0.02).</sub>
 
-Rainfall tells its own story here: unlike most of the sites in this series, Honolulu Airport shows a real, if much smaller and slower, long-run trend toward drier conditions (-24 mm/decade, p = 0.02) — alongside the much larger and faster warming signal above.
+Rainfall tells its own story here: Honolulu Airport shows a real, if much smaller and slower, long-run trend toward drier conditions (-24 mm/decade, p = 0.02) — alongside the much larger and faster warming signal above.
 
 ![Monthly rainfall through the year at Honolulu Airport, one line per year](outputs/honolulu/figures/rain_climatology.png)
 
 <sub>Rain through the year: each grey line is one year’s monthly totals, the dark line the
 long-term monthly normal, the bold blue line 2026 so far. January is the
 wettest month on average (79 mm), June the driest
-(10 mm) — but the spread between years dwarfs the seasonal cycle, which is
-exactly why no annual trend emerges.</sub>
+(10 mm) — but the spread between years is why that slow trend is easy to miss from the monthly shape alone.</sub>
 
 ### Methodology
 
@@ -874,13 +880,14 @@ exactly why no annual trend emerges.</sub>
 - **Variables.** Minimum = `TN`, maximum = `TX`, mean = `(TN+TX)/2`, in °C;
   rainfall = `RR` (daily precipitation, in mm).
 - **Annual aggregation.** Arithmetic mean of daily values over each calendar year. The
-  long-term trend uses only complete years (≥ 330 valid days). The in-progress
-  year is shown separately — as a hollow “to date” marker on the trend chart, and (for a
-  fair record comparison) against the same calendar window (Jan 1 → cutoff) of every
-  prior year, keeping only years with ≥ 150 valid days in that window.
+  long-term trend uses only complete years (≥ 330 valid days). Where the current
+  year is still in progress, it is shown separately — as a hollow “to date” marker on the
+  trend chart, and (for a fair record comparison) against the same calendar window
+  (Jan 1 → cutoff) of every prior year, keeping only years with ≥ 150 valid
+  days in that window.
 - **Daily climatology.** Each year’s daily mean is smoothed with a centred
   3-day rolling mean (unweighted moving average, computed per year so
-  December never bleeds into January; the first/last 1 day(s) keep their raw
+  December never bleeds into January; the first/last 1 day keep their raw
   value) for legibility; leap days are aligned across years. The normal is the per-day
   average over all prior years.
 - **Threshold days.** Frost = `TN < 0`, hot day = `TX ≥ 30`, very hot =
@@ -929,26 +936,22 @@ highlight the climate trend; the points are annual means. The green series (Noum
 
 At Nouméa — the station with the longest record (1951→2025) — the annual
 mean temperature rises by **+0.19 °C per decade**, about **+1.4 °C** over the
-whole period. The local Nouméa-Magenta station, which is Nouméa's in-town domestic airfield, Magenta, only covers 1964→2025. Its slope over that shorter, more recent window is steeper (+0.25 °C/decade) — but so is Nouméa’s over the same years (+0.23 °C/decade): recent decades warm faster, and the local station sits almost exactly on the regional mean. The local and regional signals are the same.
+whole period. The local Nouméa-Magenta station only covers 1964→2025. Its slope over that shorter, more recent window is steeper (+0.25 °C/decade) — but so is Nouméa’s over the same years (+0.23 °C/decade): recent decades warm faster, and the local station sits almost exactly on the regional mean.
 
 ### This year, against every year before it
 
-![Per-year mean over the same Jan-to-cutoff window, as a departure from the long-term normal, with 2026 the largest bar](outputs/noumea/figures/temperature_ytd.png)
+![Per-year mean over the same Jan-to-cutoff window, as a departure from the long-term normal, with 2026 highlighted](outputs/noumea/figures/temperature_ytd.png)
 
 <sub>Each bar is a year’s mean over the <em>same window</em> — <strong>Jan 1 – Aug 13</strong> —
 shown as its departure from the long-term normal (23.7 °C): red above, blue
 below. Comparing each year over the identical part-of-year is the only fair way to place
-a year that is still in progress against history. The bars swing from blue to red over
+any one year against every other. The bars swing from blue to red over
 the decades — the warming.</sub>
 
 Measured like-for-like over Jan 1 – Aug 13, 2026 currently ranks **#5 of 76** at Nouméa (24.6 °C). The warmest such window on record remains 2022 (25.1 °C).
 
 > [!NOTE]
-> A partial year cannot be compared to other years’ *full-year* means — it is still
-> missing the warm late-summer and autumn tail. That is why 2026 appears on the
-> long-view chart above only as a marked, hollow “to date” point (seasonally incomplete,
-> so lower than its eventual annual figure), while its real, like-for-like standing is
-> the chart here.
+> A partial year cannot be compared to other years' full-year means — it is still missing the rest of the year. That is why 2026 appears on the long-view chart above only as a marked, hollow "to date" point (seasonally incomplete, so lower than its eventual annual figure), while its real, like-for-like standing is the chart here.
 
 ### Every year, day by day
 
@@ -957,7 +960,7 @@ Measured like-for-like over Jan 1 – Aug 13, 2026 currently ranks **#5 of 76** 
 <sub>Each thin line is a single year’s daily mean temperature from January to December
 (1950–2025, 76 years), smoothed with a centred
 <strong>3-day rolling mean</strong> (each day = the average of itself
-±1 day(s)) to tame day-to-day jitter while keeping the shape. The dark line
+±1 day) to tame day-to-day jitter while keeping the shape. The dark line
 is the long-term daily normal; the bold red line is <strong>2026 so far</strong>.
 Years whose smoothed daily mean ever rose above <strong>+30 °C</strong> are
 highlighted in red and labelled; years that ever fell below
@@ -967,8 +970,7 @@ highlighted in red and labelled; years that ever fell below
 > **Hottest and coldest years.** Measured on the smoothed daily-mean curve,
 > **12** years pushed above +30 °C (1954, 1986, 1991, 1992, 1995, 1996, 2009, 2010, 2015, 2019, 2020, 2024) —
 > while **0** years dropped below -5 °C.
-> No single year managed to hit both extremes. The hot extremes and the cold extremes fall in different
-> eras, which is itself a fingerprint of the warming trend. <sub>(On the raw, unsmoothed daily mean, no year touches both extremes.)</sub>
+> No single year managed to hit both extremes.  <sub>(On the raw, unsmoothed daily mean, no year touches both extremes.)</sub>
 
 ### The record days
 
@@ -1003,7 +1005,7 @@ At Nouméa, the all-time heat (1986-01-25) is far more recent than the all-time 
 | 2025 | 21.5 | 28.1 | **24.8** |
 | 2026 *(to date)* | 21.4 | 27.8 | **24.6** |
 
-### Frost days halved, hot days doubled
+### Frost days stay at zero, hot days up
 
 A degree of warming is abstract; the count of extreme days is not. Comparing
 Nouméa’s first complete decade (1951–1960) with its last (2016–2025),
@@ -1017,8 +1019,7 @@ the everyday texture of the year has changed sharply:
 | Tropical nights (min ≥ 20 °C) | 194 | **237** |
 
 <sub>Counts of days per year crossing each threshold, averaged over the first and last
-complete decades. Frost is retreating just as heat advances — the same warming, read
-off the calendar instead of the thermometer.</sub>
+complete decades. There was never a frost season here to retreat; the change shows up entirely on the hot side of the ledger.</sub>
 
 ### What about the rain?
 
@@ -1040,8 +1041,7 @@ That contrast is the point. The very same daily records that show an unmistakabl
 <sub>Rain through the year: each grey line is one year’s monthly totals, the dark line the
 long-term monthly normal, the bold blue line 2026 so far. March is the
 wettest month on average (143 mm), September the driest
-(43 mm) — but the spread between years dwarfs the seasonal cycle, which is
-exactly why no annual trend emerges.</sub>
+(43 mm) — but the spread between years dwarfs the seasonal cycle, which is exactly why no annual trend emerges.</sub>
 
 ### Methodology
 
@@ -1050,13 +1050,14 @@ exactly why no annual trend emerges.</sub>
 - **Variables.** Minimum = `TN`, maximum = `TX`, mean = `(TN+TX)/2`, in °C;
   rainfall = `RR` (daily precipitation, in mm).
 - **Annual aggregation.** Arithmetic mean of daily values over each calendar year. The
-  long-term trend uses only complete years (≥ 330 valid days). The in-progress
-  year is shown separately — as a hollow “to date” marker on the trend chart, and (for a
-  fair record comparison) against the same calendar window (Jan 1 → cutoff) of every
-  prior year, keeping only years with ≥ 150 valid days in that window.
+  long-term trend uses only complete years (≥ 330 valid days). Where the current
+  year is still in progress, it is shown separately — as a hollow “to date” marker on the
+  trend chart, and (for a fair record comparison) against the same calendar window
+  (Jan 1 → cutoff) of every prior year, keeping only years with ≥ 150 valid
+  days in that window.
 - **Daily climatology.** Each year’s daily mean is smoothed with a centred
   3-day rolling mean (unweighted moving average, computed per year so
-  December never bleeds into January; the first/last 1 day(s) keep their raw
+  December never bleeds into January; the first/last 1 day keep their raw
   value) for legibility; leap days are aligned across years. The normal is the per-day
   average over all prior years.
 - **Threshold days.** Frost = `TN < 0`, hot day = `TX ≥ 30`, very hot =
@@ -1080,7 +1081,7 @@ exactly why no annual trend emerges.</sub>
 
 ## A warming climate, seen from Moscow
 
-*Roshydromet / RIHMI-WDC — AISORI-M daily temperature records, 1949 to 2025 — plus 2025 so far.*
+*Roshydromet / RIHMI-WDC — AISORI-M daily temperature records, 1949 to 2025.*
 
 Roshydromet / RIHMI-WDC — AISORI-M daily records for the Moscow area tell an unambiguous story:
 since the mid-20th century, minimum, maximum and mean temperatures have all risen —
@@ -1107,24 +1108,20 @@ At Moscow — the station with the longest record (1949→2025) — the annual
 mean temperature rises by **+0.39 °C per decade**, about **+3.0 °C** over the
 whole period. This site has no second station — Moscow alone provides the temperature trend and the daily climatology.
 
-### This year, against every year before it
+### 2025, against every year before it
 
 ![Per-year mean over the same Jan-to-cutoff window, as a departure from the long-term normal, with 2025 the largest bar](outputs/moscow/figures/temperature_ytd.png)
 
 <sub>Each bar is a year’s mean over the <em>same window</em> — <strong>Jan 1 – Dec 31</strong> —
 shown as its departure from the long-term normal (5.7 °C): red above, blue
 below. Comparing each year over the identical part-of-year is the only fair way to place
-a year that is still in progress against history. The bars swing from blue to red over
-the decades — the warming.</sub>
+any one year against every other. The bars swing from blue to red over
+the decades — the warming — and 2025 is the tallest of all.</sub>
 
-Measured like-for-like, **2025 is the warmest Jan 1 – Dec 31 in 77 years** at Moscow: **8.6 °C** — +0.4 °C above the previous record (2020, 8.2 °C) and **+2.9 °C above the long-term normal** (5.7 °C). This is exactly the point of the chart: a year still in progress can already stand out against the whole record.
+Measured like-for-like, **2025 is the warmest Jan 1 – Dec 31 in 77 years** at Moscow: **8.6 °C** — +0.4 °C above the previous record (2020, 8.2 °C) and **+2.9 °C above the long-term normal** (5.7 °C). This is exactly the point of the chart: even a complete year can be measured precisely, like-for-like, against every year before it.
 
 > [!NOTE]
-> A partial year cannot be compared to other years’ *full-year* means — it is still
-> missing the warm late-summer and autumn tail. That is why 2025 appears on the
-> long-view chart above only as a marked, hollow “to date” point (seasonally incomplete,
-> so lower than its eventual annual figure), while its real, like-for-like standing is
-> the chart here.
+> 2025 is Moscow's most recent complete year — this export has no 2026 data yet, so it is plotted as a solid point like every other complete year, not as a hollow "to date" marker.
 
 ### Every year, day by day
 
@@ -1133,18 +1130,17 @@ Measured like-for-like, **2025 is the warmest Jan 1 – Dec 31 in 77 years** at 
 <sub>Each thin line is a single year’s daily mean temperature from January to December
 (1948–2024, 77 years), smoothed with a centred
 <strong>3-day rolling mean</strong> (each day = the average of itself
-±1 day(s)) to tame day-to-day jitter while keeping the shape. The dark line
-is the long-term daily normal; the bold red line is <strong>2025 so far</strong>.
+±1 day) to tame day-to-day jitter while keeping the shape. The dark line
+is the long-term daily normal; the bold red line is <strong>2025</strong>.
 Years whose smoothed daily mean ever rose above <strong>+30 °C</strong> are
 highlighted in red and labelled; years that ever fell below
 <strong>-5 °C</strong> in blue.</sub>
 
 > [!NOTE]
 > **Hottest and coldest years.** Measured on the smoothed daily-mean curve,
-> **1** years pushed above +30 °C (2010) — all of them recent —
+> **1** year pushed above +30 °C (2010) — all of them recent —
 > while **77** years dropped below -5 °C (1948, 1949, 1950, 1951, 1952, 1953, 1954, 1955, 1956, 1957, 1958, 1959, 1960, 1961, 1962, 1963, 1964, 1965, 1966, 1967, 1968, 1969, 1970, 1971, 1972, 1973, 1974, 1975, 1976, 1977, 1978, 1979, 1980, 1981, 1982, 1983, 1984, 1985, 1986, 1987, 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024).
-> Years hitting both extremes: 2010. The hot extremes and the cold extremes fall in different
-> eras, which is itself a fingerprint of the warming trend. <sub>(If the threshold is applied instead to the raw, unsmoothed daily mean, 2010 alone touch both extremes.)</sub>
+> Years hitting both extremes: 2010.  <sub>(If the threshold is applied instead to the raw, unsmoothed daily mean, 2010 alone touches both extremes.)</sub>
 
 ### The record days
 
@@ -1176,7 +1172,7 @@ At Moscow, the all-time heat (2010-07-29) is far more recent than the all-time c
 | 2024 | 4.1 | 12.0 | **8.0** |
 | 2025 | 5.2 | 12.0 | **8.6** |
 
-### Frost days halved, hot days doubled
+### Frost days down, hot days up
 
 A degree of warming is abstract; the count of extreme days is not. Comparing
 Moscow’s first complete decade (1949–1958) with its last (2016–2025),
@@ -1190,8 +1186,7 @@ the everyday texture of the year has changed sharply:
 | Tropical nights (min ≥ 20 °C) | 0 | **2** |
 
 <sub>Counts of days per year crossing each threshold, averaged over the first and last
-complete decades. Frost is retreating just as heat advances — the same warming, read
-off the calendar instead of the thermometer.</sub>
+complete decades. Frost is retreating just as heat advances — the same warming, read off the calendar instead of the thermometer.</sub>
 
 ### What about the rain?
 
@@ -1206,15 +1201,14 @@ Moscow shows **a statistically significant trend (+19 mm/decade, p = 0.00)**.
 large — from 397 mm (1964) to 891 mm (2013) —
 but the long-run slope (+19 mm/decade) is measurable and statistically significant (p = 0.00).</sub>
 
-Rainfall tells its own story here: unlike most of the sites in this series, Moscow shows a real, if much smaller and slower, long-run trend toward wetter conditions (+19 mm/decade, p = 0.00) — alongside the much larger and faster warming signal above.
+Rainfall tells its own story here: Moscow shows a real, if much smaller and slower, long-run trend toward wetter conditions (+19 mm/decade, p = 0.00) — alongside the much larger and faster warming signal above.
 
 ![Monthly rainfall through the year at Moscow, one line per year](outputs/moscow/figures/rain_climatology.png)
 
 <sub>Rain through the year: each grey line is one year’s monthly totals, the dark line the
-long-term monthly normal, the bold blue line 2025 so far. July is the
+long-term monthly normal, the bold blue line 2025. July is the
 wettest month on average (86 mm), March the driest
-(37 mm) — but the spread between years dwarfs the seasonal cycle, which is
-exactly why no annual trend emerges.</sub>
+(37 mm) — but the spread between years is why that slow trend is easy to miss from the monthly shape alone.</sub>
 
 ### Methodology
 
@@ -1223,13 +1217,14 @@ exactly why no annual trend emerges.</sub>
 - **Variables.** Minimum = `TN`, maximum = `TX`, mean = `(TN+TX)/2`, in °C;
   rainfall = `RR` (daily precipitation, in mm).
 - **Annual aggregation.** Arithmetic mean of daily values over each calendar year. The
-  long-term trend uses only complete years (≥ 330 valid days). The in-progress
-  year is shown separately — as a hollow “to date” marker on the trend chart, and (for a
-  fair record comparison) against the same calendar window (Jan 1 → cutoff) of every
-  prior year, keeping only years with ≥ 150 valid days in that window.
+  long-term trend uses only complete years (≥ 330 valid days). Where the current
+  year is still in progress, it is shown separately — as a hollow “to date” marker on the
+  trend chart, and (for a fair record comparison) against the same calendar window
+  (Jan 1 → cutoff) of every prior year, keeping only years with ≥ 150 valid
+  days in that window.
 - **Daily climatology.** Each year’s daily mean is smoothed with a centred
   3-day rolling mean (unweighted moving average, computed per year so
-  December never bleeds into January; the first/last 1 day(s) keep their raw
+  December never bleeds into January; the first/last 1 day keep their raw
   value) for legibility; leap days are aligned across years. The normal is the per-day
   average over all prior years.
 - **Threshold days.** Frost = `TN < 0`, hot day = `TX ≥ 30`, very hot =
@@ -1282,22 +1277,18 @@ whole period. This site has no second station — Voronezh alone provides the te
 
 ### This year, against every year before it
 
-![Per-year mean over the same Jan-to-cutoff window, as a departure from the long-term normal, with 2026 the largest bar](outputs/voronezh/figures/temperature_ytd.png)
+![Per-year mean over the same Jan-to-cutoff window, as a departure from the long-term normal, with 2026 highlighted](outputs/voronezh/figures/temperature_ytd.png)
 
 <sub>Each bar is a year’s mean over the <em>same window</em> — <strong>Jan 1 – Feb 28</strong> —
 shown as its departure from the long-term normal (-7.5 °C): red above, blue
 below. Comparing each year over the identical part-of-year is the only fair way to place
-a year that is still in progress against history. The bars swing from blue to red over
+any one year against every other. The bars swing from blue to red over
 the decades — the warming.</sub>
 
 Measured like-for-like over Jan 1 – Feb 28, 2026 currently ranks **#55 of 84** at Voronezh (-8.4 °C). The warmest such window on record remains 2020 (-0.5 °C).
 
 > [!NOTE]
-> A partial year cannot be compared to other years’ *full-year* means — it is still
-> missing the warm late-summer and autumn tail. That is why 2026 appears on the
-> long-view chart above only as a marked, hollow “to date” point (seasonally incomplete,
-> so lower than its eventual annual figure), while its real, like-for-like standing is
-> the chart here.
+> A partial year cannot be compared to other years' full-year means — it is still missing the rest of the year. That is why 2026 appears on the long-view chart above only as a marked, hollow "to date" point (seasonally incomplete, so lower than its eventual annual figure), while its real, like-for-like standing is the chart here.
 
 ### Every year, day by day
 
@@ -1306,7 +1297,7 @@ Measured like-for-like over Jan 1 – Feb 28, 2026 currently ranks **#55 of 84**
 <sub>Each thin line is a single year’s daily mean temperature from January to December
 (1940–2025, 85 years), smoothed with a centred
 <strong>3-day rolling mean</strong> (each day = the average of itself
-±1 day(s)) to tame day-to-day jitter while keeping the shape. The dark line
+±1 day) to tame day-to-day jitter while keeping the shape. The dark line
 is the long-term daily normal; the bold red line is <strong>2026 so far</strong>.
 Years whose smoothed daily mean ever rose above <strong>+30 °C</strong> are
 highlighted in red and labelled; years that ever fell below
@@ -1316,8 +1307,7 @@ highlighted in red and labelled; years that ever fell below
 > **Hottest and coldest years.** Measured on the smoothed daily-mean curve,
 > **2** years pushed above +30 °C (2010, 2016) — all of them recent —
 > while **85** years dropped below -5 °C (1940, 1941, 1942, 1944, 1945, 1946, 1947, 1948, 1949, 1950, 1951, 1952, 1953, 1954, 1955, 1956, 1957, 1958, 1959, 1960, 1961, 1962, 1963, 1964, 1965, 1966, 1967, 1968, 1969, 1970, 1971, 1972, 1973, 1974, 1975, 1976, 1977, 1978, 1979, 1980, 1981, 1982, 1983, 1984, 1985, 1986, 1987, 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025).
-> Years hitting both extremes: 2010, 2016. The hot extremes and the cold extremes fall in different
-> eras, which is itself a fingerprint of the warming trend. <sub>(If the threshold is applied instead to the raw, unsmoothed daily mean, 1972 and 1991 and 1996 and 2010 and 2016 and 2020 each touch both extremes.)</sub>
+> Years hitting both extremes: 2010 and 2016.  <sub>(If the threshold is applied instead to the raw, unsmoothed daily mean, 1972, 1991, 1996, 2010, 2016 and 2020 each touch both extremes.)</sub>
 
 ### The record days
 
@@ -1350,7 +1340,7 @@ At Voronezh, the all-time heat (2010-08-02) is far more recent than the all-time
 | 2025 | 5.5 | 14.2 | **9.9** |
 | 2026 *(to date)* | -11.6 | -5.2 | **-8.4** |
 
-### Frost days halved, hot days doubled
+### Frost days down, hot days up
 
 A degree of warming is abstract; the count of extreme days is not. Comparing
 Voronezh’s first complete decade (1940–1949) with its last (2016–2025),
@@ -1364,8 +1354,7 @@ the everyday texture of the year has changed sharply:
 | Tropical nights (min ≥ 20 °C) | 4 | **8** |
 
 <sub>Counts of days per year crossing each threshold, averaged over the first and last
-complete decades. Frost is retreating just as heat advances — the same warming, read
-off the calendar instead of the thermometer.</sub>
+complete decades. Frost is retreating just as heat advances — the same warming, read off the calendar instead of the thermometer.</sub>
 
 ### What about the rain?
 
@@ -1380,15 +1369,14 @@ Voronezh shows **a statistically significant trend (+16 mm/decade, p = 0.00)**.
 large — from 333 mm (1949) to 871 mm (2022) —
 but the long-run slope (+16 mm/decade) is measurable and statistically significant (p = 0.00).</sub>
 
-Rainfall tells its own story here: unlike most of the sites in this series, Voronezh shows a real, if much smaller and slower, long-run trend toward wetter conditions (+16 mm/decade, p = 0.00) — alongside the much larger and faster warming signal above.
+Rainfall tells its own story here: Voronezh shows a real, if much smaller and slower, long-run trend toward wetter conditions (+16 mm/decade, p = 0.00) — alongside the much larger and faster warming signal above.
 
 ![Monthly rainfall through the year at Voronezh, one line per year](outputs/voronezh/figures/rain_climatology.png)
 
 <sub>Rain through the year: each grey line is one year’s monthly totals, the dark line the
 long-term monthly normal, the bold blue line 2026 so far. July is the
 wettest month on average (65 mm), March the driest
-(32 mm) — but the spread between years dwarfs the seasonal cycle, which is
-exactly why no annual trend emerges.</sub>
+(32 mm) — but the spread between years is why that slow trend is easy to miss from the monthly shape alone.</sub>
 
 ### Methodology
 
@@ -1397,13 +1385,14 @@ exactly why no annual trend emerges.</sub>
 - **Variables.** Minimum = `TN`, maximum = `TX`, mean = `(TN+TX)/2`, in °C;
   rainfall = `RR` (daily precipitation, in mm).
 - **Annual aggregation.** Arithmetic mean of daily values over each calendar year. The
-  long-term trend uses only complete years (≥ 330 valid days). The in-progress
-  year is shown separately — as a hollow “to date” marker on the trend chart, and (for a
-  fair record comparison) against the same calendar window (Jan 1 → cutoff) of every
-  prior year, keeping only years with ≥ 50 valid days in that window.
+  long-term trend uses only complete years (≥ 330 valid days). Where the current
+  year is still in progress, it is shown separately — as a hollow “to date” marker on the
+  trend chart, and (for a fair record comparison) against the same calendar window
+  (Jan 1 → cutoff) of every prior year, keeping only years with ≥ 50 valid
+  days in that window.
 - **Daily climatology.** Each year’s daily mean is smoothed with a centred
   3-day rolling mean (unweighted moving average, computed per year so
-  December never bleeds into January; the first/last 1 day(s) keep their raw
+  December never bleeds into January; the first/last 1 day keep their raw
   value) for legibility; leap days are aligned across years. The normal is the per-day
   average over all prior years.
 - **Threshold days.** Frost = `TN < 0`, hot day = `TX ≥ 30`, very hot =
@@ -1422,47 +1411,6 @@ exactly why no annual trend emerges.</sub>
 <sub>Figures and numbers above are generated — edit `R/03_readme.R`, not this block.</sub>
 
 <!-- END REPORT:voronezh -->
-
-<!-- BEGIN COMPARE -->
-
-## All eight cities, side by side
-
-Every chapter above uses the same variables, the same completeness rule (>= 330 valid
-days/year) and the same trend method (least-squares on annual means) — the numbers below are those
-same headline figures, gathered in one place rather than recomputed. Comparing raw warming rates
-across records of very different length and era is not adjusted for either; the record span in the
-table is the honest caveat, not a footnote to skip.
-
-![Warming rate compared across all eight cities, ranked fastest to slowest](outputs/compare/figures/warming_rate.png)
-
-<sub>Ranked fastest to slowest. Record span and length for each city are in the table below, not
-repeated on the bars — Santa Fe’s and Karlsruhe’s records run a century longer than Honolulu’s or
-Nouméa’s, so the same-looking rate rests on very different amounts of evidence.</sub>
-
-| City | Country | Record | Warming rate | This year’s standing | Data current through |
-|---|---|---:|---:|---|---|
-| Voronezh | Russia | 1940→2025 (85 yr) | **+0.46 °C/decade** | #55 of 84 (2026, Jan 1 – Feb 28) | Feb 28, 2026 † |
-| Moscow | Russia | 1949→2025 (76 yr) | **+0.39 °C/decade** | #1 of 77 — record (2025, full year) | Dec 31, 2025 † |
-| Castanet-Tolosan | France | 1947→2025 (78 yr) | **+0.34 °C/decade** | #1 of 80 — record (2026, Jan 1 – Aug 12) | Aug 12, 2026 |
-| Honolulu | USA | 1950→2025 (75 yr) | **+0.20 °C/decade** | #18 of 84 (2026, Jan 1 – Aug 11) | Aug 11, 2026 |
-| Nouméa | France | 1951→2025 (74 yr) | **+0.19 °C/decade** | #5 of 76 (2026, Jan 1 – Aug 13) | Aug 13, 2026 |
-| Zurich | Switzerland | 1882→2025 (143 yr) | **+0.18 °C/decade** | #1 of 144 — record (2026, Jan 1 – Aug 12) | Aug 12, 2026 |
-| Karlsruhe | Germany | 1876→2025 (149 yr) | **+0.14 °C/decade** | #2 of 150 (2026, Jan 1 – Aug 12) | Aug 12, 2026 |
-| Santa Fe | USA | 1874→2025 (151 yr) | **+0.08 °C/decade** | #1 of 149 — record (2026, Jan 1 – Jun 30) | Jun 30, 2026 |
-
-† Moscow and Voronezh are manually exported from Roshydromet’s AISORI-M (login-gated, no automated
-refresh) — their "current through" date is not "today" the way the other six sites’ automated feeds
-are; see each city’s own "Why only one station?" note above.
-
-Each row’s standing also names its own year and window in parentheses, since they are not all the
-same claim: the six automated sites all rank 2026 over comparable multi-month windows, but Moscow’s
-row ranks a complete, already-finished 2025 and Voronezh’s ranks a 59-day midwinter fragment — a
-"#55 of 84" over two months of winter is not the same kind of statement as an 8-month "#5 of 76".
-
-<sub>Figures and numbers above are generated — edit `R/04_compare.R`, not this block.</sub>
-
-<!-- END COMPARE -->
-
 ## Data sources
 
 Each site pulls from its own national weather service, all open data, all

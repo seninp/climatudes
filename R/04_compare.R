@@ -87,7 +87,7 @@ p <- ggplot(cmp, aes(x = slope_dec, y = city_f)) +
       "Source: each city's own report, this repository. Records span different years and lengths ",
       "(see the table below) — a raw rate is not adjusted for record length or baseline era.\n",
       "Slope = linear regression on complete-year annual means (≥ ", MIN_DAYS, " valid days/year); ",
-      "matches the “Warming rate” headline number in each city's own section above."
+      "matches the “Warming rate” headline number in each city's own section below."
     )
   ) +
   theme_minimal(base_size = 13) +
@@ -139,10 +139,10 @@ block <- paste0(
 
 ## All eight cities, side by side
 
-Every chapter above uses the same variables, the same completeness rule (>= ', MIN_DAYS, ' valid
+Every chapter below uses the same variables, the same completeness rule (>= ', MIN_DAYS, ' valid
 days/year) and the same trend method (least-squares on annual means) — the numbers below are those
-same headline figures, gathered in one place rather than recomputed. Comparing raw warming rates
-across records of very different length and era is not adjusted for either; the record span in the
+same headline figures, gathered in one place rather than recomputed. These are raw warming rates:
+they are not adjusted for the very different length and era of each record. The record span in the
 table is the honest caveat, not a footnote to skip.
 
 ![Warming rate compared across all eight cities, ranked fastest to slowest](outputs/compare/figures/warming_rate.png)
@@ -151,13 +151,13 @@ table is the honest caveat, not a footnote to skip.
 repeated on the bars — Santa Fe’s and Karlsruhe’s records run a century longer than Honolulu’s or
 Nouméa’s, so the same-looking rate rests on very different amounts of evidence.</sub>
 
-| City | Country | Record | Warming rate | This year’s standing | Data current through |
+| City | Country | Record | Warming rate | Standing | Data current through |
 |---|---|---:|---:|---|---|
 ', paste(table_rows, collapse = "\n"), '
 
 † Moscow and Voronezh are manually exported from Roshydromet’s AISORI-M (login-gated, no automated
 refresh) — their "current through" date is not "today" the way the other six sites’ automated feeds
-are; see each city’s own "Why only one station?" note above.
+are; see each city’s own "Why only one station?" note in its chapter below.
 
 Each row’s standing also names its own year and window in parentheses, since they are not all the
 same claim: the six automated sites all rank 2026 over comparable multi-month windows, but Moscow’s

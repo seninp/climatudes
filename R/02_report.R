@@ -135,7 +135,7 @@ template <- '<!DOCTYPE html>
   <header>
     <p class="eyebrow">Local climate · {{REGION}}, {{COUNTRY}}</p>
     <h1>A warming climate, seen from {{CITY}}</h1>
-    <p class="sub">{{SOURCE_NAME}} daily temperature records, {{YR0}} to {{YR1}}</p>
+    <p class="sub">{{SOURCE_NAME}} daily temperature records, {{YR0}} to {{YR1}}{{CUR_YEAR_CLAUSE}}</p>
   </header>
 
   <p class="lead">
@@ -170,25 +170,21 @@ template <- '<!DOCTYPE html>
     <strong>+{{RISE}}&nbsp;°C</strong> over the whole period. {{LOCAL_TEMP_PARAGRAPH}}
   </p>
 
-  <h2>This year, against every year before it</h2>
+  <h2>{{YTD_SECTION_YEAR}}, against every year before it</h2>
   <figure>
-    <img src="data:image/png;base64,{{IMG_YTD}}" alt="Per-year departure of the same-window mean temperature from the long-term normal, current year highlighted as the largest">
+    <img src="data:image/png;base64,{{IMG_YTD}}" alt="Per-year departure of the same-window mean temperature from the long-term normal, current year {{YTD_ALT_SUFFIX}}">
     <figcaption>
       Each bar is a year&rsquo;s mean over the <em>same window</em> —
       <strong>{{YTD_WINDOW}}</strong> — shown as its departure from the long-term
       normal ({{YTD_NORMAL}}&nbsp;°C): red above, blue below. Comparing each year over
-      the identical part-of-year is the only fair way to place a year that is still in
-      progress against history. The bars swing from blue to red over the decades —
-      the warming — and <strong>{{CUR_YEAR}}</strong> is the tallest of all.
+      the identical part-of-year is the only fair way to place any one year against
+      every other. The bars swing from blue to red over the decades —
+      the warming{{YTD_TALLEST_CLAUSE}}.
     </figcaption>
   </figure>
   <p>{{YTD_SENTENCE}}</p>
   <div class="note">
-    A partial year cannot be compared to other years&rsquo; <em>full-year</em> means —
-    it is still missing the warm late-summer and autumn tail. That is why {{CUR_YEAR}}
-    appears on the long-view chart above only as a marked, hollow &ldquo;to&nbsp;date&rdquo;
-    point (seasonally incomplete, so lower than its eventual annual figure), while its
-    real, like-for-like standing is the chart here.
+    {{PARTIAL_YEAR_NOTE}}
   </div>
 
   <h2>Every year, day by day</h2>
@@ -198,9 +194,9 @@ template <- '<!DOCTYPE html>
       Each thin line is a single year&rsquo;s daily mean temperature from January to
       December ({{CLIM_YR0}}&ndash;{{CLIM_YR1}}, {{CLIM_NYEARS}} years), smoothed with a centred
       <strong>{{SMOOTH_WINDOW}}-day rolling mean</strong> (each day = the average of itself
-      &plusmn;{{SMOOTH_HALF}} day(s)) to tame day-to-day jitter while keeping the shape.
+      &plusmn;{{SMOOTH_HALF}} {{SMOOTH_HALF_WORD}}) to tame day-to-day jitter while keeping the shape.
       The dark line is the long-term daily normal; the
-      bold red line is <strong>{{CUR_YEAR}} so far</strong>. Years whose smoothed daily mean ever
+      bold red line is <strong>{{CUR_YEAR}}{{SO_FAR_SUFFIX}}</strong>. Years whose smoothed daily mean ever
       rose above <strong>+{{HOT_THR}}&nbsp;°C</strong> are highlighted in red and labelled;
       years that ever fell below <strong>{{COLD_THR}}&nbsp;°C</strong> in blue.
     </figcaption>
@@ -208,11 +204,10 @@ template <- '<!DOCTYPE html>
 
   <div class="note">
     <strong>Hottest and coldest years.</strong> Measured on the smoothed daily-mean
-    curve, <strong>{{N_HOT}}</strong> years pushed above +{{HOT_THR}}&nbsp;°C
-   {{HOT_YEARS_PAREN}}{{HOT_RECENT_CLAUSE}} while <strong>{{N_COLD}}</strong> years
+    curve, <strong>{{N_HOT}}</strong> {{N_HOT_WORD}} pushed above +{{HOT_THR}}&nbsp;°C
+   {{HOT_YEARS_PAREN}}{{HOT_RECENT_CLAUSE}} while <strong>{{N_COLD}}</strong> {{N_COLD_WORD}}
     dropped below {{COLD_THR}}&nbsp;°C{{COLD_YEARS_PAREN}}{{COLD_ERA_CLAUSE}}.
-    <strong>{{BOTH_SENTENCE}}</strong> The hot extremes and the cold extremes fall in
-    different eras, which is itself a fingerprint of the warming trend.
+    <strong>{{BOTH_SENTENCE}}</strong> {{ERA_CLAUSE}}
     <span style="color:#8A97A0;">{{RAW_BOTH_SENTENCE}}</span>
   </div>
 
@@ -244,7 +239,7 @@ template <- '<!DOCTYPE html>
     </tbody>
   </table>
 
-  <h2>Frost days halved, hot days doubled</h2>
+  <h2>{{EXTREMES_HEADER}}</h2>
   <p>
     A degree of warming is abstract; the count of extreme days is not. Comparing
     {{REF_STATION}}&rsquo;s first complete decade ({{EXT_SPAN0}}) with its last
@@ -252,9 +247,9 @@ template <- '<!DOCTYPE html>
   </p>
   <div class="stats">
     <div class="stat"><div class="num" style="color:var(--blue)">{{FROST_EARLY}}&nbsp;→&nbsp;{{FROST_RECENT}}</div>
-      <div class="lab">frost days per year<br>(min below&nbsp;0&nbsp;°C) — roughly halved</div></div>
+      <div class="lab">frost days per year<br>(min below&nbsp;0&nbsp;°C)</div></div>
     <div class="stat"><div class="num">{{HOT_EARLY}}&nbsp;→&nbsp;{{HOT_RECENT}}</div>
-      <div class="lab">hot days per year<br>(max&nbsp;≥&nbsp;{{HOT_TX}}&nbsp;°C) — roughly doubled</div></div>
+      <div class="lab">hot days per year<br>(max&nbsp;≥&nbsp;{{HOT_TX}}&nbsp;°C)</div></div>
     <div class="stat"><div class="num">{{VHOT_EARLY}}&nbsp;→&nbsp;{{VHOT_RECENT}}</div>
       <div class="lab">very hot days per year<br>(max&nbsp;≥&nbsp;{{VHOT_TX}}&nbsp;°C)</div></div>
     <div class="stat"><div class="num">{{TROP_EARLY}}&nbsp;→&nbsp;{{TROP_RECENT}}</div>
@@ -262,8 +257,7 @@ template <- '<!DOCTYPE html>
   </div>
   <p style="color:#8A97A0; font-size:0.9rem;">
     Counts of days per year crossing each threshold, averaged over the first and
-    last complete decades of the record. Frost is retreating just as heat advances —
-    the same warming, read off the calendar instead of the thermometer.
+    last complete decades of the record. {{EXTREMES_CLOSING}}
   </p>
 
   <h2>What about the rain?</h2>
@@ -291,10 +285,9 @@ template <- '<!DOCTYPE html>
     <figcaption>
       Rain through the year: each grey line is one year&rsquo;s monthly totals,
       the dark line the long-term monthly normal, the bold blue line
-      {{CUR_YEAR}} so far. {{WET_MONTH}} is the wettest month on average
+      {{CUR_YEAR}}{{SO_FAR_SUFFIX}}. {{WET_MONTH}} is the wettest month on average
       ({{WET_MONTH_MM}}&nbsp;mm), {{DRY_MONTH}} the driest
-      ({{DRY_MONTH_MM}}&nbsp;mm) — but the spread between years dwarfs the
-      seasonal cycle, which is exactly why no annual trend emerges.
+      ({{DRY_MONTH_MM}}&nbsp;mm) — {{RAIN_MONTHLY_CLOSING}}
     </figcaption>
   </figure>
 
@@ -316,15 +309,15 @@ template <- '<!DOCTYPE html>
         Monthly climatology keeps only months with&nbsp;≥&nbsp;27 valid days.</li>
     <li><strong>Annual aggregation.</strong> Arithmetic mean of daily values over each
         calendar year. The long-term trend uses only complete years (≥&nbsp;{{MIN_DAYS}} valid
-        days). The in-progress year is shown separately — as a hollow
-        &ldquo;to&nbsp;date&rdquo; marker on the trend chart, and (for a fair record
+        days). Where the current year is still in progress, it is shown separately — as a
+        hollow &ldquo;to&nbsp;date&rdquo; marker on the trend chart, and (for a fair record
         comparison) against the same calendar window (Jan&nbsp;1&nbsp;→&nbsp;cutoff)
         of every prior year, keeping only years with ≥&nbsp;{{MIN_YTD_DAYS}} valid days
         in that window.</li>
     <li><strong>Daily climatology.</strong> Each year&rsquo;s daily mean is smoothed
         with a centred {{SMOOTH_WINDOW}}-day rolling mean (unweighted moving average,
         computed per year so December never bleeds into January; the first/last
-        {{SMOOTH_HALF}} day(s) keep their raw value) for legibility; leap days are aligned
+        {{SMOOTH_HALF}} {{SMOOTH_HALF_WORD}} keep their raw value) for legibility; leap days are aligned
         across years. The normal is the per-day average over all prior years.</li>
     <li><strong>Trend.</strong> Slope estimated by linear regression (least squares);
         the line-chart curves use LOESS smoothing (span&nbsp;=&nbsp;0.7).</li>

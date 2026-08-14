@@ -75,7 +75,7 @@ record_rows_md <- paste(record_rows, collapse = "\n")
 # ---- the report, as Markdown ------------------------------------------------
 template <- '## A warming climate, seen from {{CITY}}
 
-*{{SOURCE_NAME}} daily temperature records, {{YR0}} to {{YR1}} — plus {{CUR_YEAR}} so far.*
+*{{SOURCE_NAME}} daily temperature records, {{YR0}} to {{YR1}}{{CUR_YEAR_CLAUSE}}.*
 
 {{SOURCE_NAME}} daily records for the {{CITY}} area tell an unambiguous story:
 since {{SINCE_PHRASE}}, minimum, maximum and mean temperatures have all risen —
@@ -102,24 +102,20 @@ At {{REF_STATION}} — the station with the longest record ({{YR0}}→{{YR1}}) �
 mean temperature rises by **+{{SLOPE_DEC}} °C per decade**, about **+{{RISE}} °C** over the
 whole period. {{LOCAL_TEMP_PARAGRAPH}}
 
-### This year, against every year before it
+### {{YTD_SECTION_YEAR}}, against every year before it
 
-![Per-year mean over the same Jan-to-cutoff window, as a departure from the long-term normal, with {{CUR_YEAR}} the largest bar]({{FIG_YTD}})
+![Per-year mean over the same Jan-to-cutoff window, as a departure from the long-term normal, with {{CUR_YEAR}} {{YTD_ALT_SUFFIX}}]({{FIG_YTD}})
 
 <sub>Each bar is a year’s mean over the <em>same window</em> — <strong>{{YTD_WINDOW}}</strong> —
 shown as its departure from the long-term normal ({{YTD_NORMAL}} °C): red above, blue
 below. Comparing each year over the identical part-of-year is the only fair way to place
-a year that is still in progress against history. The bars swing from blue to red over
-the decades — the warming.</sub>
+any one year against every other. The bars swing from blue to red over
+the decades — the warming{{YTD_TALLEST_CLAUSE}}.</sub>
 
 {{YTD_SENTENCE}}
 
 > [!NOTE]
-> A partial year cannot be compared to other years’ *full-year* means — it is still
-> missing the warm late-summer and autumn tail. That is why {{CUR_YEAR}} appears on the
-> long-view chart above only as a marked, hollow “to date” point (seasonally incomplete,
-> so lower than its eventual annual figure), while its real, like-for-like standing is
-> the chart here.
+> {{PARTIAL_YEAR_NOTE}}
 
 ### Every year, day by day
 
@@ -128,18 +124,17 @@ the decades — the warming.</sub>
 <sub>Each thin line is a single year’s daily mean temperature from January to December
 ({{CLIM_YR0}}–{{CLIM_YR1}}, {{CLIM_NYEARS}} years), smoothed with a centred
 <strong>{{SMOOTH_WINDOW}}-day rolling mean</strong> (each day = the average of itself
-±{{SMOOTH_HALF}} day(s)) to tame day-to-day jitter while keeping the shape. The dark line
-is the long-term daily normal; the bold red line is <strong>{{CUR_YEAR}} so far</strong>.
+±{{SMOOTH_HALF}} {{SMOOTH_HALF_WORD}}) to tame day-to-day jitter while keeping the shape. The dark line
+is the long-term daily normal; the bold red line is <strong>{{CUR_YEAR}}{{SO_FAR_SUFFIX}}</strong>.
 Years whose smoothed daily mean ever rose above <strong>+{{HOT_THR}} °C</strong> are
 highlighted in red and labelled; years that ever fell below
 <strong>{{COLD_THR}} °C</strong> in blue.</sub>
 
 > [!NOTE]
 > **Hottest and coldest years.** Measured on the smoothed daily-mean curve,
-> **{{N_HOT}}** years pushed above +{{HOT_THR}} °C{{HOT_YEARS_PAREN}}{{HOT_RECENT_CLAUSE}}
-> while **{{N_COLD}}** years dropped below {{COLD_THR}} °C{{COLD_YEARS_PAREN}}{{COLD_ERA_CLAUSE}}.
-> {{BOTH_SENTENCE}} The hot extremes and the cold extremes fall in different
-> eras, which is itself a fingerprint of the warming trend. <sub>{{RAW_BOTH_SENTENCE}}</sub>
+> **{{N_HOT}}** {{N_HOT_WORD}} pushed above +{{HOT_THR}} °C{{HOT_YEARS_PAREN}}{{HOT_RECENT_CLAUSE}}
+> while **{{N_COLD}}** {{N_COLD_WORD}} dropped below {{COLD_THR}} °C{{COLD_YEARS_PAREN}}{{COLD_ERA_CLAUSE}}.
+> {{BOTH_SENTENCE}} {{ERA_CLAUSE}} <sub>{{RAW_BOTH_SENTENCE}}</sub>
 
 ### The record days
 
@@ -161,7 +156,7 @@ maximum (TX), “coldest” the lowest daily minimum (TN).
 |---|---:|---:|---:|
 {{ROWS}}
 
-### Frost days halved, hot days doubled
+### {{EXTREMES_HEADER}}
 
 A degree of warming is abstract; the count of extreme days is not. Comparing
 {{REF_STATION}}’s first complete decade ({{EXT_SPAN0}}) with its last ({{EXT_SPAN1}}),
@@ -175,8 +170,7 @@ the everyday texture of the year has changed sharply:
 | Tropical nights (min ≥ {{TROP_TX}} °C) | {{TROP_EARLY}} | **{{TROP_RECENT}}** |
 
 <sub>Counts of days per year crossing each threshold, averaged over the first and last
-complete decades. Frost is retreating just as heat advances — the same warming, read
-off the calendar instead of the thermometer.</sub>
+complete decades. {{EXTREMES_CLOSING}}</sub>
 
 ### What about the rain?
 
@@ -196,10 +190,9 @@ but the long-run slope ({{RAIN_SLOPE}} mm/decade) {{RAIN_FLAT_CLAUSE}}.</sub>
 ![Monthly rainfall through the year at {{REF_STATION}}, one line per year]({{FIG_RAINC}})
 
 <sub>Rain through the year: each grey line is one year’s monthly totals, the dark line the
-long-term monthly normal, the bold blue line {{CUR_YEAR}} so far. {{WET_MONTH}} is the
+long-term monthly normal, the bold blue line {{CUR_YEAR}}{{SO_FAR_SUFFIX}}. {{WET_MONTH}} is the
 wettest month on average ({{WET_MONTH_MM}} mm), {{DRY_MONTH}} the driest
-({{DRY_MONTH_MM}} mm) — but the spread between years dwarfs the seasonal cycle, which is
-exactly why no annual trend emerges.</sub>
+({{DRY_MONTH_MM}} mm) — {{RAIN_MONTHLY_CLOSING}}</sub>
 
 ### Methodology
 
@@ -208,13 +201,14 @@ exactly why no annual trend emerges.</sub>
 - **Variables.** Minimum = `TN`, maximum = `TX`, mean = `(TN+TX)/2`, in °C;
   rainfall = `RR` (daily precipitation, in mm).
 - **Annual aggregation.** Arithmetic mean of daily values over each calendar year. The
-  long-term trend uses only complete years (≥ {{MIN_DAYS}} valid days). The in-progress
-  year is shown separately — as a hollow “to date” marker on the trend chart, and (for a
-  fair record comparison) against the same calendar window (Jan 1 → cutoff) of every
-  prior year, keeping only years with ≥ {{MIN_YTD_DAYS}} valid days in that window.
+  long-term trend uses only complete years (≥ {{MIN_DAYS}} valid days). Where the current
+  year is still in progress, it is shown separately — as a hollow “to date” marker on the
+  trend chart, and (for a fair record comparison) against the same calendar window
+  (Jan 1 → cutoff) of every prior year, keeping only years with ≥ {{MIN_YTD_DAYS}} valid
+  days in that window.
 - **Daily climatology.** Each year’s daily mean is smoothed with a centred
   {{SMOOTH_WINDOW}}-day rolling mean (unweighted moving average, computed per year so
-  December never bleeds into January; the first/last {{SMOOTH_HALF}} day(s) keep their raw
+  December never bleeds into January; the first/last {{SMOOTH_HALF}} {{SMOOTH_HALF_WORD}} keep their raw
   value) for legibility; leap days are aligned across years. The normal is the per-day
   average over all prior years.
 - **Threshold days.** Frost = `TN < 0`, hot day = `TX ≥ {{HOT_TX}}`, very hot =

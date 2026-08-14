@@ -90,6 +90,13 @@ local <- if (SITE$local_has_temp) annual[station == SITE$local_station] else ann
 # current partial-year row (for the hollow "to date" marker on plot 1)
 ref_cur <- annual_all[station == SITE$reference_station & year == cur_year & complete == FALSE]
 
+# Whether `cur_year` is a genuinely in-progress partial year (every site so far
+# except Moscow, whose manual export's last year, 2025, is already complete —
+# nrow(ref_cur) == 0 means no incomplete row exists for it). Prose that says
+# "so far" / "still in progress" / draws a hollow to-date marker must check
+# this rather than assume it, the way every site up to now allowed it to.
+YEAR_COMPLETE <- nrow(ref_cur) == 0
+
 L_TX   <- sprintf("%s — daily maximum (TX)", SITE$reference_station)
 L_MEAN <- sprintf("%s — daily mean",         SITE$reference_station)
 L_TN   <- sprintf("%s — daily minimum (TN)", SITE$reference_station)
@@ -751,7 +758,7 @@ stats <- list(
   mean_recent = round(mean(ref[year >= yr1 - 9]$TMEAN), 2),
   mean_early  = round(mean(ref[year <= yr0 + 9]$TMEAN), 2),
   clim_yr0 = min(prev_years$year), clim_yr1 = max(prev_years$year),
-  clim_nyears = n_years, cur_year = cur_year,
+  clim_nyears = n_years, cur_year = cur_year, year_complete = YEAR_COMPLETE,
   n_station_years = nrow(annual),
   hot_thr = HOT_THR, cold_thr = COLD_THR,
   hot_years = hot_years, cold_years = cold_years, both_years = both_years,
