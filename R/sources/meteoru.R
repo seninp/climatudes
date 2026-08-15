@@ -82,9 +82,29 @@ prepare_data <- function(site) {
   dir.create(site$paths$processed, recursive = TRUE, showWarnings = FALSE)
   dir.create(site$paths$raw,       recursive = TRUE, showWarnings = FALSE)
 
-  zip_path <- meteoru_find_export(site$paths$raw)
-
   extract_gz <- file.path(site$paths$processed, STATION_EXTRACT)
+
+  # This source is hand-fed, so "no raw export present" is a normal state rather
+  # than a failure — the export is login-gated and deliberately not committed
+  # (its licence forbids redistribution). If the processed extract already exists
+  # we keep it and stop here.
+  #
+  # Without this, `make all-sites` hard-fails on Moscow and Voronezh after ANY
+  # edit to a shared file: the extract goes stale against R/lib/common.R, make
+  # tries to rebuild it from raw, and stage 00 aborts because there is nothing to
+  # rebuild it from. The other nine sites re-download and carry on; these two
+  # cannot. Only error when there is no extract either, which is the genuine
+  # fresh-clone case the message below is for.
+  if (!length(Sys.glob(file.path(site$paths$raw, "*.zip")))) {
+    if (file.exists(extract_gz)) {
+      message("no new AISORI-M export in ", site$paths$raw,
+              " — keeping the existing extract (manual source, nothing to fetch)")
+      return(invisible(NULL))
+    }
+    meteoru_find_export(site$paths$raw)   # no export and no extract: real error
+  }
+
+  zip_path <- meteoru_find_export(site$paths$raw)
   inputs <- c(zip_path, "R/sources/meteoru.R", sprintf("R/sites/%s.R", site$key))
   if (file.exists(extract_gz) &&
       file.info(extract_gz)$mtime >= max(file.info(inputs)$mtime)) {

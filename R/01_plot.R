@@ -393,6 +393,16 @@ p2 <- ggplot() +
 
 agg_png(file.path(PATHS$figures, "temperature_climatology.png"),
         width = 2400, height = 1250, res = 200, background = "white")
+# On the sites with 100+ cold-year labels this PNG came out byte-different on
+# every run with identical code and data, so figures showed up dirty in
+# `git status` after any rebuild and had to be discarded by hand before
+# committing. Seeding here fixes SOME of it — Karlsruhe became byte-stable —
+# but NOT all: Zurich and Santa Fe still vary, so the remaining nondeterminism
+# is inside ggrepel's layout iteration and is not reachable through the RNG or
+# through its own `seed` argument. Keep the seed (one less file churning), and
+# keep expecting a couple of these to show up modified with no real change;
+# discard them rather than committing megabytes of identical-looking diff.
+set.seed(1L)
 print(p2); invisible(dev.off())
 message("Wrote temperature_climatology.png")
 

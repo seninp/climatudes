@@ -91,6 +91,12 @@ outputs/lyon/*
 outputs/lyon/figures/*
 !outputs/lyon/figures/*.png
 
+!outputs/paris/
+outputs/paris/*
+!outputs/paris/figures/
+outputs/paris/figures/*
+!outputs/paris/figures/*.png
+
 !outputs/compare/
 outputs/compare/*
 !outputs/compare/figures/

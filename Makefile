@@ -48,6 +48,15 @@ STATS       := $(PROCESSED)/trend_stats.rds
 REPORT      := $(OUTDIR)/temperature_report.html
 README      := README.md
 SITE_CONFIG := R/sites/$(SITE).R
+# Per-site stamp for the README stage. README.md itself CANNOT be the target:
+# every site writes into the same file, so the first site's run bumps README.md's
+# mtime past every other site's dependencies and `make all-sites` then silently
+# skips stages 03 for sites 2..N — leaving their blocks stale while reporting
+# "Nothing to be done for 'readme'". Verified: editing R/lib/narrative.R and
+# running `make all-sites` regenerated only the first site's block. The stamp
+# lives per-site under $(PROCESSED), so each site's staleness is judged against
+# its own inputs.
+README_STAMP := $(PROCESSED)/readme.stamp
 
 .PHONY: all all-sites compare prepare refresh plots report readme open clean
 
@@ -91,9 +100,13 @@ $(REPORT): R/02_report.R R/lib/common.R R/lib/narrative.R $(SITE_CONFIG) $(FIGUR
 # README.md is version-controlled and only partly generated — stage 03 rewrites
 # the block between this site's BEGIN/END markers and leaves the rest alone.
 # `clean` therefore does NOT delete it.
-readme: $(README)
-$(README): R/03_readme.R R/lib/common.R R/lib/narrative.R $(SITE_CONFIG) $(FIGURES) $(ANNUAL) $(STATS)
+#
+# The target is $(README_STAMP), not README.md — see its definition above for why
+# using the shared file made `make all-sites` skip every site but the first.
+readme: $(README_STAMP)
+$(README_STAMP): R/03_readme.R R/lib/common.R R/lib/narrative.R $(SITE_CONFIG) $(FIGURES) $(ANNUAL) $(STATS)
 	SITE=$(SITE) $(RSCRIPT) R/03_readme.R
+	@mkdir -p $(dir $@) && touch $@
 
 open: $(REPORT)
 	open $(REPORT)
@@ -102,4 +115,4 @@ open: $(REPORT)
 # working tree dirty until `make plots` regenerates them — or restore from
 # version control. README.md itself is never removed.
 clean:
-	rm -f $(FIGURES) $(ANNUAL) $(STATS) $(REPORT) $(EXTRACT)
+	rm -f $(FIGURES) $(ANNUAL) $(STATS) $(REPORT) $(EXTRACT) $(README_STAMP)

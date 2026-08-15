@@ -30,7 +30,7 @@ suppressPackageStartupMessages({
 source("R/lib/common.R")
 source("R/lib/narrative.R")   # shares ytd_standing_text() with every per-site chapter
 
-SITE_ORDER <- c("castanet", "lyon", "zurich", "karlsruhe", "moscow", "voronezh",
+SITE_ORDER <- c("castanet", "paris", "lyon", "karlsruhe", "zurich", "moscow", "voronezh",
                 "irvine", "albuquerque", "santafe", "honolulu", "noumea")
 
 load_site <- function(key) {
@@ -81,6 +81,20 @@ if (any(cmp$yr0 > COMMON_YR0))
   stop("These sites start after COMMON_YR0 (", COMMON_YR0, "): ",
        paste(cmp[yr0 > COMMON_YR0]$city, collapse = ", "),
        ". Bump COMMON_YR0 in R/lib/common.R.")
+
+# SITE_ORDER and the physical chapter order in README.md are both hand-maintained,
+# and nothing forced them to agree — so a city inserted in one and appended in the
+# other would drift silently, exactly the failure this comment warns about above.
+# Check it instead of trusting it.
+readme_order <- sub(".*BEGIN REPORT:([a-z]+).*", "\\1",
+                    grep("<!-- BEGIN REPORT:[a-z]+ -->", readLines("README.md", warn = FALSE),
+                         value = TRUE))
+if (!identical(readme_order, SITE_ORDER))
+  stop("SITE_ORDER disagrees with the chapter order in README.md.\n",
+       "  SITE_ORDER: ", paste(SITE_ORDER, collapse = ", "), "\n",
+       "  README.md:  ", paste(readme_order, collapse = ", "), "\n",
+       "Both are hand-maintained and must match — see the ordering rule under ",
+       "Project layout in README.md.")
 
 N_SITES     <- nrow(cmp)
 N_AUTOMATED <- sum(!cmp$manual_source)

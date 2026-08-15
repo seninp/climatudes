@@ -1,6 +1,6 @@
 # Climatudes — local warming, city by city
 
-**Eleven cities, five national weather services, one method. Every city is warming.
+**Twelve cities, five national weather services, one method. Every city is warming.
 Rainfall, taken from the same records through the same pipeline, shows nothing
 comparable: at most of these cities there is no trend at all, and where there is
 one it runs wetter in some places and drier in others.**
@@ -22,7 +22,7 @@ non-commercial use only (see [Licence](#licence)).
 
 <!-- BEGIN COMPARE -->
 
-## All eleven cities, side by side
+## All twelve cities, side by side
 
 Every chapter below uses the same variables, the same completeness rule (≥ 330 valid
 days/year) and the same trend method (least-squares on annual means). The numbers here are those
@@ -30,9 +30,9 @@ same headline figures gathered in one place, not recomputed. Two rates are given
 one over its own record, and one over 1951–2025, the longest window every
 city shares. Where they disagree, the raw ranking is partly reporting record length.
 
-![Warming rate compared across all eleven cities, ranked fastest to slowest, with a shared-window rate alongside](outputs/compare/figures/warming_rate.png?v=21fb9a48)
+![Warming rate compared across all twelve cities, ranked fastest to slowest, with a shared-window rate alongside](outputs/compare/figures/warming_rate.png?v=34d0344e)
 
-<sub>Ranked by the raw rate. Santa Fe’s record runs 77 years longer than Nouméa’s, so two similar-looking rates can rest on very different
+<sub>Ranked by the raw rate. Paris’s record runs 78 years longer than Nouméa’s, so two similar-looking rates can rest on very different
 amounts of evidence — the record span and the count of complete years are in the table below.</sub>
 
 | City | Country | Record | °C/decade | 1951→ | Standing | Window ranked | Data current through |
@@ -44,13 +44,14 @@ amounts of evidence — the record span and the count of complete years are in t
 | [Lyon](#a-warming-climate-seen-from-lyon) | France | 1921→2025 (105 yr, 105 complete) | **+0.26** | +0.42 | #1 of 106 — record | 2026, Jan 1 – Aug 13 · 225 d | Aug 13, 2026 |
 | [Honolulu](#a-warming-climate-seen-from-honolulu) | USA | 1950→2025 (76 yr, 76 complete) | **+0.20** | +0.20 | #18 of 84 | 2026, Jan 1 – Aug 11 · 223 d | Aug 11, 2026 |
 | [Nouméa](#a-warming-climate-seen-from-nouméa) | France | 1951→2025 (75 yr, 75 complete) | **+0.19** | +0.19 | #5 of 76 | 2026, Jan 1 – Aug 14 · 226 d | Aug 14, 2026 |
+| [Paris](#a-warming-climate-seen-from-paris) | France | 1873→2025 (153 yr, 153 complete) | **+0.18** | +0.34 | #1 of 154 — record | 2026, Jan 1 – Aug 13 · 225 d | Aug 13, 2026 |
 | [Albuquerque](#a-warming-climate-seen-from-albuquerque) | USA | 1932→2025 (94 yr, 94 complete) | **+0.18** | +0.22 | #1 of 95 — record | 2026, Jan 1 – Aug 11 · 223 d | Aug 11, 2026 |
 | [Zurich](#a-warming-climate-seen-from-zurich) | Switzerland | 1882→2025 (144 yr, 143 complete) | **+0.18** | +0.37 | #1 of 144 — record | 2026, Jan 1 – Aug 13 · 225 d | Aug 13, 2026 |
 | [Karlsruhe](#a-warming-climate-seen-from-karlsruhe) | Germany | 1876→2025 (150 yr, 148 complete) | **+0.14** | +0.27 | #2 of 150 | 2026, Jan 1 – Aug 13 · 225 d | Aug 13, 2026 |
 | [Santa Fe](#a-warming-climate-seen-from-santa-fe) | USA | 1874→2025 (152 yr, 138 complete) | **+0.08** | +0.13 | #1 of 147 — record | 2026, Jan 1 – Jun 30 · 181 d | Jun 30, 2026 |
 
 † Moscow and Voronezh are manually exported from Roshydromet’s AISORI-M (login-gated, no automated
-refresh), so their "current through" date lags the other nine sites’ automated feeds by
+refresh), so their "current through" date lags the other ten sites’ automated feeds by
 however long it has been since the last hand export. See each city’s own "Why only one station?"
 note below.
 
@@ -75,6 +76,7 @@ or on a high desert plateau. North to south:
 | [Moscow](#a-warming-climate-seen-from-moscow) | Russia | 55.8°N | 156 m | **Dfb** — humid continental, warm summer |
 | [Voronezh](#a-warming-climate-seen-from-voronezh) | Russia | 51.6°N | 154 m | **Dfa** — humid continental, hot summer ‡ |
 | [Karlsruhe](#a-warming-climate-seen-from-karlsruhe) | Germany | 49.0°N | 116 m | **Cfb** — temperate oceanic |
+| [Paris](#a-warming-climate-seen-from-paris) | France | 48.8°N | 75 m | **Cfb** — temperate oceanic |
 | [Zurich](#a-warming-climate-seen-from-zurich) | Switzerland | 47.4°N | 604 m | **Cfb** — temperate oceanic |
 | [Lyon](#a-warming-climate-seen-from-lyon) | France | 45.7°N | 202 m | **Cfa** — humid subtropical |
 | [Castanet-Tolosan](#a-warming-climate-seen-from-castanet-tolosan) | France | 43.6°N | 151 m | **Cfa** — humid subtropical |
@@ -99,7 +101,7 @@ exact span differs by a few years where a record has gaps.
 ## How every chapter is built
 
 The comparison above is only meaningful because every city is measured the same way. That
-method is stated here once, rather than repeated in all eleven chapters; each chapter adds only
+method is stated here once, rather than repeated in all twelve chapters; each chapter adds only
 its own source, stations and rebuild command.
 
 - **Variables.** Minimum = `TN`, maximum = `TX`, mean = `(TN+TX)/2`, in °C;
@@ -288,6 +290,157 @@ comparison at the top of this page legitimate.
 
 <!-- END REPORT:castanet -->
 
+<!-- BEGIN REPORT:paris -->
+
+## A warming climate, seen from Paris
+
+*Météo-France daily temperature records, 1873 to 2025 — plus 2026 so far.*
+
+Météo-France’s daily records for the Paris area are unambiguous: since
+the late 19th century, daily minimum, maximum and mean temperatures have all risen.
+
+| Headline number | Value |
+|---|---:|
+| Warming rate, mean temperature (Paris-Montsouris) | **+0.18 °C / decade** |
+| Total rise over 152 years (1873 → 2025) | **+2.8 °C** |
+| Mean of the last decade (vs 10.6 °C in 1873–1882) | **13.7 °C** |
+| Frost days per year, 1873–1882 → 2016–2025 | **55 → 15** |
+| Hot days (≥ 30 °C) per year, 1873–1882 → 2016–2025 | **8 → 20** |
+| Complete station-years analysed | **198** |
+| 2026 year-to-date (Jan 1 – Aug 13), against 153 prior years | **#1 of 154 — record** |
+
+### The long view: annual means
+
+![Annual mean temperatures around Paris, 1873 to 2025](outputs/paris/figures/temperature_series.png)
+
+<sub>Annual means of daily temperatures. The thick curves are LOESS smoothings that
+highlight the climate trend; the points are annual means. The green series (Paris-Luxembourg) is the gauge in the Jardin du Luxembourg, 2.5 km north in the 6th arrondissement. It tracks the long Paris-Montsouris reference mean closely.</sub>
+
+At Paris-Montsouris — the station with the longest record (1873→2025) — the annual
+mean temperature rises by **+0.18 °C per decade**, about **+2.8 °C** over the
+whole period. The local Paris-Luxembourg station only covers 1978→2025. Its slope over that shorter, more recent window is steeper (+0.48 °C/decade), and so is Paris-Montsouris’s over the same years (+0.49 °C/decade): recent decades warm faster, and over these years the two stations agree to within 0.01 °C/decade.
+
+
+
+### This year, against every year before it
+
+![Per-year mean over the same Jan-to-cutoff window, as a departure from the 1873–2025 mean, with 2026 the largest bar](outputs/paris/figures/temperature_ytd.png)
+
+<sub>Each bar is a year’s mean over the <em>same window</em> — <strong>Jan 1 – Aug 13</strong> —
+shown as its departure from the 1873–2025 mean (11.9 °C): red above, blue
+below. Holding the part-of-year identical is what makes one year comparable with another. The bars swing from blue to red over
+the decades — and 2026 is the tallest of all.</sub>
+
+Measured like-for-like, **2026 is the warmest Jan 1 – Aug 13 in 154 years** at Paris-Montsouris: **15.9 °C** — +1.1 °C above the previous record (2020, 14.8 °C) and **+4.0 °C above the 1873–2025 mean** (11.9 °C).
+
+> [!NOTE]
+> A part-year mean cannot be compared with other years' full-year means. That is why 2026 appears on the long-view chart above only as a marked, hollow "to date" point — a part-year mean on an axis of full-year means — while its like-for-like standing is the chart here.
+
+### Every year, day by day
+
+![Daily temperature climatology, every year January to December, hot years red and cold years blue](outputs/paris/figures/temperature_climatology.png)
+
+<sub>Each thin line is a single year’s daily mean temperature from January to December
+(1872–2025, 154 years), smoothed with a centred
+<strong>3-day rolling mean</strong> (each day = the average of itself
+±1 day) to tame day-to-day jitter while keeping the shape. The dark line
+is the long-term daily normal; the bold red line is <strong>2026 so far</strong>.
+Years whose smoothed daily mean ever rose above <strong>+30 °C</strong> are
+highlighted in red and labelled; years that ever fell below
+<strong>-5 °C</strong> in blue.</sub>
+
+> [!NOTE]
+> **Hottest and coldest years.** Measured on the smoothed daily-mean curve,
+> **3** years pushed above +30 °C (2003, 2019, 2020)
+> while **47** years dropped below -5 °C (first in 1874, most recently 1996 and 1997), all but one before 2000.
+> No year hit both extremes. The hot extremes and the cold extremes fall in different eras, which is itself a fingerprint of the warming trend. <sub>(If the threshold is applied instead to the raw, unsmoothed daily mean, 1947 and 2003 each touch both extremes.)</sub>
+
+### The record days
+
+The single most extreme days in each station’s record. “Hottest” is the highest daily
+maximum (TX), “coldest” the lowest daily minimum (TN).
+
+| Station (record span) | Extreme | Date | Min (TN) | Max (TX) |
+|---|---|---|---:|---:|
+| Paris-Montsouris <sub>1872–2026</sub> | Hottest 🔥 | 2019-07-25 | 25.0 | **42.6** |
+| Paris-Montsouris <sub>1872–2026</sub> | Coldest ❄️ | 1879-12-10 | **-23.9** | -6.2 |
+| Paris-Luxembourg <sub>1978–2026</sub> | Hottest 🔥 | 2026-06-24 | 24.7 | **42.2** |
+| Paris-Luxembourg <sub>1978–2026</sub> | Coldest ❄️ | 1985-01-17 | **-13.8** | -1.6 |
+
+At Paris-Montsouris, the all-time heat (2019-07-25) postdates the all-time cold (1879-12-10) by 140 years.
+
+> [!NOTE]
+> **Why Paris-Luxembourg?** The Jardin du Luxembourg gauge (station 75106001), 2.5 km north of Montsouris, has recorded temperature since 1978 — 45 complete years, with only 2013–2015 missing — and provides the local comparison. Paris-Montsouris (station 75114001), in the Parc Montsouris in the 14th, provides the trend, and it is the strongest record in this collection: 1873 onward with 153 complete years and no incomplete year in between. The Paris Observatory series is older still, beginning in 1816, but it ends in 1903 and has nineteen gaps, so it cannot carry a trend to the present.
+
+### The last decade (Paris-Montsouris)
+
+| Year | Min (TN) | Max (TX) | Mean |
+|---|---:|---:|---:|
+| 2016 | 9.3 | 16.4 | **12.9** |
+| 2017 | 9.6 | 17.2 | **13.4** |
+| 2018 | 10.0 | 17.8 | **13.9** |
+| 2019 | 9.8 | 17.5 | **13.7** |
+| 2020 | 10.3 | 18.3 | **14.3** |
+| 2021 | 9.1 | 16.6 | **12.9** |
+| 2022 | 10.3 | 18.3 | **14.3** |
+| 2023 | 10.5 | 18.0 | **14.3** |
+| 2024 | 10.1 | 17.0 | **13.6** |
+| 2025 | 9.9 | 17.8 | **13.8** |
+| 2026 *(to date)* | 11.2 | 20.6 | **15.9** |
+
+### Frost days down, hot days up
+
+A degree of warming is abstract; a count of days is not. Paris-Montsouris’s first
+complete decade (1873–1882) against its last (2016–2025):
+
+| Threshold days per year | 1873–1882 | 2016–2025 |
+|---|---:|---:|
+| Frost days (min < 0 °C) | 55 | **15** |
+| Hot days (max ≥ 30 °C) | 8 | **20** |
+| Very hot days (max ≥ 35 °C) | 1 | **4** |
+| Tropical nights (min ≥ 20 °C) | 0 | **10** |
+
+<sub>Counts of days per year crossing each threshold, averaged over the first and last
+complete decades of the record.</sub>
+
+### What about the rain?
+
+Temperature is only half of a climate. Over 1873–2025 (153 years),
+annual precipitation at Paris-Montsouris shows **a statistically significant trend (+6 mm/decade, p = 0.00)**.
+
+![Annual rainfall totals around Paris](outputs/paris/figures/rain_series.png)
+
+<sub>Annual total precipitation. The dashed line is Paris-Montsouris’s long-term mean
+(620 mm/yr); the thick curves are LOESS smoothings. The year-to-year swings are
+large — from 274 mm (1921) to 901 mm (2024) —
+but the long-run slope (+6 mm/decade) is measurable and statistically significant (p = 0.00).</sub>
+
+Rainfall here is not flat: the long run tilts wetter. The tilt is small against the year-to-year spread above, which is why it is easy to miss in any single decade.
+
+![Monthly rainfall through the year at Paris-Montsouris, one line per year](outputs/paris/figures/rain_climatology.png)
+
+<sub>Rain through the year: each grey line is one year’s monthly totals, the dark line the
+long-term monthly normal, the bold blue line 2026 so far. July is the
+wettest month on average (58 mm), February the driest
+(42 mm) — but the spread between years is why that slow trend is easy to miss from the monthly shape alone.</sub>
+
+### Methodology
+
+Only what is specific to this city is listed here. The variables, completeness rule,
+smoothing, thresholds and trend method are the same for every city and are stated once, in
+[How every chapter is built](#how-every-chapter-is-built) — which is also what makes the
+comparison at the top of this page legitimate.
+
+- **Source.** Météo-France — Données climatologiques de base – quotidiennes, Île-de-France, France. Full citation
+  in [Data sources](#data-sources) below.
+- **Stations.** Paris-Luxembourg (75106001) and Paris-Montsouris (75114001).
+- **Rebuild this chapter.** `SITE=paris make all` — every figure and number above is
+  regenerated from the source data on each run.
+
+<sub>Figures and numbers above are generated — edit `R/03_readme.R`, not this block.</sub>
+
+<!-- END REPORT:paris -->
+
 <!-- BEGIN REPORT:lyon -->
 
 ## A warming climate, seen from Lyon
@@ -439,6 +592,155 @@ comparison at the top of this page legitimate.
 
 <!-- END REPORT:lyon -->
 
+<!-- BEGIN REPORT:karlsruhe -->
+
+## A warming climate, seen from Karlsruhe
+
+*DWD (Deutscher Wetterdienst) daily temperature records, 1876 to 2025 — plus 2026 so far.*
+
+DWD (Deutscher Wetterdienst)’s daily records for the Karlsruhe area are unambiguous: since
+the late 19th century, daily minimum, maximum and mean temperatures have all risen.
+
+| Headline number | Value |
+|---|---:|
+| Warming rate, mean temperature (Rheinstetten) | **+0.14 °C / decade** |
+| Total rise over 149 years (1876 → 2025) | **+2.1 °C** |
+| Mean of the last decade (vs 9.8 °C in 1876–1885) | **11.9 °C** |
+| Frost days per year, 1876–1885 → 2016–2025 | **67 → 59** |
+| Hot days (≥ 30 °C) per year, 1876–1885 → 2016–2025 | **7 → 26** |
+| Complete station-years analysed | **148** |
+| 2026 year-to-date (Jan 1 – Aug 13), against 149 prior years | **#2 of 150** |
+
+### The long view: annual means
+
+![Annual mean temperatures around Karlsruhe, 1876 to 2025](outputs/karlsruhe/figures/temperature_series.png)
+
+<sub>Annual means of daily temperatures. The thick curves are LOESS smoothings that
+highlight the climate trend; the points are annual means.</sub>
+
+At Rheinstetten — the station with the longest record (1876→2025) — the annual
+mean temperature rises by **+0.14 °C per decade**, about **+2.1 °C** over the
+whole period. Karlsruhe-Wolfartsweier carries no temperature record; Rheinstetten alone provides the temperature trend for this area. The local comparison here uses rainfall instead — see below.
+
+
+
+### This year, against every year before it
+
+![Per-year mean over the same Jan-to-cutoff window, as a departure from the 1876–2025 mean, with 2026 highlighted](outputs/karlsruhe/figures/temperature_ytd.png)
+
+<sub>Each bar is a year’s mean over the <em>same window</em> — <strong>Jan 1 – Aug 13</strong> —
+shown as its departure from the 1876–2025 mean (11.0 °C): red above, blue
+below. Holding the part-of-year identical is what makes one year comparable with another. The bars swing from blue to red over
+the decades.</sub>
+
+Measured like-for-like over Jan 1 – Aug 13, 2026 ranks **#2 of 150** at Rheinstetten (13.3 °C). The warmest such window on record remains 2007 (13.6 °C).
+
+> [!NOTE]
+> A part-year mean cannot be compared with other years' full-year means. That is why 2026 appears on the long-view chart above only as a marked, hollow "to date" point — a part-year mean on an axis of full-year means — while its like-for-like standing is the chart here.
+
+### Every year, day by day
+
+![Daily temperature climatology, every year January to December, hot years red and cold years blue](outputs/karlsruhe/figures/temperature_climatology.png)
+
+<sub>Each thin line is a single year’s daily mean temperature from January to December
+(1876–2025, 150 years), smoothed with a centred
+<strong>3-day rolling mean</strong> (each day = the average of itself
+±1 day) to tame day-to-day jitter while keeping the shape. The dark line
+is the long-term daily normal; the bold red line is <strong>2026 so far</strong>.
+Years whose smoothed daily mean ever rose above <strong>+30 °C</strong> are
+highlighted in red and labelled; years that ever fell below
+<strong>-5 °C</strong> in blue.</sub>
+
+> [!NOTE]
+> **Hottest and coldest years.** Measured on the smoothed daily-mean curve,
+> **0** years pushed above +30 °C
+> while **107** years dropped below -5 °C (first in 1876, most recently 2021 and 2022).
+>   <sub>(If the threshold is applied instead to the raw, unsmoothed daily mean, 1952 and 2003 each touch both extremes.)</sub>
+
+### The record days
+
+The single most extreme days in each station’s record. “Hottest” is the highest daily
+maximum (TX), “coldest” the lowest daily minimum (TN).
+
+| Station (record span) | Extreme | Date | Min (TN) | Max (TX) |
+|---|---|---|---:|---:|
+| Rheinstetten <sub>1876–2026</sub> | Hottest 🔥 | 2026-06-27 | 20.7 | **40.5** |
+| Rheinstetten <sub>1876–2026</sub> | Coldest ❄️ | 1940-01-18 | **-25.4** | -12.5 |
+
+At Rheinstetten, the all-time heat (2026-06-27) postdates the all-time cold (1940-01-18) by 86 years.
+
+> [!NOTE]
+> **Why Karlsruhe-Wolfartsweier?** No active DWD station near Grötzingen — a district on Karlsruhe’s eastern edge — carries a temperature record; the nearest that once did (Augustenberg, under 1 km away) closed in 1985. Karlsruhe-Wolfartsweier (station 02523), 5.4 km away and active since 1931, is the nearest active rain gauge and stands in for local rainfall. Rheinstetten (station 04177) provides the temperature trend, spliced with its in-city predecessor (02522, 1876–2008) for the historical depth needed to see the underlying trend.
+
+### The last decade (Rheinstetten)
+
+| Year | Min (TN) | Max (TX) | Mean |
+|---|---:|---:|---:|
+| 2016 | 6.6 | 15.8 | **11.2** |
+| 2017 | 6.6 | 16.5 | **11.5** |
+| 2018 | 7.1 | 17.7 | **12.4** |
+| 2019 | 6.5 | 17.0 | **11.8** |
+| 2020 | 6.7 | 17.6 | **12.1** |
+| 2021 | 5.9 | 15.5 | **10.7** |
+| 2022 | 7.1 | 17.9 | **12.5** |
+| 2023 | 7.9 | 17.6 | **12.8** |
+| 2024 | 7.7 | 16.9 | **12.3** |
+| 2025 | 6.3 | 17.0 | **11.6** |
+| 2026 *(to date)* | 7.1 | 19.5 | **13.3** |
+
+### Frost days down, hot days up
+
+A degree of warming is abstract; a count of days is not. Rheinstetten’s first
+complete decade (1876–1885) against its last (2016–2025):
+
+| Threshold days per year | 1876–1885 | 2016–2025 |
+|---|---:|---:|
+| Frost days (min < 0 °C) | 67 | **59** |
+| Hot days (max ≥ 30 °C) | 7 | **26** |
+| Very hot days (max ≥ 35 °C) | 0 | **3** |
+| Tropical nights (min ≥ 20 °C) | 1 | **1** |
+
+<sub>Counts of days per year crossing each threshold, averaged over the first and last
+complete decades of the record.</sub>
+
+### What about the rain?
+
+Temperature is only half of a climate. Over 1876–2025 (148 years),
+annual precipitation at Rheinstetten shows **a statistically significant trend (-11 mm/decade, p = 0.00)**.
+
+![Annual rainfall totals around Karlsruhe](outputs/karlsruhe/figures/rain_series.png)
+
+<sub>Annual total precipitation. The dashed line is Rheinstetten’s long-term mean
+(793 mm/yr); the thick curves are LOESS smoothings. The year-to-year swings are
+large — from 456 mm (1959) to 1452 mm (1882) —
+but the long-run slope (-11 mm/decade) is measurable and statistically significant (p = 0.00).</sub>
+
+Rainfall here is not flat: the long run tilts drier. The tilt is small against the year-to-year spread above, which is why it is easy to miss in any single decade.
+
+![Monthly rainfall through the year at Rheinstetten, one line per year](outputs/karlsruhe/figures/rain_climatology.png)
+
+<sub>Rain through the year: each grey line is one year’s monthly totals, the dark line the
+long-term monthly normal, the bold blue line 2026 so far. June is the
+wettest month on average (82 mm), February the driest
+(52 mm) — but the spread between years is why that slow trend is easy to miss from the monthly shape alone.</sub>
+
+### Methodology
+
+Only what is specific to this city is listed here. The variables, completeness rule,
+smoothing, thresholds and trend method are the same for every city and are stated once, in
+[How every chapter is built](#how-every-chapter-is-built) — which is also what makes the
+comparison at the top of this page legitimate.
+
+- **Source.** DWD (Deutscher Wetterdienst) — Climate Data Center — daily station observations (KL) & precipitation (RR), Baden-Württemberg, Germany. Full citation
+  in [Data sources](#data-sources) below.
+- **Stations.** Karlsruhe-Wolfartsweier (02523) and Rheinstetten (04177).
+- **Rebuild this chapter.** `SITE=karlsruhe make all` — every figure and number above is
+  regenerated from the source data on each run.
+
+<sub>Figures and numbers above are generated — edit `R/03_readme.R`, not this block.</sub>
+
+<!-- END REPORT:karlsruhe -->
+
 <!-- BEGIN REPORT:zurich -->
 
 ## A warming climate, seen from Zurich
@@ -589,155 +891,6 @@ comparison at the top of this page legitimate.
 <sub>Figures and numbers above are generated — edit `R/03_readme.R`, not this block.</sub>
 
 <!-- END REPORT:zurich -->
-
-<!-- BEGIN REPORT:karlsruhe -->
-
-## A warming climate, seen from Karlsruhe
-
-*DWD (Deutscher Wetterdienst) daily temperature records, 1876 to 2025 — plus 2026 so far.*
-
-DWD (Deutscher Wetterdienst)’s daily records for the Karlsruhe area are unambiguous: since
-the late 19th century, daily minimum, maximum and mean temperatures have all risen.
-
-| Headline number | Value |
-|---|---:|
-| Warming rate, mean temperature (Rheinstetten) | **+0.14 °C / decade** |
-| Total rise over 149 years (1876 → 2025) | **+2.1 °C** |
-| Mean of the last decade (vs 9.8 °C in 1876–1885) | **11.9 °C** |
-| Frost days per year, 1876–1885 → 2016–2025 | **67 → 59** |
-| Hot days (≥ 30 °C) per year, 1876–1885 → 2016–2025 | **7 → 26** |
-| Complete station-years analysed | **148** |
-| 2026 year-to-date (Jan 1 – Aug 13), against 149 prior years | **#2 of 150** |
-
-### The long view: annual means
-
-![Annual mean temperatures around Karlsruhe, 1876 to 2025](outputs/karlsruhe/figures/temperature_series.png)
-
-<sub>Annual means of daily temperatures. The thick curves are LOESS smoothings that
-highlight the climate trend; the points are annual means.</sub>
-
-At Rheinstetten — the station with the longest record (1876→2025) — the annual
-mean temperature rises by **+0.14 °C per decade**, about **+2.1 °C** over the
-whole period. Karlsruhe-Wolfartsweier carries no temperature record; Rheinstetten alone provides the temperature trend for this area. The local comparison here uses rainfall instead — see below.
-
-
-
-### This year, against every year before it
-
-![Per-year mean over the same Jan-to-cutoff window, as a departure from the 1876–2025 mean, with 2026 highlighted](outputs/karlsruhe/figures/temperature_ytd.png)
-
-<sub>Each bar is a year’s mean over the <em>same window</em> — <strong>Jan 1 – Aug 13</strong> —
-shown as its departure from the 1876–2025 mean (11.0 °C): red above, blue
-below. Holding the part-of-year identical is what makes one year comparable with another. The bars swing from blue to red over
-the decades.</sub>
-
-Measured like-for-like over Jan 1 – Aug 13, 2026 ranks **#2 of 150** at Rheinstetten (13.3 °C). The warmest such window on record remains 2007 (13.6 °C).
-
-> [!NOTE]
-> A part-year mean cannot be compared with other years' full-year means. That is why 2026 appears on the long-view chart above only as a marked, hollow "to date" point — a part-year mean on an axis of full-year means — while its like-for-like standing is the chart here.
-
-### Every year, day by day
-
-![Daily temperature climatology, every year January to December, hot years red and cold years blue](outputs/karlsruhe/figures/temperature_climatology.png)
-
-<sub>Each thin line is a single year’s daily mean temperature from January to December
-(1876–2025, 150 years), smoothed with a centred
-<strong>3-day rolling mean</strong> (each day = the average of itself
-±1 day) to tame day-to-day jitter while keeping the shape. The dark line
-is the long-term daily normal; the bold red line is <strong>2026 so far</strong>.
-Years whose smoothed daily mean ever rose above <strong>+30 °C</strong> are
-highlighted in red and labelled; years that ever fell below
-<strong>-5 °C</strong> in blue.</sub>
-
-> [!NOTE]
-> **Hottest and coldest years.** Measured on the smoothed daily-mean curve,
-> **0** years pushed above +30 °C
-> while **107** years dropped below -5 °C (first in 1876, most recently 2021 and 2022).
->   <sub>(If the threshold is applied instead to the raw, unsmoothed daily mean, 1952 and 2003 each touch both extremes.)</sub>
-
-### The record days
-
-The single most extreme days in each station’s record. “Hottest” is the highest daily
-maximum (TX), “coldest” the lowest daily minimum (TN).
-
-| Station (record span) | Extreme | Date | Min (TN) | Max (TX) |
-|---|---|---|---:|---:|
-| Rheinstetten <sub>1876–2026</sub> | Hottest 🔥 | 2026-06-27 | 20.7 | **40.5** |
-| Rheinstetten <sub>1876–2026</sub> | Coldest ❄️ | 1940-01-18 | **-25.4** | -12.5 |
-
-At Rheinstetten, the all-time heat (2026-06-27) postdates the all-time cold (1940-01-18) by 86 years.
-
-> [!NOTE]
-> **Why Karlsruhe-Wolfartsweier?** No active DWD station near Grötzingen — a district on Karlsruhe’s eastern edge — carries a temperature record; the nearest that once did (Augustenberg, under 1 km away) closed in 1985. Karlsruhe-Wolfartsweier (station 02523), 5.4 km away and active since 1931, is the nearest active rain gauge and stands in for local rainfall. Rheinstetten (station 04177) provides the temperature trend, spliced with its in-city predecessor (02522, 1876–2008) for the historical depth needed to see the underlying trend.
-
-### The last decade (Rheinstetten)
-
-| Year | Min (TN) | Max (TX) | Mean |
-|---|---:|---:|---:|
-| 2016 | 6.6 | 15.8 | **11.2** |
-| 2017 | 6.6 | 16.5 | **11.5** |
-| 2018 | 7.1 | 17.7 | **12.4** |
-| 2019 | 6.5 | 17.0 | **11.8** |
-| 2020 | 6.7 | 17.6 | **12.1** |
-| 2021 | 5.9 | 15.5 | **10.7** |
-| 2022 | 7.1 | 17.9 | **12.5** |
-| 2023 | 7.9 | 17.6 | **12.8** |
-| 2024 | 7.7 | 16.9 | **12.3** |
-| 2025 | 6.3 | 17.0 | **11.6** |
-| 2026 *(to date)* | 7.1 | 19.5 | **13.3** |
-
-### Frost days down, hot days up
-
-A degree of warming is abstract; a count of days is not. Rheinstetten’s first
-complete decade (1876–1885) against its last (2016–2025):
-
-| Threshold days per year | 1876–1885 | 2016–2025 |
-|---|---:|---:|
-| Frost days (min < 0 °C) | 67 | **59** |
-| Hot days (max ≥ 30 °C) | 7 | **26** |
-| Very hot days (max ≥ 35 °C) | 0 | **3** |
-| Tropical nights (min ≥ 20 °C) | 1 | **1** |
-
-<sub>Counts of days per year crossing each threshold, averaged over the first and last
-complete decades of the record.</sub>
-
-### What about the rain?
-
-Temperature is only half of a climate. Over 1876–2025 (148 years),
-annual precipitation at Rheinstetten shows **a statistically significant trend (-11 mm/decade, p = 0.00)**.
-
-![Annual rainfall totals around Karlsruhe](outputs/karlsruhe/figures/rain_series.png)
-
-<sub>Annual total precipitation. The dashed line is Rheinstetten’s long-term mean
-(793 mm/yr); the thick curves are LOESS smoothings. The year-to-year swings are
-large — from 456 mm (1959) to 1452 mm (1882) —
-but the long-run slope (-11 mm/decade) is measurable and statistically significant (p = 0.00).</sub>
-
-Rainfall here is not flat: the long run tilts drier. The tilt is small against the year-to-year spread above, which is why it is easy to miss in any single decade.
-
-![Monthly rainfall through the year at Rheinstetten, one line per year](outputs/karlsruhe/figures/rain_climatology.png)
-
-<sub>Rain through the year: each grey line is one year’s monthly totals, the dark line the
-long-term monthly normal, the bold blue line 2026 so far. June is the
-wettest month on average (82 mm), February the driest
-(52 mm) — but the spread between years is why that slow trend is easy to miss from the monthly shape alone.</sub>
-
-### Methodology
-
-Only what is specific to this city is listed here. The variables, completeness rule,
-smoothing, thresholds and trend method are the same for every city and are stated once, in
-[How every chapter is built](#how-every-chapter-is-built) — which is also what makes the
-comparison at the top of this page legitimate.
-
-- **Source.** DWD (Deutscher Wetterdienst) — Climate Data Center — daily station observations (KL) & precipitation (RR), Baden-Württemberg, Germany. Full citation
-  in [Data sources](#data-sources) below.
-- **Stations.** Karlsruhe-Wolfartsweier (02523) and Rheinstetten (04177).
-- **Rebuild this chapter.** `SITE=karlsruhe make all` — every figure and number above is
-  regenerated from the source data on each run.
-
-<sub>Figures and numbers above are generated — edit `R/03_readme.R`, not this block.</sub>
-
-<!-- END REPORT:karlsruhe -->
 
 <!-- BEGIN REPORT:moscow -->
 
@@ -1799,9 +1952,10 @@ only, which is why their raw exports are never committed to this repository:
 | Site | Source | Scope | Licence |
 |---|---|---|---|
 | Castanet-Tolosan | Météo-France — *Données climatologiques de base – quotidiennes* | dept. 31 (Haute-Garonne), `RR-T-Vent` daily files, three eras (`avant-1949`, `previous-1950-2024`, `latest-2025-2026`) | Licence Ouverte / Open Licence (Etalab 2.0) |
+| Paris | Météo-France — *Données climatologiques de base – quotidiennes* | dept. 75 (Paris), `RR-T-Vent` daily files, same three eras | Licence Ouverte / Open Licence (Etalab 2.0) |
 | Lyon | Météo-France — *Données climatologiques de base – quotidiennes* | dept. 69 (Rhône), `RR-T-Vent` daily files, same three eras | Licence Ouverte / Open Licence (Etalab 2.0) |
-| Zurich | MeteoSwiss — Open Government Data | `ogd-nbcn` (homogeneous climate stations) + `ogd-smn` (automatic weather stations) | MeteoSwiss Open Data (attribution: "Source: MeteoSwiss") |
 | Karlsruhe | DWD (Deutscher Wetterdienst) — Climate Data Center | `kl` (daily station observations) + `more_precip` (precipitation only) | Creative Commons BY 4.0 |
+| Zurich | MeteoSwiss — Open Government Data | `ogd-nbcn` (homogeneous climate stations) + `ogd-smn` (automatic weather stations) | MeteoSwiss Open Data (attribution: "Source: MeteoSwiss") |
 | Moscow | Roshydromet / RIHMI-WDC — AISORI-M | Сутки → TTTR (temp. + precip.), WMO 27612, manually exported (login-gated, no stable URL) | Not openly licensed — Rospatent 2019621537; personal, non-commercial use only |
 | Voronezh | Roshydromet / RIHMI-WDC — AISORI-M | Сутки → TTTR (temp. + precip.), WMO 34123, manually exported (login-gated, no stable URL) | Not openly licensed — Rospatent 2019621537; personal, non-commercial use only |
 | Irvine | NOAA — GHCN-Daily, Access Data Service v1 | `daily-summaries` (TMAX/TMIN/PRCP), stations USC00049087/044303 (spliced) + USW00093184 | U.S. Government work — no copyright restriction |
@@ -1820,12 +1974,14 @@ Full dataset URLs and citation text are in each site's report above and in
 |---|------|------|--------|------|
 | Castanet-Tolosan | `31035001` | Auzeville-Tolosane-INRAE | 2002→ | Local station, on the edge of Castanet-Tolosan (INRAE/ENSAT campus) |
 | Castanet-Tolosan | `31069001` | Toulouse-Blagnac | 1947→ | Long regional reference; used for the trend and the daily climatology |
+| Paris | `75106001` | Paris-Luxembourg | 1978→ | Local station, the Jardin du Luxembourg gauge 2.5 km north; 45 complete years, 2013–2015 missing |
+| Paris | `75114001` | Paris-Montsouris | 1873→ | Long reference — 153 complete years and no incomplete year in between, the strongest record here |
 | Lyon | `69299001` | Lyon-Saint-Exupéry | 1976→ | Local station, the current international airport ~25 km east; 50 complete years, no gaps |
 | Lyon | `69029001` | Lyon-Bron | 1921→ | Long reference, the historic airport 7 km east — 105 complete years and no incomplete year in between |
-| Zurich | `REH` | Zürich-Affoltern | 1961→ (temp. 1978→) | Local station, in Zurich's Affoltern district (MeteoSwiss automatic network) |
-| Zurich | `SMA` | Zürich-Fluntern | 1864→ (TN/TX 1881→) | Long regional reference; MeteoSwiss's homogeneous series for the trend and climatology |
 | Karlsruhe | `02523` | Karlsruhe-Wolfartsweier | 1931→ | Local station — **rainfall only**, no temperature record near Grötzingen (see below) |
 | Karlsruhe | `04177` | Rheinstetten | 1876→ | Long regional reference — spliced with predecessor 02522 (city-centre, 1876→2008) at its 2008-11-01 handoff to Rheinstetten, closing what would otherwise be a 1985–2008 gap in 04177's own record |
+| Zurich | `REH` | Zürich-Affoltern | 1961→ (temp. 1978→) | Local station, in Zurich's Affoltern district (MeteoSwiss automatic network) |
+| Zurich | `SMA` | Zürich-Fluntern | 1864→ (TN/TX 1881→) | Long regional reference; MeteoSwiss's homogeneous series for the trend and climatology |
 | Moscow | `27612` | Moscow | 1948→2025 | Single station — no local pairing; this export has no second WMO index |
 | Voronezh | `34123` | Voronezh | 1940→2026 | Single station — no local pairing; this export has no second WMO index |
 | Irvine | `USW00093184` | John Wayne Airport | 1999→ | Local station, on Irvine's border — no splice needed, but the shortest record of the pair |
@@ -1852,9 +2008,10 @@ target town, so every pairing is a compromise. The compromises:
 | Site | Local station | Compromise |
 |---|---|---|
 | Castanet-Tolosan | Auzeville-Tolosane-INRAE | None to speak of — it sits on the town boundary. |
+| Paris | Paris-Luxembourg | None to speak of — a second city-centre park gauge, 2.5 km away, missing only 2013–2015. |
 | Lyon | Lyon-Saint-Exupéry | None — gap-free since 1976, though much shorter than the reference. Saint-Genis-Laval reaches back to 1881 but is missing 1920–1939. |
-| Zurich | Zürich-Affoltern | Affoltern is outside MeteoSwiss's homogeneous long-term network, so this is the closest full station. |
 | Karlsruhe | Karlsruhe-Wolfartsweier | Rainfall only. The nearest station that also measured temperature (Augustenberg, under 1 km from Grötzingen) closed in 1985. |
+| Zurich | Zürich-Affoltern | Affoltern is outside MeteoSwiss's homogeneous long-term network, so this is the closest full station. |
 | Moscow, Voronezh | *none* | Exported from AISORI-M with one WMO index each; there is no second station to pair. |
 | Irvine | John Wayne Airport | Gap-free, but only from 1999, against the reference series' 1915. |
 | Albuquerque | Albuquerque Foothills NE | A genuinely different microclimate, but its temperature reporting stops in June 2026. |
@@ -1882,6 +2039,7 @@ climatudes/
 │   │   └── narrative.R        shared report prose/number logic (build_common_fills())
 │   ├── sites/
 │   │   ├── castanet.R         Castanet-Tolosan: stations, paths, citation, narrative facts
+│   │   ├── paris.R            Paris: same, for Météo-France dept. 75
 │   │   ├── lyon.R             Lyon: same, for Météo-France dept. 69
 │   │   ├── zurich.R           Zurich: same, for MeteoSwiss
 │   │   ├── karlsruhe.R        Karlsruhe: same, for DWD
@@ -2025,7 +2183,7 @@ Source data:
 
 Grouped by provider, since the licence follows the source rather than the city:
 
-- Castanet-Tolosan, Lyon and Nouméa © Météo-France, *Licence Ouverte / Open
+- Castanet-Tolosan, Paris, Lyon and Nouméa © Météo-France, *Licence Ouverte / Open
   Licence (Etalab 2.0)*.
 - Zurich © MeteoSwiss Open Data — attribution required: "Source: MeteoSwiss".
 - Karlsruhe © DWD (Deutscher Wetterdienst), *Creative Commons BY 4.0*.
