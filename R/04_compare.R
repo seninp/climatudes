@@ -162,10 +162,25 @@ p <- ggplot(cmp, aes(y = city_f)) +
     plot.background = element_rect(fill = "white", colour = NA)
   )
 
-agg_png("outputs/compare/figures/warming_rate.png",
-        width = 2400, height = 1300, res = 200, background = "white")
+FIG_PATH <- "outputs/compare/figures/warming_rate.png"
+agg_png(FIG_PATH, width = 2400, height = 1300, res = 200, background = "white")
 print(p); invisible(dev.off())
-message("Wrote outputs/compare/figures/warming_rate.png")
+message("Wrote ", FIG_PATH)
+
+# GitHub proxies README images and caches them by URL. Because this file's path
+# never changes, adding a city can leave the OLD chart on display next to text
+# that already says "eleven" — observed twice, and confusing enough both times to
+# look like a failed push when the committed bytes were in fact correct. Append a
+# short content hash so the URL changes exactly when the image does, which gives
+# the proxy a new key to fetch.
+#
+# Applied only to this figure, deliberately. The per-site climatology PNGs are
+# NOT byte-stable across runs (ggrepel places 100+ year labels without a stable
+# tie-break), so hashing those would make README.md churn on every rebuild and
+# destroy its idempotency. This chart has no repelled labels and re-renders
+# identically, verified by building it twice and comparing checksums.
+FIG_REF <- sprintf("%s?v=%s", FIG_PATH,
+                   substr(unname(tools::md5sum(FIG_PATH)), 1, 8))
 
 # ---- TABLE -------------------------------------------------------------------
 # A standing is NOT the same claim from row to row, and the windows are further
@@ -226,7 +241,7 @@ same headline figures gathered in one place, not recomputed. Two rates are given
 one over its own record, and one over ', COMMON_YR0, '–', max(cmp$yr1), ', the longest window every
 city shares. Where they disagree, the raw ranking is partly reporting record length.
 
-![Warming rate compared across all ', num_word(N_SITES), ' cities, ranked fastest to slowest, with a shared-window rate alongside](outputs/compare/figures/warming_rate.png)
+![Warming rate compared across all ', num_word(N_SITES), ' cities, ranked fastest to slowest, with a shared-window rate alongside](', FIG_REF, ')
 
 <sub>Ranked by the raw rate. ', longest$city, '’s record runs ', longest$nyears - shortest$nyears,
 ' years longer than ', shortest$city, '’s, so two similar-looking rates can rest on very different

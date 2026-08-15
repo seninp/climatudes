@@ -30,7 +30,7 @@ same headline figures gathered in one place, not recomputed. Two rates are given
 one over its own record, and one over 1951–2025, the longest window every
 city shares. Where they disagree, the raw ranking is partly reporting record length.
 
-![Warming rate compared across all eleven cities, ranked fastest to slowest, with a shared-window rate alongside](outputs/compare/figures/warming_rate.png)
+![Warming rate compared across all eleven cities, ranked fastest to slowest, with a shared-window rate alongside](outputs/compare/figures/warming_rate.png?v=21fb9a48)
 
 <sub>Ranked by the raw rate. Santa Fe’s record runs 77 years longer than Nouméa’s, so two similar-looking rates can rest on very different
 amounts of evidence — the record span and the count of complete years are in the table below.</sub>
