@@ -71,7 +71,7 @@ resolve_italic_md   <- function(x) gsub(ITALIC_CLOSE, "*",     gsub(ITALIC_OPEN,
 # Voronezh's fell by 12-28%, nowhere near half. A plain direction word makes
 # no claim about magnitude, so it can't be wrong about magnitude.
 extreme_direction <- function(early, recent) {
-  if (early == 0 && recent == 0) "stay at zero"
+  if (early == 0 && recent == 0) "at zero"
   else if (recent > early) "up"
   else if (recent < early) "down"
   else "unchanged"
@@ -100,7 +100,7 @@ build_common_fills <- function(stats, site) {
     "No single year managed to hit both extremes." else
     sprintf("Years hitting both extremes: %s.", join_and(stats$both_years))
 
-  hot_recent_clause <- if (isTRUE(stats$hot_all_recent)) " — all of them recent —" else " —"
+  hot_recent_clause <- if (isTRUE(stats$hot_all_recent)) " — all of them recent —" else ""
   cold_era_clause   <- if (isTRUE(stats$cold_all_but_one)) ", all but one before 2000" else ""
   # Parenthetical year lists — omitted entirely (not left as an empty "()")
   # when a site's climate never crosses one of the two thresholds, e.g. Zurich
@@ -248,9 +248,18 @@ build_common_fills <- function(stats, site) {
 
   ref_rec <- stats$records[[which(vapply(stats$records, function(r) r$station, character(1)) ==
                                    site$reference_station)]]
-  closing_record_note <- sprintf(
-    "At %s, the all-time heat (%s) is far more recent than the all-time cold (%s) — the same warming signature seen throughout this report.",
-    site$reference_station, ref_rec$hot$date, ref_rec$cold$date)
+  # "Heat more recent than cold" was a fixed claim that happened to hold for the
+  # first sites checked but is not universal — Santa Fe's record cold (2011-02-03,
+  # the Southwest's February 2011 cold wave) postdates its record heat (1994-06-26).
+  # Check which date is actually later rather than assert it.
+  hot_is_recent <- as.Date(ref_rec$hot$date) > as.Date(ref_rec$cold$date)
+  closing_record_note <- if (hot_is_recent)
+    sprintf(
+      "At %s, the all-time heat (%s) is far more recent than the all-time cold (%s) — the same warming signature seen throughout this report.",
+      site$reference_station, ref_rec$hot$date, ref_rec$cold$date) else
+    sprintf(
+      "At %s, the all-time cold (%s) is actually more recent than the all-time heat (%s) — a reminder that a single record day is noisy compared to the mean trend shown throughout this report.",
+      site$reference_station, ref_rec$cold$date, ref_rec$hot$date)
 
   # Extreme-day header/closing: computed direction words, not fixed rhetoric —
   # see extreme_direction()'s comment for why "halved"/"doubled" broke.
@@ -259,7 +268,7 @@ build_common_fills <- function(stats, site) {
   extremes_header <- sprintf("Frost days %s, hot days %s", frost_dir, hot_dir)
   extremes_closing <- if (frost_dir == "down" && hot_dir == "up")
     "Frost is retreating just as heat advances — the same warming, read off the calendar instead of the thermometer." else
-  if (frost_dir == "stay at zero" && hot_dir == "up")
+  if (frost_dir == "at zero" && hot_dir == "up")
     "There was never a frost season here to retreat; the change shows up entirely on the hot side of the ledger." else
   if (frost_dir == "up" && hot_dir == "up")
     "Both counts have risen here — a reminder that year-to-year extreme-day counts are noisy even where the underlying mean trend, shown above, is unambiguous." else

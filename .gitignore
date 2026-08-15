@@ -73,6 +73,12 @@ outputs/voronezh/*
 outputs/voronezh/figures/*
 !outputs/voronezh/figures/*.png
 
+!outputs/irvine/
+outputs/irvine/*
+!outputs/irvine/figures/
+outputs/irvine/figures/*
+!outputs/irvine/figures/*.png
+
 !outputs/compare/
 outputs/compare/*
 !outputs/compare/figures/

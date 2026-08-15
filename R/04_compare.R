@@ -23,7 +23,7 @@ suppressPackageStartupMessages({
 source("R/lib/common.R")
 source("R/lib/narrative.R")   # shares ytd_standing_text() with every per-site chapter
 
-SITE_ORDER <- c("castanet", "zurich", "karlsruhe", "santafe", "honolulu", "noumea", "moscow", "voronezh")
+SITE_ORDER <- c("castanet", "zurich", "karlsruhe", "santafe", "honolulu", "noumea", "moscow", "voronezh", "irvine")
 
 load_site <- function(key) {
   env <- new.env()
@@ -80,7 +80,7 @@ p <- ggplot(cmp, aes(x = slope_dec, y = city_f)) +
   scale_x_continuous(limits = c(0, max(cmp$slope_dec) * 1.32), expand = expansion(mult = c(0, 0)),
                      labels = function(x) sprintf("+%.1f", x)) +
   labs(
-    title = "Eight cities, all warming — just not at the same speed",
+    title = "Nine cities, all warming — just not at the same speed",
     subtitle = "Annual-mean warming rate, least-squares slope over each city's own complete-year record",
     x = "°C per decade", y = NULL,
     caption = paste0(
@@ -137,7 +137,7 @@ table_rows <- vapply(seq_len(nrow(plot_ord)), function(i) row_md(plot_ord[i]), c
 block <- paste0(
 '<!-- BEGIN COMPARE -->
 
-## All eight cities, side by side
+## All nine cities, side by side
 
 Every chapter below uses the same variables, the same completeness rule (>= ', MIN_DAYS, ' valid
 days/year) and the same trend method (least-squares on annual means) — the numbers below are those
@@ -145,7 +145,7 @@ same headline figures, gathered in one place rather than recomputed. These are r
 they are not adjusted for the very different length and era of each record. The record span in the
 table is the honest caveat, not a footnote to skip.
 
-![Warming rate compared across all eight cities, ranked fastest to slowest](outputs/compare/figures/warming_rate.png)
+![Warming rate compared across all nine cities, ranked fastest to slowest](outputs/compare/figures/warming_rate.png)
 
 <sub>Ranked fastest to slowest. Record span and length for each city are in the table below, not
 repeated on the bars — Santa Fe’s and Karlsruhe’s records run a century longer than Honolulu’s or
@@ -156,11 +156,11 @@ Nouméa’s, so the same-looking rate rests on very different amounts of evidenc
 ', paste(table_rows, collapse = "\n"), '
 
 † Moscow and Voronezh are manually exported from Roshydromet’s AISORI-M (login-gated, no automated
-refresh) — their "current through" date is not "today" the way the other six sites’ automated feeds
+refresh) — their "current through" date is not "today" the way the other seven sites’ automated feeds
 are; see each city’s own "Why only one station?" note in its chapter below.
 
 Each row’s standing also names its own year and window in parentheses, since they are not all the
-same claim: the six automated sites all rank 2026 over comparable multi-month windows, but Moscow’s
+same claim: the seven automated sites all rank 2026 over comparable multi-month windows, but Moscow’s
 row ranks a complete, already-finished 2025 and Voronezh’s ranks a 59-day midwinter fragment — a
 "#55 of 84" over two months of winter is not the same kind of statement as an 8-month "#5 of 76".
 

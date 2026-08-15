@@ -250,7 +250,14 @@ if (max(clim$year) != cur_year)
   stop(sprintf("%s data ends in %d but the extract reaches %d — refresh the raw files (make prepare).",
                CLIMATOLOGY_STATION, max(clim$year), cur_year))
 
-prev_years <- clim[year <  cur_year]
+# `cur_year` is excluded from "previous years" for every site EXCEPT the one
+# whose cur_year is already a complete, finished calendar year (Moscow's manual
+# export, 2025) — for that site, excluding it dropped a real complete year from
+# the hot/cold-year classification, the climatology date range and the
+# long-term normal. It is still drawn separately, bold, as `this_year` either
+# way; for YEAR_COMPLETE sites it therefore also appears once, thin, inside
+# `prev_years` — invisible, since the bold trace is drawn on top of it.
+prev_years <- if (YEAR_COMPLETE) clim[year <= cur_year] else clim[year < cur_year]
 this_year  <- clim[year == cur_year]
 
 normal <- prev_years[, .(tnorm = mean(tsmooth, na.rm = TRUE)), by = doy]
@@ -477,12 +484,21 @@ p3 <- ggplot(ytd, aes(year, anom, fill = anom > 0)) +
 # — otherwise `ytd[is_cur == TRUE]` is empty and cur_anom is NA, so there is
 # nothing honest to highlight yet.
 if (HAS_YTD) {
+  # Every OTHER bar's colour follows its own sign (scale_fill_manual below); the
+  # current-year highlight must too — it was previously hardcoded red regardless
+  # of sign, which drew a below-normal current year (Voronezh, 2026: -0.9 °C) in
+  # the "warmer than normal" colour, directly contradicting the chart's own
+  # "Red = warmer, blue = cooler" legend.
+  cur_below   <- isTRUE(cur_anom <= 0)
+  cur_fill    <- if (cur_below) COL$tn else COL$tx
+  cur_border  <- if (cur_below) "#154360" else "#7B241C"
+  cur_vjust   <- if (cur_below) 1.35 else -0.35   # label sits just outside the bar's tip either way
   p3 <- p3 +
     geom_col(data = ytd[is_cur == TRUE], aes(year, anom),
-             fill = COL$tx, colour = "#7B241C", linewidth = 0.4, width = 0.92) +
-    annotate("text", x = cur_year, y = cur_anom, vjust = -0.35, hjust = 0.65,
+             fill = cur_fill, colour = cur_border, linewidth = 0.4, width = 0.92) +
+    annotate("text", x = cur_year, y = cur_anom, vjust = cur_vjust, hjust = 0.65,
              label = sprintf("%d\n%s", cur_year, deg_label(cur_anom_disp, signed = TRUE)),
-             colour = COL$tx, fontface = "bold", size = 3.7, lineheight = 0.92)
+             colour = cur_fill, fontface = "bold", size = 3.7, lineheight = 0.92)
 }
 
 p3 <- p3 +
@@ -534,9 +550,15 @@ record_day <- function(st, col, decreasing) {
 }
 record_stations <- if (SITE$local_has_temp) levels(dat$station) else SITE$reference_station
 records <- lapply(record_stations, function(st) {
+  # Span must reflect years the station actually carries TX/TN (TNTXM is NA
+  # unless both are present) — not every year `dat` has ANY row for. Zurich's
+  # SMA file carries a mean-only series back to 1864, eight years before its
+  # digitized TX/TN start in 1881; using every row's year claimed an 1864
+  # "hottest/coldest" span for a record search that only ever looks at 1881->.
+  yrs <- dat[station == st & !is.na(TNTXM)]$year
   list(station = st,
-       span_yr0 = min(dat[station == st]$year),
-       span_yr1 = max(dat[station == st]$year),
+       span_yr0 = min(yrs),
+       span_yr1 = max(yrs),
        hot  = record_day(st, "TX", TRUE),
        cold = record_day(st, "TN", FALSE))
 })
@@ -618,6 +640,17 @@ names(rain_pal) <- rain_levels
 names(rain_shp) <- rain_levels
 rain_ann[, station := factor(station, levels = rain_levels)]
 
+# geom_line only breaks at a row that EXISTS with an NA value, not at a year
+# with no row at all -- a station with a real multi-year digitization gap (e.g.
+# Santa Fe/Honolulu's local rain station) otherwise gets a single straight
+# diagonal segment bridging the gap, indistinguishable from real data. Insert
+# an explicit NA row for every year missing within each station's own
+# min..max span; geom_point/geom_smooth silently drop NA rows on their own.
+rain_plot <- merge(
+  rain_ann[, .(year = seq(min(year), max(year))), by = station],
+  rain_ann[, .(station, year, total)],
+  by = c("station", "year"), all.x = TRUE)
+
 # Significance clause must branch like the report text (see R/lib/narrative.R)
 # — this was previously hardcoded to "not significant" regardless of rain_sig.
 rain_sig_txt <- if (rain_sig) sprintf("significant (p = %.2f)", rain_p) else
@@ -626,7 +659,7 @@ rain_txt <- sprintf(
   "%s, annual total rainfall\nmean %.0f mm/yr  ·  %+.0f mm/decade — %s",
   SITE$reference_station, rain_mean_ref, rain_slope_dec, rain_sig_txt)
 
-p4 <- ggplot(rain_ann, aes(year, total, colour = station, shape = station)) +
+p4 <- ggplot(rain_plot, aes(year, total, colour = station, shape = station)) +
   geom_hline(yintercept = rain_mean_ref, colour = COL$rain_blag,
              linetype = "dashed", linewidth = 0.4, alpha = 0.6) +
   geom_line(aes(group = station), alpha = 0.28, linewidth = 0.4) +

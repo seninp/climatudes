@@ -2,7 +2,7 @@
 
 A small, reproducible analytics pipeline that turns national weather-service
 daily records into a readable report on local warming. It currently covers
-eight sites, each from its own national open-data source:
+nine sites, each from its own national open-data source:
 
 | Site | Country | Source |
 |---|---|---|
@@ -14,10 +14,11 @@ eight sites, each from its own national open-data source:
 | [Nouméa](#a-warming-climate-seen-from-nouméa) | France (New Caledonia) | Météo-France |
 | [Moscow](#a-warming-climate-seen-from-moscow) | Russia | Roshydromet (AISORI-M, manual export) |
 | [Voronezh](#a-warming-climate-seen-from-voronezh) | Russia | Roshydromet (AISORI-M, manual export) |
+| [Irvine](#a-warming-climate-seen-from-irvine) | USA | NOAA (GHCN-Daily) |
 
 <!-- BEGIN COMPARE -->
 
-## All eight cities, side by side
+## All nine cities, side by side
 
 Every chapter below uses the same variables, the same completeness rule (>= 330 valid
 days/year) and the same trend method (least-squares on annual means) — the numbers below are those
@@ -25,7 +26,7 @@ same headline figures, gathered in one place rather than recomputed. These are r
 they are not adjusted for the very different length and era of each record. The record span in the
 table is the honest caveat, not a footnote to skip.
 
-![Warming rate compared across all eight cities, ranked fastest to slowest](outputs/compare/figures/warming_rate.png)
+![Warming rate compared across all nine cities, ranked fastest to slowest](outputs/compare/figures/warming_rate.png)
 
 <sub>Ranked fastest to slowest. Record span and length for each city are in the table below, not
 repeated on the bars — Santa Fe’s and Karlsruhe’s records run a century longer than Honolulu’s or
@@ -35,19 +36,20 @@ Nouméa’s, so the same-looking rate rests on very different amounts of evidenc
 |---|---|---:|---:|---|---|
 | Voronezh | Russia | 1940→2025 (85 yr) | **+0.46 °C/decade** | #55 of 84 (2026, Jan 1 – Feb 28) | Feb 28, 2026 † |
 | Moscow | Russia | 1949→2025 (76 yr) | **+0.39 °C/decade** | #1 of 77 — record (2025, full year) | Dec 31, 2025 † |
-| Castanet-Tolosan | France | 1947→2025 (78 yr) | **+0.34 °C/decade** | #1 of 80 — record (2026, Jan 1 – Aug 12) | Aug 12, 2026 |
+| Castanet-Tolosan | France | 1947→2025 (78 yr) | **+0.34 °C/decade** | #1 of 80 — record (2026, Jan 1 – Aug 13) | Aug 13, 2026 |
+| Irvine | USA | 1915→2025 (110 yr) | **+0.27 °C/decade** | #2 of 101 (2026, Jan 1 – May 31) | May 31, 2026 |
 | Honolulu | USA | 1950→2025 (75 yr) | **+0.20 °C/decade** | #18 of 84 (2026, Jan 1 – Aug 11) | Aug 11, 2026 |
-| Nouméa | France | 1951→2025 (74 yr) | **+0.19 °C/decade** | #5 of 76 (2026, Jan 1 – Aug 13) | Aug 13, 2026 |
-| Zurich | Switzerland | 1882→2025 (143 yr) | **+0.18 °C/decade** | #1 of 144 — record (2026, Jan 1 – Aug 12) | Aug 12, 2026 |
-| Karlsruhe | Germany | 1876→2025 (149 yr) | **+0.14 °C/decade** | #2 of 150 (2026, Jan 1 – Aug 12) | Aug 12, 2026 |
+| Nouméa | France | 1951→2025 (74 yr) | **+0.19 °C/decade** | #5 of 76 (2026, Jan 1 – Aug 14) | Aug 14, 2026 |
+| Zurich | Switzerland | 1882→2025 (143 yr) | **+0.18 °C/decade** | #1 of 144 — record (2026, Jan 1 – Aug 13) | Aug 13, 2026 |
+| Karlsruhe | Germany | 1876→2025 (149 yr) | **+0.14 °C/decade** | #2 of 150 (2026, Jan 1 – Aug 13) | Aug 13, 2026 |
 | Santa Fe | USA | 1874→2025 (151 yr) | **+0.08 °C/decade** | #1 of 149 — record (2026, Jan 1 – Jun 30) | Jun 30, 2026 |
 
 † Moscow and Voronezh are manually exported from Roshydromet’s AISORI-M (login-gated, no automated
-refresh) — their "current through" date is not "today" the way the other six sites’ automated feeds
+refresh) — their "current through" date is not "today" the way the other seven sites’ automated feeds
 are; see each city’s own "Why only one station?" note in its chapter below.
 
 Each row’s standing also names its own year and window in parentheses, since they are not all the
-same claim: the six automated sites all rank 2026 over comparable multi-month windows, but Moscow’s
+same claim: the seven automated sites all rank 2026 over comparable multi-month windows, but Moscow’s
 row ranks a complete, already-finished 2025 and Voronezh’s ranks a 59-day midwinter fragment — a
 "#55 of 84" over two months of winter is not the same kind of statement as an 8-month "#5 of 76".
 
@@ -79,7 +81,7 @@ steadily and continuously.
 | Frost days per year, 1947–1956 → 2016–2025 | **46 → 18** |
 | Hot days (≥ 30 °C) per year, 1947–1956 → 2016–2025 | **24 → 47** |
 | Complete station-years analysed | **101** |
-| 2026 year-to-date (Jan 1 – Aug 12), against 79 prior years | **#1 of 80 — record** |
+| 2026 year-to-date (Jan 1 – Aug 13), against 79 prior years | **#1 of 80 — record** |
 
 ### The long view: annual means
 
@@ -96,13 +98,13 @@ whole period. The local Auzeville-Tolosane-INRAE station only covers 2004→2025
 
 ![Per-year mean over the same Jan-to-cutoff window, as a departure from the long-term normal, with 2026 the largest bar](outputs/figures/temperature_ytd.png)
 
-<sub>Each bar is a year’s mean over the <em>same window</em> — <strong>Jan 1 – Aug 12</strong> —
+<sub>Each bar is a year’s mean over the <em>same window</em> — <strong>Jan 1 – Aug 13</strong> —
 shown as its departure from the long-term normal (13.6 °C): red above, blue
 below. Comparing each year over the identical part-of-year is the only fair way to place
 any one year against every other. The bars swing from blue to red over
 the decades — the warming — and 2026 is the tallest of all.</sub>
 
-Measured like-for-like, **2026 is the warmest Jan 1 – Aug 12 in 80 years** at Toulouse-Blagnac: **16.8 °C** — +0.8 °C above the previous record (2025, 16.0 °C) and **+3.3 °C above the long-term normal** (13.6 °C). This is exactly the point of the chart: a year still in progress can already stand out against the whole record.
+Measured like-for-like, **2026 is the warmest Jan 1 – Aug 13 in 80 years** at Toulouse-Blagnac: **16.9 °C** — +0.8 °C above the previous record (2025, 16.1 °C) and **+3.3 °C above the long-term normal** (13.6 °C). This is exactly the point of the chart: a year still in progress can already stand out against the whole record.
 
 > [!NOTE]
 > A partial year cannot be compared to other years' full-year means — it is still missing the rest of the year. That is why 2026 appears on the long-view chart above only as a marked, hollow "to date" point (seasonally incomplete, so lower than its eventual annual figure), while its real, like-for-like standing is the chart here.
@@ -157,7 +159,7 @@ At Toulouse-Blagnac, the all-time heat (2023-08-23) is far more recent than the 
 | 2023 | 10.7 | 20.8 | **15.7** |
 | 2024 | 10.5 | 19.6 | **15.1** |
 | 2025 | 10.7 | 20.6 | **15.6** |
-| 2026 *(to date)* | 11.5 | 22.2 | **16.8** |
+| 2026 *(to date)* | 11.6 | 22.2 | **16.9** |
 
 ### Frost days down, hot days up
 
@@ -249,7 +251,7 @@ steadily and continuously.
 | Frost days per year, 1882–1891 → 2016–2025 | **111 → 61** |
 | Hot days (≥ 30 °C) per year, 1882–1891 → 2016–2025 | **4 → 12** |
 | Complete station-years analysed | **190** |
-| 2026 year-to-date (Jan 1 – Aug 12), against 143 prior years | **#1 of 144 — record** |
+| 2026 year-to-date (Jan 1 – Aug 13), against 143 prior years | **#1 of 144 — record** |
 
 ### The long view: annual means
 
@@ -266,13 +268,13 @@ whole period. The local Zürich-Affoltern station only covers 1979→2025. Its s
 
 ![Per-year mean over the same Jan-to-cutoff window, as a departure from the long-term normal, with 2026 the largest bar](outputs/zurich/figures/temperature_ytd.png)
 
-<sub>Each bar is a year’s mean over the <em>same window</em> — <strong>Jan 1 – Aug 12</strong> —
-shown as its departure from the long-term normal (9.3 °C): red above, blue
+<sub>Each bar is a year’s mean over the <em>same window</em> — <strong>Jan 1 – Aug 13</strong> —
+shown as its departure from the long-term normal (9.4 °C): red above, blue
 below. Comparing each year over the identical part-of-year is the only fair way to place
 any one year against every other. The bars swing from blue to red over
 the decades — the warming — and 2026 is the tallest of all.</sub>
 
-Measured like-for-like, **2026 is the warmest Jan 1 – Aug 12 in 144 years** at Zürich-Fluntern: **12.8 °C** — +0.6 °C above the previous record (2022, 12.2 °C) and **+3.5 °C above the long-term normal** (9.3 °C). This is exactly the point of the chart: a year still in progress can already stand out against the whole record.
+Measured like-for-like, **2026 is the warmest Jan 1 – Aug 13 in 144 years** at Zürich-Fluntern: **12.8 °C** — +0.5 °C above the previous record (2022, 12.3 °C) and **+3.5 °C above the long-term normal** (9.4 °C). This is exactly the point of the chart: a year still in progress can already stand out against the whole record.
 
 > [!NOTE]
 > A partial year cannot be compared to other years' full-year means — it is still missing the rest of the year. That is why 2026 appears on the long-view chart above only as a marked, hollow "to date" point (seasonally incomplete, so lower than its eventual annual figure), while its real, like-for-like standing is the chart here.
@@ -292,7 +294,7 @@ highlighted in red and labelled; years that ever fell below
 
 > [!NOTE]
 > **Hottest and coldest years.** Measured on the smoothed daily-mean curve,
-> **0** years pushed above +30 °C —
+> **0** years pushed above +30 °C
 > while **118** years dropped below -5 °C (1882, 1883, 1885, 1886, 1887, 1888, 1889, 1890, 1891, 1892, 1893, 1894, 1895, 1896, 1897, 1898, 1899, 1900, 1901, 1902, 1903, 1904, 1905, 1906, 1907, 1908, 1909, 1911, 1912, 1914, 1915, 1917, 1918, 1919, 1920, 1921, 1922, 1923, 1924, 1925, 1926, 1927, 1929, 1930, 1931, 1932, 1933, 1934, 1935, 1936, 1937, 1938, 1939, 1940, 1941, 1942, 1944, 1945, 1946, 1947, 1948, 1949, 1950, 1952, 1953, 1954, 1956, 1957, 1958, 1960, 1961, 1962, 1963, 1964, 1966, 1967, 1968, 1969, 1970, 1971, 1972, 1973, 1975, 1976, 1979, 1980, 1981, 1982, 1983, 1984, 1985, 1986, 1987, 1988, 1991, 1992, 1993, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2005, 2006, 2007, 2009, 2010, 2012, 2013, 2014, 2017, 2018, 2021, 2022).
 > No single year managed to hit both extremes.  <sub>(On the raw, unsmoothed daily mean, no year touches both extremes.)</sub>
 
@@ -303,10 +305,10 @@ maximum (TX), “coldest” the lowest daily minimum (TN).
 
 | Station (record span) | Extreme | Date | Min (TN) | Max (TX) |
 |---|---|---|---:|---:|
-| Zürich-Fluntern <sub>1864–2026</sub> | Hottest 🔥 | 2026-06-27 | 21.6 | **37.1** |
-| Zürich-Fluntern <sub>1864–2026</sub> | Coldest ❄️ | 1929-02-12 | **-24.7** | -16.3 |
-| Zürich-Affoltern <sub>1961–2026</sub> | Hottest 🔥 | 2026-07-30 | 15.4 | **37.5** |
-| Zürich-Affoltern <sub>1961–2026</sub> | Coldest ❄️ | 1985-01-09 | **-26.6** | -12.9 |
+| Zürich-Fluntern <sub>1881–2026</sub> | Hottest 🔥 | 2026-06-27 | 21.6 | **37.1** |
+| Zürich-Fluntern <sub>1881–2026</sub> | Coldest ❄️ | 1929-02-12 | **-24.7** | -16.3 |
+| Zürich-Affoltern <sub>1978–2026</sub> | Hottest 🔥 | 2026-07-30 | 15.4 | **37.5** |
+| Zürich-Affoltern <sub>1978–2026</sub> | Coldest ❄️ | 1985-01-09 | **-26.6** | -12.9 |
 
 At Zürich-Fluntern, the all-time heat (2026-06-27) is far more recent than the all-time cold (1929-02-12) — the same warming signature seen throughout this report.
 
@@ -327,7 +329,7 @@ At Zürich-Fluntern, the all-time heat (2026-06-27) is far more recent than the 
 | 2023 | 7.8 | 15.8 | **11.8** |
 | 2024 | 7.7 | 15.0 | **11.4** |
 | 2025 | 7.0 | 14.9 | **11.0** |
-| 2026 *(to date)* | 7.8 | 17.7 | **12.8** |
+| 2026 *(to date)* | 7.9 | 17.8 | **12.8** |
 
 ### Frost days down, hot days up
 
@@ -419,7 +421,7 @@ steadily and continuously.
 | Frost days per year, 1876–1885 → 2016–2025 | **67 → 59** |
 | Hot days (≥ 30 °C) per year, 1876–1885 → 2016–2025 | **7 → 26** |
 | Complete station-years analysed | **148** |
-| 2026 year-to-date (Jan 1 – Aug 12), against 149 prior years | **#2 of 150** |
+| 2026 year-to-date (Jan 1 – Aug 13), against 149 prior years | **#2 of 150** |
 
 ### The long view: annual means
 
@@ -436,13 +438,13 @@ whole period. Karlsruhe-Wolfartsweier carries no temperature record; Rheinstette
 
 ![Per-year mean over the same Jan-to-cutoff window, as a departure from the long-term normal, with 2026 highlighted](outputs/karlsruhe/figures/temperature_ytd.png)
 
-<sub>Each bar is a year’s mean over the <em>same window</em> — <strong>Jan 1 – Aug 12</strong> —
-shown as its departure from the long-term normal (10.9 °C): red above, blue
+<sub>Each bar is a year’s mean over the <em>same window</em> — <strong>Jan 1 – Aug 13</strong> —
+shown as its departure from the long-term normal (11.0 °C): red above, blue
 below. Comparing each year over the identical part-of-year is the only fair way to place
 any one year against every other. The bars swing from blue to red over
 the decades — the warming.</sub>
 
-Measured like-for-like over Jan 1 – Aug 12, 2026 currently ranks **#2 of 150** at Rheinstetten (13.3 °C). The warmest such window on record remains 2007 (13.6 °C).
+Measured like-for-like over Jan 1 – Aug 13, 2026 currently ranks **#2 of 150** at Rheinstetten (13.3 °C). The warmest such window on record remains 2007 (13.6 °C).
 
 > [!NOTE]
 > A partial year cannot be compared to other years' full-year means — it is still missing the rest of the year. That is why 2026 appears on the long-view chart above only as a marked, hollow "to date" point (seasonally incomplete, so lower than its eventual annual figure), while its real, like-for-like standing is the chart here.
@@ -462,7 +464,7 @@ highlighted in red and labelled; years that ever fell below
 
 > [!NOTE]
 > **Hottest and coldest years.** Measured on the smoothed daily-mean curve,
-> **0** years pushed above +30 °C —
+> **0** years pushed above +30 °C
 > while **107** years dropped below -5 °C (1876, 1878, 1879, 1880, 1881, 1882, 1883, 1885, 1886, 1887, 1888, 1889, 1890, 1891, 1892, 1893, 1894, 1895, 1896, 1899, 1901, 1902, 1903, 1904, 1905, 1906, 1907, 1908, 1909, 1911, 1912, 1914, 1915, 1917, 1918, 1919, 1920, 1921, 1922, 1923, 1924, 1925, 1926, 1927, 1929, 1931, 1932, 1933, 1934, 1935, 1938, 1939, 1940, 1941, 1942, 1943, 1945, 1946, 1947, 1948, 1950, 1952, 1953, 1954, 1956, 1957, 1959, 1960, 1961, 1962, 1963, 1964, 1966, 1967, 1968, 1969, 1970, 1971, 1972, 1973, 1976, 1978, 1979, 1980, 1981, 1982, 1985, 1986, 1987, 1991, 1992, 1993, 1995, 1996, 1997, 2002, 2003, 2005, 2006, 2009, 2010, 2011, 2012, 2017, 2018, 2021, 2022).
 > No single year managed to hit both extremes.  <sub>(If the threshold is applied instead to the raw, unsmoothed daily mean, 1952 and 2003 each touch both extremes.)</sub>
 
@@ -495,7 +497,7 @@ At Rheinstetten, the all-time heat (2026-06-27) is far more recent than the all-
 | 2023 | 7.9 | 17.6 | **12.8** |
 | 2024 | 7.7 | 16.9 | **12.3** |
 | 2025 | 6.3 | 17.0 | **11.6** |
-| 2026 *(to date)* | 7.1 | 19.4 | **13.3** |
+| 2026 *(to date)* | 7.1 | 19.5 | **13.3** |
 
 ### Frost days down, hot days up
 
@@ -630,7 +632,7 @@ highlighted in red and labelled; years that ever fell below
 
 > [!NOTE]
 > **Hottest and coldest years.** Measured on the smoothed daily-mean curve,
-> **0** years pushed above +30 °C —
+> **0** years pushed above +30 °C
 > while **148** years dropped below -5 °C (1874, 1875, 1876, 1877, 1878, 1879, 1880, 1881, 1882, 1883, 1884, 1885, 1886, 1887, 1888, 1889, 1890, 1891, 1892, 1893, 1894, 1895, 1896, 1897, 1898, 1899, 1900, 1901, 1902, 1903, 1904, 1905, 1906, 1907, 1908, 1909, 1910, 1911, 1912, 1913, 1914, 1915, 1916, 1917, 1918, 1919, 1920, 1921, 1922, 1923, 1924, 1925, 1926, 1927, 1928, 1929, 1930, 1931, 1932, 1933, 1934, 1935, 1936, 1937, 1938, 1939, 1940, 1941, 1942, 1944, 1945, 1946, 1947, 1948, 1949, 1950, 1951, 1952, 1953, 1954, 1955, 1956, 1957, 1958, 1959, 1960, 1961, 1962, 1963, 1964, 1965, 1966, 1967, 1968, 1969, 1970, 1971, 1972, 1973, 1974, 1975, 1976, 1977, 1978, 1979, 1982, 1983, 1984, 1985, 1986, 1987, 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025).
 > No single year managed to hit both extremes.  <sub>(On the raw, unsmoothed daily mean, no year touches both extremes.)</sub>
 
@@ -646,7 +648,7 @@ maximum (TX), “coldest” the lowest daily minimum (TN).
 | Santa Fe Airport <sub>1941–2026</sub> | Hottest 🔥 | 2013-06-27 | 18.3 | **38.9** |
 | Santa Fe Airport <sub>1941–2026</sub> | Coldest ❄️ | 2011-02-03 | **-27.7** | -8.8 |
 
-At Santa Fe, the all-time heat (1994-06-26) is far more recent than the all-time cold (2011-02-03) — the same warming signature seen throughout this report.
+At Santa Fe, the all-time cold (2011-02-03) is actually more recent than the all-time heat (1994-06-26) — a reminder that a single record day is noisy compared to the mean trend shown throughout this report.
 
 > [!NOTE]
 > **Why Santa Fe Airport?** Santa Fe Airport (station USW00023049), a few miles southwest of downtown, is the nearest continuously-sited station and provides the local comparison. NOAA's own GHCN-Daily archive has no digitized daily temperature for it between 1959 and 1996 — a real gap in the upstream record, not a fetch issue here — so its trend uses only the complete years on either side. The reference series, labelled “Santa Fe”, splices the city's original in-town COOP station (298072, 1874–1972) with its direct successor a few miles south (298085, 1972–2026) for one gap-free record back to 1874.
@@ -800,7 +802,7 @@ highlighted in red and labelled; years that ever fell below
 
 > [!NOTE]
 > **Hottest and coldest years.** Measured on the smoothed daily-mean curve,
-> **2** years pushed above +30 °C (1987, 2019) —
+> **2** years pushed above +30 °C (1987, 2019)
 > while **0** years dropped below -5 °C.
 > No single year managed to hit both extremes.  <sub>(On the raw, unsmoothed daily mean, no year touches both extremes.)</sub>
 
@@ -835,7 +837,7 @@ At Honolulu Airport, the all-time heat (1994-09-19) is far more recent than the 
 | 2025 | 22.7 | 29.9 | **26.3** |
 | 2026 *(to date)* | 22.0 | 28.6 | **25.3** |
 
-### Frost days stay at zero, hot days up
+### Frost days at zero, hot days up
 
 A degree of warming is abstract; the count of extreme days is not. Comparing
 Honolulu Airport’s first complete decade (1950–1959) with its last (2016–2025),
@@ -925,7 +927,7 @@ steadily and continuously.
 | Frost days per year, 1951–1960 → 2016–2025 | **0 → 0** |
 | Hot days (≥ 30 °C) per year, 1951–1960 → 2016–2025 | **32 → 74** |
 | Complete station-years analysed | **137** |
-| 2026 year-to-date (Jan 1 – Aug 13), against 75 prior years | **#5 of 76** |
+| 2026 year-to-date (Jan 1 – Aug 14), against 75 prior years | **#5 of 76** |
 
 ### The long view: annual means
 
@@ -942,13 +944,13 @@ whole period. The local Nouméa-Magenta station only covers 1964→2025. Its slo
 
 ![Per-year mean over the same Jan-to-cutoff window, as a departure from the long-term normal, with 2026 highlighted](outputs/noumea/figures/temperature_ytd.png)
 
-<sub>Each bar is a year’s mean over the <em>same window</em> — <strong>Jan 1 – Aug 13</strong> —
+<sub>Each bar is a year’s mean over the <em>same window</em> — <strong>Jan 1 – Aug 14</strong> —
 shown as its departure from the long-term normal (23.7 °C): red above, blue
 below. Comparing each year over the identical part-of-year is the only fair way to place
 any one year against every other. The bars swing from blue to red over
 the decades — the warming.</sub>
 
-Measured like-for-like over Jan 1 – Aug 13, 2026 currently ranks **#5 of 76** at Nouméa (24.6 °C). The warmest such window on record remains 2022 (25.1 °C).
+Measured like-for-like over Jan 1 – Aug 14, 2026 currently ranks **#5 of 76** at Nouméa (24.6 °C). The warmest such window on record remains 2022 (25.1 °C).
 
 > [!NOTE]
 > A partial year cannot be compared to other years' full-year means — it is still missing the rest of the year. That is why 2026 appears on the long-view chart above only as a marked, hollow "to date" point (seasonally incomplete, so lower than its eventual annual figure), while its real, like-for-like standing is the chart here.
@@ -968,7 +970,7 @@ highlighted in red and labelled; years that ever fell below
 
 > [!NOTE]
 > **Hottest and coldest years.** Measured on the smoothed daily-mean curve,
-> **12** years pushed above +30 °C (1954, 1986, 1991, 1992, 1995, 1996, 2009, 2010, 2015, 2019, 2020, 2024) —
+> **12** years pushed above +30 °C (1954, 1986, 1991, 1992, 1995, 1996, 2009, 2010, 2015, 2019, 2020, 2024)
 > while **0** years dropped below -5 °C.
 > No single year managed to hit both extremes.  <sub>(On the raw, unsmoothed daily mean, no year touches both extremes.)</sub>
 
@@ -1005,7 +1007,7 @@ At Nouméa, the all-time heat (1986-01-25) is far more recent than the all-time 
 | 2025 | 21.5 | 28.1 | **24.8** |
 | 2026 *(to date)* | 21.4 | 27.8 | **24.6** |
 
-### Frost days stay at zero, hot days up
+### Frost days at zero, hot days up
 
 A degree of warming is abstract; the count of extreme days is not. Comparing
 Nouméa’s first complete decade (1951–1960) with its last (2016–2025),
@@ -1128,7 +1130,7 @@ Measured like-for-like, **2025 is the warmest Jan 1 – Dec 31 in 77 years** at 
 ![Daily temperature climatology, every year January to December, hot years red and cold years blue](outputs/moscow/figures/temperature_climatology.png)
 
 <sub>Each thin line is a single year’s daily mean temperature from January to December
-(1948–2024, 77 years), smoothed with a centred
+(1948–2025, 78 years), smoothed with a centred
 <strong>3-day rolling mean</strong> (each day = the average of itself
 ±1 day) to tame day-to-day jitter while keeping the shape. The dark line
 is the long-term daily normal; the bold red line is <strong>2025</strong>.
@@ -1139,7 +1141,7 @@ highlighted in red and labelled; years that ever fell below
 > [!NOTE]
 > **Hottest and coldest years.** Measured on the smoothed daily-mean curve,
 > **1** year pushed above +30 °C (2010) — all of them recent —
-> while **77** years dropped below -5 °C (1948, 1949, 1950, 1951, 1952, 1953, 1954, 1955, 1956, 1957, 1958, 1959, 1960, 1961, 1962, 1963, 1964, 1965, 1966, 1967, 1968, 1969, 1970, 1971, 1972, 1973, 1974, 1975, 1976, 1977, 1978, 1979, 1980, 1981, 1982, 1983, 1984, 1985, 1986, 1987, 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024).
+> while **78** years dropped below -5 °C (1948, 1949, 1950, 1951, 1952, 1953, 1954, 1955, 1956, 1957, 1958, 1959, 1960, 1961, 1962, 1963, 1964, 1965, 1966, 1967, 1968, 1969, 1970, 1971, 1972, 1973, 1974, 1975, 1976, 1977, 1978, 1979, 1980, 1981, 1982, 1983, 1984, 1985, 1986, 1987, 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025).
 > Years hitting both extremes: 2010.  <sub>(If the threshold is applied instead to the raw, unsmoothed daily mean, 2010 alone touches both extremes.)</sub>
 
 ### The record days
@@ -1411,6 +1413,177 @@ wettest month on average (65 mm), March the driest
 <sub>Figures and numbers above are generated — edit `R/03_readme.R`, not this block.</sub>
 
 <!-- END REPORT:voronezh -->
+
+<!-- BEGIN REPORT:irvine -->
+
+## A warming climate, seen from Irvine
+
+*NOAA (National Centers for Environmental Information) daily temperature records, 1915 to 2025 — plus 2026 so far.*
+
+NOAA (National Centers for Environmental Information) daily records for the Irvine area tell an unambiguous story:
+since the early 20th century, minimum, maximum and mean temperatures have all risen —
+steadily and continuously.
+
+| Headline number | Value |
+|---|---:|
+| Warming rate, mean temperature (Irvine) | **+0.27 °C / decade** |
+| Total rise over 110 years (1915 → 2025) | **+3.0 °C** |
+| Mean of the last decade (vs 15.8 °C in 1915–1924) | **19.3 °C** |
+| Frost days per year, 1915–1924 → 2016–2025 | **12 → 0** |
+| Hot days (≥ 30 °C) per year, 1915–1924 → 2016–2025 | **40 → 92** |
+| Complete station-years analysed | **121** |
+| 2026 year-to-date (Jan 1 – May 31), against 100 prior years | **#2 of 101** |
+
+### The long view: annual means
+
+![Annual mean temperatures around Irvine, 1915 to 2025](outputs/irvine/figures/temperature_series.png)
+
+<sub>Annual means of daily temperatures. The thick curves are LOESS smoothings that
+highlight the climate trend; the points are annual means. The green series (John Wayne Airport) is Orange County's regional airport, a few miles southwest on Irvine's border; it tracks the long Irvine reference mean almost exactly.</sub>
+
+At Irvine — the station with the longest record (1915→2025) — the annual
+mean temperature rises by **+0.27 °C per decade**, about **+3.0 °C** over the
+whole period. The local John Wayne Airport station only covers 2000→2025. Its slope over that shorter, more recent window is steeper (+0.62 °C/decade) — but so is Irvine’s over the same years (+0.75 °C/decade): recent decades warm faster, and the local station sits almost exactly on the regional mean.
+
+### This year, against every year before it
+
+![Per-year mean over the same Jan-to-cutoff window, as a departure from the long-term normal, with 2026 highlighted](outputs/irvine/figures/temperature_ytd.png)
+
+<sub>Each bar is a year’s mean over the <em>same window</em> — <strong>Jan 1 – May 31</strong> —
+shown as its departure from the long-term normal (14.7 °C): red above, blue
+below. Comparing each year over the identical part-of-year is the only fair way to place
+any one year against every other. The bars swing from blue to red over
+the decades — the warming.</sub>
+
+Measured like-for-like over Jan 1 – May 31, 2026 currently ranks **#2 of 101** at Irvine (18.3 °C). The warmest such window on record remains 2014 (18.8 °C).
+
+> [!NOTE]
+> A partial year cannot be compared to other years' full-year means — it is still missing the rest of the year. That is why 2026 appears on the long-view chart above only as a marked, hollow "to date" point (seasonally incomplete, so lower than its eventual annual figure), while its real, like-for-like standing is the chart here.
+
+### Every year, day by day
+
+![Daily temperature climatology, every year January to December, hot years red and cold years blue](outputs/irvine/figures/temperature_climatology.png)
+
+<sub>Each thin line is a single year’s daily mean temperature from January to December
+(1915–2025, 111 years), smoothed with a centred
+<strong>3-day rolling mean</strong> (each day = the average of itself
+±1 day) to tame day-to-day jitter while keeping the shape. The dark line
+is the long-term daily normal; the bold red line is <strong>2026 so far</strong>.
+Years whose smoothed daily mean ever rose above <strong>+30 °C</strong> are
+highlighted in red and labelled; years that ever fell below
+<strong>-5 °C</strong> in blue.</sub>
+
+> [!NOTE]
+> **Hottest and coldest years.** Measured on the smoothed daily-mean curve,
+> **15** years pushed above +30 °C (1939, 1963, 1984, 1994, 1997, 1998, 2006, 2007, 2014, 2016, 2017, 2018, 2020, 2022, 2024)
+> while **0** years dropped below -5 °C.
+> No single year managed to hit both extremes.  <sub>(On the raw, unsmoothed daily mean, no year touches both extremes.)</sub>
+
+### The record days
+
+The single most extreme days in each station’s record. “Hottest” is the highest daily
+maximum (TX), “coldest” the lowest daily minimum (TN).
+
+| Station (record span) | Extreme | Date | Min (TN) | Max (TX) |
+|---|---|---|---:|---:|
+| Irvine <sub>1915–2026</sub> | Hottest 🔥 | 2018-07-06 | 17.8 | **46.1** |
+| Irvine <sub>1915–2026</sub> | Coldest ❄️ | 1937-01-21 | **-7.8** | 6.1 |
+| John Wayne Airport <sub>1999–2026</sub> | Hottest 🔥 | 2010-09-27 | 21.1 | **43.3** |
+| John Wayne Airport <sub>1999–2026</sub> | Coldest ❄️ | 2007-01-14 | **0.6** | 12.8 |
+
+At Irvine, the all-time heat (2018-07-06) is far more recent than the all-time cold (1937-01-21) — the same warming signature seen throughout this report.
+
+> [!NOTE]
+> **Why John Wayne Airport?** John Wayne Airport (station USW00093184), a few miles southwest on Irvine's border, is the nearest continuously-sited station and provides the local comparison — but only since 1999, a much shorter record than the reference series. The reference series, labelled “Irvine”, splices the Irvine Ranch COOP station's original site (049087, “Tustin Irvine Ranch”, 1915–2003) with its direct successor a few miles away (044303, 2003–2026) for one gap-free record back to 1915; the two stations' own records do not quite touch (049087 ends June 2003, 044303 begins August 2003), which costs 2003 its “complete year” status.
+
+### The last decade (Irvine)
+
+| Year | Min (TN) | Max (TX) | Mean |
+|---|---:|---:|---:|
+| 2016 | 13.7 | 26.8 | **20.3** |
+| 2017 | 13.3 | 26.7 | **20.0** |
+| 2018 | 12.7 | 26.4 | **19.6** |
+| 2019 | 12.8 | 25.2 | **19.0** |
+| 2020 | 12.7 | 26.6 | **19.7** |
+| 2021 | 13.3 | 25.5 | **19.4** |
+| 2022 | 13.5 | 26.1 | **19.8** |
+| 2023 | 11.4 | 23.1 | **17.3** |
+| 2024 | 12.9 | 24.9 | **18.9** |
+| 2025 | 12.9 | 24.7 | **18.8** |
+| 2026 *(to date)* | 12.1 | 24.4 | **18.3** |
+
+### Frost days down, hot days up
+
+A degree of warming is abstract; the count of extreme days is not. Comparing
+Irvine’s first complete decade (1915–1924) with its last (2016–2025),
+the everyday texture of the year has changed sharply:
+
+| Threshold days per year | 1915–1924 | 2016–2025 |
+|---|---:|---:|
+| Frost days (min < 0 °C) | 12 | **0** |
+| Hot days (max ≥ 30 °C) | 40 | **92** |
+| Very hot days (max ≥ 35 °C) | 4 | **18** |
+| Tropical nights (min ≥ 20 °C) | 1 | **13** |
+
+<sub>Counts of days per year crossing each threshold, averaged over the first and last
+complete decades. Frost is retreating just as heat advances — the same warming, read off the calendar instead of the thermometer.</sub>
+
+### What about the rain?
+
+Temperature is only half of a climate. Rainfall tells a very different — and much
+quieter — story: over the same 96 years, annual precipitation at
+Irvine shows **no statistically significant trend**.
+
+![Annual rainfall totals around Irvine](outputs/irvine/figures/rain_series.png)
+
+<sub>Annual total precipitation. The dashed line is Irvine’s long-term mean
+(315 mm/yr); the thick curves are LOESS smoothings. The year-to-year swings are
+large — from 99 mm (1972) to 725 mm (1941) —
+but the long-run slope (-0 mm/decade) is flat and not significant (p = 0.93).</sub>
+
+That contrast is the point. The very same daily records that show an unmistakable, statistically strong warming signal show *no* comparable signal in how much it rains. A dataset that manufactured trends would have produced one here too; this one does not.
+
+![Monthly rainfall through the year at Irvine, one line per year](outputs/irvine/figures/rain_climatology.png)
+
+<sub>Rain through the year: each grey line is one year’s monthly totals, the dark line the
+long-term monthly normal, the bold blue line 2026 so far. February is the
+wettest month on average (68 mm), July the driest
+(1 mm) — but the spread between years dwarfs the seasonal cycle, which is exactly why no annual trend emerges.</sub>
+
+### Methodology
+
+- **Source.** NOAA (National Centers for Environmental Information) — GHCN-Daily — Global Historical Climatology Network, daily summaries, California, USA. Full citation
+  below.
+- **Variables.** Minimum = `TN`, maximum = `TX`, mean = `(TN+TX)/2`, in °C;
+  rainfall = `RR` (daily precipitation, in mm).
+- **Annual aggregation.** Arithmetic mean of daily values over each calendar year. The
+  long-term trend uses only complete years (≥ 330 valid days). Where the current
+  year is still in progress, it is shown separately — as a hollow “to date” marker on the
+  trend chart, and (for a fair record comparison) against the same calendar window
+  (Jan 1 → cutoff) of every prior year, keeping only years with ≥ 128 valid
+  days in that window.
+- **Daily climatology.** Each year’s daily mean is smoothed with a centred
+  3-day rolling mean (unweighted moving average, computed per year so
+  December never bleeds into January; the first/last 1 day keep their raw
+  value) for legibility; leap days are aligned across years. The normal is the per-day
+  average over all prior years.
+- **Threshold days.** Frost = `TN < 0`, hot day = `TX ≥ 30`, very hot =
+  `TX ≥ 35`, tropical night = `TN ≥ 20`, counted per complete year and
+  averaged over the first/last complete decade.
+- **Rainfall.** Annual total of daily `RR` over complete years; the trend is a
+  least-squares slope with its two-sided p-value. Monthly climatology keeps only months
+  with ≥ 27 valid days.
+- **Trend.** Slope estimated by linear regression (least squares); the line-chart curves
+  use LOESS smoothing (span = 0.7).
+- **Reproducibility.** A 4-stage R pipeline (`R/00_prepare_data.R` → `R/01_plot.R` →
+  `R/02_report.R` → `R/03_readme.R`), driven by `SITE=irvine make all`. The figures
+  above and the numbers in this section are regenerated from the source data on every
+  run — see [Data source](#data-source--citation) below for the full citation.
+
+<sub>Figures and numbers above are generated — edit `R/03_readme.R`, not this block.</sub>
+
+<!-- END REPORT:irvine -->
+
 ## Data sources
 
 Each site pulls from its own national weather service, all open data, all
@@ -1422,10 +1595,11 @@ attribution-only:
 | Zurich | MeteoSwiss — Open Government Data | `ogd-nbcn` (homogeneous climate stations) + `ogd-smn` (automatic weather stations) | MeteoSwiss Open Data (attribution: "Source: MeteoSwiss") |
 | Karlsruhe | DWD (Deutscher Wetterdienst) — Climate Data Center | `kl` (daily station observations) + `more_precip` (precipitation only) | Creative Commons BY 4.0 |
 | Santa Fe | NOAA — GHCN-Daily, Access Data Service v1 | `daily-summaries` (TMAX/TMIN/PRCP), stations USC00298072/298085 (spliced) + USW00023049 | U.S. Government work — no copyright restriction |
-| Honolulu | NOAA — GHCN-Daily, Access Data Service v1 | `daily-summaries` (TMAX/TMIN/PRCP), stations USW00022521 + USC00511925 | U.S. Government work — no copyright restriction |
+| Honolulu | NOAA — GHCN-Daily, Access Data Service v1 | `daily-summaries` (TMAX/TMIN/PRCP), stations USW00022521 + USC00516395 | U.S. Government work — no copyright restriction |
 | Nouméa | Météo-France — *Données climatologiques de base – quotidiennes* | dept. 988 (Nouvelle-Calédonie), `RR-T-Vent` daily files, same three eras | Licence Ouverte / Open Licence (Etalab 2.0) |
 | Moscow | Roshydromet / RIHMI-WDC — AISORI-M | Сутки → TTTR (temp. + precip.), WMO 27612, manually exported (login-gated, no stable URL) | Not openly licensed — Rospatent 2019621537; personal, non-commercial use only |
 | Voronezh | Roshydromet / RIHMI-WDC — AISORI-M | Сутки → TTTR (temp. + precip.), WMO 34123, manually exported (login-gated, no stable URL) | Not openly licensed — Rospatent 2019621537; personal, non-commercial use only |
+| Irvine | NOAA — GHCN-Daily, Access Data Service v1 | `daily-summaries` (TMAX/TMIN/PRCP), stations USC00049087/044303 (spliced) + USW00093184 | U.S. Government work — no copyright restriction |
 
 Full dataset URLs and citation text are in each site's report above and in
 `R/sites/<site>.R`. Météo-France field definitions land in
@@ -1443,12 +1617,14 @@ Full dataset URLs and citation text are in each site's report above and in
 | Karlsruhe | `04177` | Rheinstetten | 1876→ | Long regional reference — spliced with predecessor 02522 (city-centre, 1876→2008) at its 2008-11-01 handoff to Rheinstetten, closing what would otherwise be a 1985–2008 gap in 04177's own record |
 | Santa Fe | `USW00023049` | Santa Fe Airport | 1941→ | Local station — NOAA's own GHCN-Daily archive has no digitized daily temperature for it between 1959 and 1996 |
 | Santa Fe | `USC00298085` | Santa Fe | 1874→ | Long reference — spliced with predecessor 298072 (in-town, 1874→1972) at its 1972-04-01 handoff to 298085, a few miles south |
-| Honolulu | `USC00511925` | Honolulu Fire Station | 2008→ | Local station — **rainfall only**, no independent temperature record near downtown Honolulu |
+| Honolulu | `USC00516395` | Honolulu-Moanalua | 1905→ | Local station — **rainfall only**; a valley neighbourhood between the airport and downtown, 107 complete years of 122 |
 | Honolulu | `USW00022521` | Honolulu Airport | 1940→ | Long regional reference; one continuous record, no splice needed |
 | Nouméa | `98818002` | Nouméa-Magenta | 1964→ | Local station, the in-town domestic airfield; complete, no gaps |
 | Nouméa | `98818001` | Nouméa | 1950→ | Long regional reference; used for the trend and the daily climatology |
 | Moscow | `27612` | Moscow | 1948→2025 | Single station — no local pairing; this export has no second WMO index |
 | Voronezh | `34123` | Voronezh | 1940→2026 | Single station — no local pairing; this export has no second WMO index |
+| Irvine | `USW00093184` | John Wayne Airport | 1999→ | Local station, on Irvine's border — no splice needed, but the shortest record of the pair |
+| Irvine | `USC00044303` | Irvine | 1915→ | Long reference — spliced with predecessor 049087 (Tustin Irvine Ranch, 1915→2003) at its 2003 handoff to 044303, a few miles away |
 
 > The "Record" column is each station's raw first→last year; the trend prose and
 > "last decade" tables instead start from each station's first *complete* year
@@ -1466,7 +1642,9 @@ Full dataset URLs and citation text are in each site's report above and in
 > record has an unexplained 1959–1996 hole in NOAA's archive; Honolulu, like
 > Karlsruhe, has no independent in-town temperature station, so its local tier
 > is rainfall-only too; Nouméa-Magenta is the one exception — a genuinely
-> complete, gap-free local record. Moscow and Voronezh are a different case
+> complete, gap-free local record. John Wayne Airport, Irvine's local station,
+> is gap-free too, but only from 1999 — much shorter than the spliced 1915→
+> reference. Moscow and Voronezh are a different case
 > entirely: manually exported from Roshydromet's AISORI-M with a single WMO
 > index each, so there is no local pairing at all. Each report's own
 > "Why...?" note has the full explanation.
@@ -1489,7 +1667,8 @@ climatudes/
 │   │   ├── honolulu.R         Honolulu: same, for NOAA GHCN-Daily
 │   │   ├── noumea.R           Nouméa: same, for Météo-France dept. 988
 │   │   ├── moscow.R           Moscow: same, for Roshydromet/AISORI-M (manual export)
-│   │   └── voronezh.R         Voronezh: same, for Roshydromet/AISORI-M (manual export)
+│   │   ├── voronezh.R         Voronezh: same, for Roshydromet/AISORI-M (manual export)
+│   │   └── irvine.R           Irvine: same, for NOAA GHCN-Daily
 │   ├── sources/
 │   │   ├── meteofrance.R      fetch + normalize Météo-France's format (Castanet-Tolosan, Nouméa)
 │   │   ├── meteoswiss.R       fetch + normalize MeteoSwiss's format
