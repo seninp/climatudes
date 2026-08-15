@@ -30,7 +30,7 @@ suppressPackageStartupMessages({
 source("R/lib/common.R")
 source("R/lib/narrative.R")   # shares ytd_standing_text() with every per-site chapter
 
-SITE_ORDER <- c("castanet", "zurich", "karlsruhe", "moscow", "voronezh",
+SITE_ORDER <- c("castanet", "lyon", "zurich", "karlsruhe", "moscow", "voronezh",
                 "irvine", "albuquerque", "santafe", "honolulu", "noumea")
 
 load_site <- function(key) {

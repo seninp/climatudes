@@ -85,6 +85,12 @@ outputs/albuquerque/*
 outputs/albuquerque/figures/*
 !outputs/albuquerque/figures/*.png
 
+!outputs/lyon/
+outputs/lyon/*
+!outputs/lyon/figures/
+outputs/lyon/figures/*
+!outputs/lyon/figures/*.png
+
 !outputs/compare/
 outputs/compare/*
 !outputs/compare/figures/

@@ -1,9 +1,9 @@
 # Climatudes — local warming, city by city
 
-**Ten cities, five national weather services, one method. Every city is warming.
+**Eleven cities, five national weather services, one method. Every city is warming.
 Rainfall, taken from the same records through the same pipeline, shows nothing
-comparable: at half the cities there is no trend at all, and where there is one
-it runs wetter in some places and drier in others.**
+comparable: at most of these cities there is no trend at all, and where there is
+one it runs wetter in some places and drier in others.**
 
 That contrast is why the rainfall section exists. Every figure and number below
 is regenerated from the weather services' own daily files by a single command —
@@ -13,7 +13,7 @@ consistent temperature signal finds no matching one in precipitation.
 Start with the ranked comparison below; its city links lead to the chapters,
 which all follow the same eight sections in the same order.
 
-Eight sites come from national open-data portals. Moscow and Voronezh come from
+Nine sites come from national open-data portals. Moscow and Voronezh come from
 Roshydromet's AISORI-M, which is **not** openly licensed — personal,
 non-commercial use only (see [Licence](#licence)).
 
@@ -22,7 +22,7 @@ non-commercial use only (see [Licence](#licence)).
 
 <!-- BEGIN COMPARE -->
 
-## All ten cities, side by side
+## All eleven cities, side by side
 
 Every chapter below uses the same variables, the same completeness rule (≥ 330 valid
 days/year) and the same trend method (least-squares on annual means). The numbers here are those
@@ -30,7 +30,7 @@ same headline figures gathered in one place, not recomputed. Two rates are given
 one over its own record, and one over 1951–2025, the longest window every
 city shares. Where they disagree, the raw ranking is partly reporting record length.
 
-![Warming rate compared across all ten cities, ranked fastest to slowest, with a shared-window rate alongside](outputs/compare/figures/warming_rate.png)
+![Warming rate compared across all eleven cities, ranked fastest to slowest, with a shared-window rate alongside](outputs/compare/figures/warming_rate.png)
 
 <sub>Ranked by the raw rate. Santa Fe’s record runs 77 years longer than Nouméa’s, so two similar-looking rates can rest on very different
 amounts of evidence — the record span and the count of complete years are in the table below.</sub>
@@ -41,6 +41,7 @@ amounts of evidence — the record span and the count of complete years are in t
 | [Moscow](#a-warming-climate-seen-from-moscow) | Russia | 1949→2025 (77 yr, 77 complete) | **+0.39** | +0.41 | #1 of 77 — record | 2025, full year | Dec 31, 2025 † |
 | [Castanet-Tolosan](#a-warming-climate-seen-from-castanet-tolosan) | France | 1947→2025 (79 yr, 79 complete) | **+0.34** | +0.39 | #1 of 80 — record | 2026, Jan 1 – Aug 13 · 225 d | Aug 13, 2026 |
 | [Irvine](#a-warming-climate-seen-from-irvine) | USA | 1915→2025 (111 yr, 95 complete) | **+0.27** | +0.43 | #2 of 101 | 2026, Jan 1 – May 31 · 151 d | May 31, 2026 |
+| [Lyon](#a-warming-climate-seen-from-lyon) | France | 1921→2025 (105 yr, 105 complete) | **+0.26** | +0.42 | #1 of 106 — record | 2026, Jan 1 – Aug 13 · 225 d | Aug 13, 2026 |
 | [Honolulu](#a-warming-climate-seen-from-honolulu) | USA | 1950→2025 (76 yr, 76 complete) | **+0.20** | +0.20 | #18 of 84 | 2026, Jan 1 – Aug 11 · 223 d | Aug 11, 2026 |
 | [Nouméa](#a-warming-climate-seen-from-nouméa) | France | 1951→2025 (75 yr, 75 complete) | **+0.19** | +0.19 | #5 of 76 | 2026, Jan 1 – Aug 14 · 226 d | Aug 14, 2026 |
 | [Albuquerque](#a-warming-climate-seen-from-albuquerque) | USA | 1932→2025 (94 yr, 94 complete) | **+0.18** | +0.22 | #1 of 95 — record | 2026, Jan 1 – Aug 11 · 223 d | Aug 11, 2026 |
@@ -66,7 +67,7 @@ The two New Mexico rows deserve a note, because they look like a contradiction. 
 ## How every chapter is built
 
 The comparison above is only meaningful because every city is measured the same way. That
-method is stated here once, rather than repeated in all ten chapters; each chapter adds only
+method is stated here once, rather than repeated in all eleven chapters; each chapter adds only
 its own source, stations and rebuild command.
 
 - **Variables.** Minimum = `TN`, maximum = `TX`, mean = `(TN+TX)/2`, in °C;
@@ -254,6 +255,157 @@ comparison at the top of this page legitimate.
 <sub>Figures and numbers above are generated — edit `R/03_readme.R`, not this block.</sub>
 
 <!-- END REPORT:castanet -->
+
+<!-- BEGIN REPORT:lyon -->
+
+## A warming climate, seen from Lyon
+
+*Météo-France daily temperature records, 1921 to 2025 — plus 2026 so far.*
+
+Météo-France’s daily records for the Lyon area are unambiguous: since
+the early 20th century, daily minimum, maximum and mean temperatures have all risen.
+
+| Headline number | Value |
+|---|---:|
+| Warming rate, mean temperature (Lyon-Bron) | **+0.26 °C / decade** |
+| Total rise over 104 years (1921 → 2025) | **+2.7 °C** |
+| Mean of the last decade (vs 11.3 °C in 1921–1930) | **14.0 °C** |
+| Frost days per year, 1921–1930 → 2016–2025 | **64 → 33** |
+| Hot days (≥ 30 °C) per year, 1921–1930 → 2016–2025 | **19 → 48** |
+| Complete station-years analysed | **155** |
+| 2026 year-to-date (Jan 1 – Aug 13), against 105 prior years | **#1 of 106 — record** |
+
+### The long view: annual means
+
+![Annual mean temperatures around Lyon, 1921 to 2025](outputs/lyon/figures/temperature_series.png)
+
+<sub>Annual means of daily temperatures. The thick curves are LOESS smoothings that
+highlight the climate trend; the points are annual means. The green series (Lyon-Saint-Exupéry) is Lyon's current international airport, about 25 km east of the city. It tracks the long Lyon-Bron reference mean closely.</sub>
+
+At Lyon-Bron — the station with the longest record (1921→2025) — the annual
+mean temperature rises by **+0.26 °C per decade**, about **+2.7 °C** over the
+whole period. The local Lyon-Saint-Exupéry station only covers 1976→2025. Its slope over that shorter, more recent window is steeper (+0.63 °C/decade), and so is Lyon-Bron’s over the same years (+0.59 °C/decade): recent decades warm faster, and over these years the two stations agree to within 0.04 °C/decade.
+
+
+
+### This year, against every year before it
+
+![Per-year mean over the same Jan-to-cutoff window, as a departure from the 1921–2025 mean, with 2026 the largest bar](outputs/lyon/figures/temperature_ytd.png)
+
+<sub>Each bar is a year’s mean over the <em>same window</em> — <strong>Jan 1 – Aug 13</strong> —
+shown as its departure from the 1921–2025 mean (12.4 °C): red above, blue
+below. Holding the part-of-year identical is what makes one year comparable with another. The bars swing from blue to red over
+the decades — and 2026 is the tallest of all.</sub>
+
+Measured like-for-like, **2026 is the warmest Jan 1 – Aug 13 in 106 years** at Lyon-Bron: **15.6 °C** — +0.4 °C above the previous record (2020, 15.2 °C) and **+3.3 °C above the 1921–2025 mean** (12.4 °C).
+
+> [!NOTE]
+> A part-year mean cannot be compared with other years' full-year means. That is why 2026 appears on the long-view chart above only as a marked, hollow "to date" point — a part-year mean on an axis of full-year means — while its like-for-like standing is the chart here.
+
+### Every year, day by day
+
+![Daily temperature climatology, every year January to December, hot years red and cold years blue](outputs/lyon/figures/temperature_climatology.png)
+
+<sub>Each thin line is a single year’s daily mean temperature from January to December
+(1920–2025, 106 years), smoothed with a centred
+<strong>3-day rolling mean</strong> (each day = the average of itself
+±1 day) to tame day-to-day jitter while keeping the shape. The dark line
+is the long-term daily normal; the bold red line is <strong>2026 so far</strong>.
+Years whose smoothed daily mean ever rose above <strong>+30 °C</strong> are
+highlighted in red and labelled; years that ever fell below
+<strong>-5 °C</strong> in blue.</sub>
+
+> [!NOTE]
+> **Hottest and coldest years.** Measured on the smoothed daily-mean curve,
+> **6** years pushed above +30 °C (1947, 1983, 2003, 2018, 2019, 2023)
+> while **44** years dropped below -5 °C (first in 1920, most recently 2003 and 2012).
+> Years hitting both extremes: 1947 and 2003.  <sub>(If the threshold is applied instead to the raw, unsmoothed daily mean, 1947 and 2003 each touch both extremes.)</sub>
+
+### The record days
+
+The single most extreme days in each station’s record. “Hottest” is the highest daily
+maximum (TX), “coldest” the lowest daily minimum (TN).
+
+| Station (record span) | Extreme | Date | Min (TN) | Max (TX) |
+|---|---|---|---:|---:|
+| Lyon-Bron <sub>1920–2026</sub> | Hottest 🔥 | 2023-08-24 | 21.6 | **41.4** |
+| Lyon-Bron <sub>1920–2026</sub> | Coldest ❄️ | 1938-12-22 | **-24.6** | -7.2 |
+| Lyon-Saint-Exupéry <sub>1975–2026</sub> | Hottest 🔥 | 2003-08-13 | 22.8 | **39.9** |
+| Lyon-Saint-Exupéry <sub>1975–2026</sub> | Coldest ❄️ | 1985-01-07 | **-20.3** | -8.4 |
+
+At Lyon-Bron, the all-time heat (2023-08-24) postdates the all-time cold (1938-12-22) by 85 years.
+
+> [!NOTE]
+> **Why Lyon-Saint-Exupéry?** Lyon-Saint-Exupéry (station 69299001), the city's international airport about 25 km east, has recorded temperature since 1976 with no missing years and provides the local comparison. Lyon-Bron (station 69029001), the historic airport 7 km east of the centre, provides the trend: 1921 onward with 105 complete years and no incomplete year in between. Saint-Genis-Laval, in the southern suburbs, reaches back further — to 1881 — but 1920–1939 is almost entirely missing from it, so a gap-free century at Bron is the sounder basis for a slope than a longer record with a hole through its middle.
+
+### The last decade (Lyon-Bron)
+
+| Year | Min (TN) | Max (TX) | Mean |
+|---|---:|---:|---:|
+| 2016 | 8.8 | 17.6 | **13.2** |
+| 2017 | 8.7 | 18.5 | **13.6** |
+| 2018 | 9.9 | 19.1 | **14.5** |
+| 2019 | 9.2 | 19.0 | **14.1** |
+| 2020 | 9.6 | 19.6 | **14.6** |
+| 2021 | 8.5 | 17.6 | **13.1** |
+| 2022 | 9.4 | 19.8 | **14.6** |
+| 2023 | 9.3 | 19.7 | **14.5** |
+| 2024 | 9.4 | 18.5 | **14.0** |
+| 2025 | 9.0 | 18.8 | **13.9** |
+| 2026 *(to date)* | 9.6 | 21.6 | **15.6** |
+
+### Frost days down, hot days up
+
+A degree of warming is abstract; a count of days is not. Lyon-Bron’s first
+complete decade (1921–1930) against its last (2016–2025):
+
+| Threshold days per year | 1921–1930 | 2016–2025 |
+|---|---:|---:|
+| Frost days (min < 0 °C) | 64 | **33** |
+| Hot days (max ≥ 30 °C) | 19 | **48** |
+| Very hot days (max ≥ 35 °C) | 3 | **10** |
+| Tropical nights (min ≥ 20 °C) | 2 | **16** |
+
+<sub>Counts of days per year crossing each threshold, averaged over the first and last
+complete decades of the record.</sub>
+
+### What about the rain?
+
+Temperature is only half of a climate. Over 1888–2025 (109 years),
+annual precipitation at Lyon-Bron shows **no statistically significant trend**.
+
+![Annual rainfall totals around Lyon](outputs/lyon/figures/rain_series.png)
+
+<sub>Annual total precipitation. The dashed line is Lyon-Bron’s long-term mean
+(823 mm/yr); the thick curves are LOESS smoothings. The year-to-year swings are
+large — from 426 mm (1921) to 1231 mm (1960) —
+but the long-run slope (-2 mm/decade) is flat and not significant (p = 0.55).</sub>
+
+The same daily records that carry a strong warming signal carry *no* comparable signal in how much it rains: annual totals swing widely from year to year around a flat long-run mean.
+
+![Monthly rainfall through the year at Lyon-Bron, one line per year](outputs/lyon/figures/rain_climatology.png)
+
+<sub>Rain through the year: each grey line is one year’s monthly totals, the dark line the
+long-term monthly normal, the bold blue line 2026 so far. October is the
+wettest month on average (88 mm), February the driest
+(46 mm) — but the spread between years dwarfs the seasonal cycle, which is exactly why no annual trend emerges.</sub>
+
+### Methodology
+
+Only what is specific to this city is listed here. The variables, completeness rule,
+smoothing, thresholds and trend method are the same for every city and are stated once, in
+[How every chapter is built](#how-every-chapter-is-built) — which is also what makes the
+comparison at the top of this page legitimate.
+
+- **Source.** Météo-France — Données climatologiques de base – quotidiennes, Rhône, France. Full citation
+  in [Data sources](#data-sources) below.
+- **Stations.** Lyon-Saint-Exupéry (69299001) and Lyon-Bron (69029001).
+- **Rebuild this chapter.** `SITE=lyon make all` — every figure and number above is
+  regenerated from the source data on each run.
+
+<sub>Figures and numbers above are generated — edit `R/03_readme.R`, not this block.</sub>
+
+<!-- END REPORT:lyon -->
 
 <!-- BEGIN REPORT:zurich -->
 
@@ -1615,6 +1767,7 @@ only, which is why their raw exports are never committed to this repository:
 | Site | Source | Scope | Licence |
 |---|---|---|---|
 | Castanet-Tolosan | Météo-France — *Données climatologiques de base – quotidiennes* | dept. 31 (Haute-Garonne), `RR-T-Vent` daily files, three eras (`avant-1949`, `previous-1950-2024`, `latest-2025-2026`) | Licence Ouverte / Open Licence (Etalab 2.0) |
+| Lyon | Météo-France — *Données climatologiques de base – quotidiennes* | dept. 69 (Rhône), `RR-T-Vent` daily files, same three eras | Licence Ouverte / Open Licence (Etalab 2.0) |
 | Zurich | MeteoSwiss — Open Government Data | `ogd-nbcn` (homogeneous climate stations) + `ogd-smn` (automatic weather stations) | MeteoSwiss Open Data (attribution: "Source: MeteoSwiss") |
 | Karlsruhe | DWD (Deutscher Wetterdienst) — Climate Data Center | `kl` (daily station observations) + `more_precip` (precipitation only) | Creative Commons BY 4.0 |
 | Moscow | Roshydromet / RIHMI-WDC — AISORI-M | Сутки → TTTR (temp. + precip.), WMO 27612, manually exported (login-gated, no stable URL) | Not openly licensed — Rospatent 2019621537; personal, non-commercial use only |
@@ -1635,6 +1788,8 @@ Full dataset URLs and citation text are in each site's report above and in
 |---|------|------|--------|------|
 | Castanet-Tolosan | `31035001` | Auzeville-Tolosane-INRAE | 2002→ | Local station, on the edge of Castanet-Tolosan (INRAE/ENSAT campus) |
 | Castanet-Tolosan | `31069001` | Toulouse-Blagnac | 1947→ | Long regional reference; used for the trend and the daily climatology |
+| Lyon | `69299001` | Lyon-Saint-Exupéry | 1976→ | Local station, the current international airport ~25 km east; 50 complete years, no gaps |
+| Lyon | `69029001` | Lyon-Bron | 1921→ | Long reference, the historic airport 7 km east — 105 complete years and no incomplete year in between |
 | Zurich | `REH` | Zürich-Affoltern | 1961→ (temp. 1978→) | Local station, in Zurich's Affoltern district (MeteoSwiss automatic network) |
 | Zurich | `SMA` | Zürich-Fluntern | 1864→ (TN/TX 1881→) | Long regional reference; MeteoSwiss's homogeneous series for the trend and climatology |
 | Karlsruhe | `02523` | Karlsruhe-Wolfartsweier | 1931→ | Local station — **rainfall only**, no temperature record near Grötzingen (see below) |
@@ -1665,6 +1820,7 @@ target town, so every pairing is a compromise. The compromises:
 | Site | Local station | Compromise |
 |---|---|---|
 | Castanet-Tolosan | Auzeville-Tolosane-INRAE | None to speak of — it sits on the town boundary. |
+| Lyon | Lyon-Saint-Exupéry | None — gap-free since 1976, though much shorter than the reference. Saint-Genis-Laval reaches back to 1881 but is missing 1920–1939. |
 | Zurich | Zürich-Affoltern | Affoltern is outside MeteoSwiss's homogeneous long-term network, so this is the closest full station. |
 | Karlsruhe | Karlsruhe-Wolfartsweier | Rainfall only. The nearest station that also measured temperature (Augustenberg, under 1 km from Grötzingen) closed in 1985. |
 | Moscow, Voronezh | *none* | Exported from AISORI-M with one WMO index each; there is no second station to pair. |
@@ -1694,6 +1850,7 @@ climatudes/
 │   │   └── narrative.R        shared report prose/number logic (build_common_fills())
 │   ├── sites/
 │   │   ├── castanet.R         Castanet-Tolosan: stations, paths, citation, narrative facts
+│   │   ├── lyon.R             Lyon: same, for Météo-France dept. 69
 │   │   ├── zurich.R           Zurich: same, for MeteoSwiss
 │   │   ├── karlsruhe.R        Karlsruhe: same, for DWD
 │   │   ├── moscow.R           Moscow: same, for Roshydromet/AISORI-M (manual export)
@@ -1836,8 +1993,8 @@ Source data:
 
 Grouped by provider, since the licence follows the source rather than the city:
 
-- Castanet-Tolosan and Nouméa © Météo-France, *Licence Ouverte / Open Licence
-  (Etalab 2.0)*.
+- Castanet-Tolosan, Lyon and Nouméa © Météo-France, *Licence Ouverte / Open
+  Licence (Etalab 2.0)*.
 - Zurich © MeteoSwiss Open Data — attribution required: "Source: MeteoSwiss".
 - Karlsruhe © DWD (Deutscher Wetterdienst), *Creative Commons BY 4.0*.
 - Irvine, Albuquerque, Santa Fe and Honolulu — NOAA / NCEI GHCN-Daily, U.S.
