@@ -63,6 +63,40 @@ months of winter is not the same kind of statement as an eight-month "#5 of 76".
 
 The two New Mexico rows deserve a note, because they look like a contradiction. Santa Fe and Albuquerque sit about 90 km apart in the same high-desert climate, yet Santa Fe warms at +0.08 °C/decade against Albuquerque's +0.18. Record length is not the explanation — over the shared 1951-onward window they are still +0.13 and +0.22. The difference is in the stations: Santa Fe's daily minima have *fallen* while its maxima rose, widening the gap between day and night, which is the opposite of the greenhouse signature and a known symptom of station history (a site move, a change in reading time) in a record that has not been homogenised. GHCN-Daily is raw. Read the slowest bar on this chart as a measurement result, not as evidence that Santa Fe is barely warming; its own airport station, and its neighbour here, both give roughly +0.2. See Santa Fe's chapter for the numbers.
 
+## How every chapter is built
+
+The comparison above is only meaningful because every city is measured the same way. That
+method is stated here once, rather than repeated in all ten chapters; each chapter adds only
+its own source, stations and rebuild command.
+
+- **Variables.** Minimum = `TN`, maximum = `TX`, mean = `(TN+TX)/2`, in °C;
+  rainfall = `RR` (daily precipitation, in mm).
+- **Annual aggregation.** Arithmetic mean of daily values over each calendar year. The
+  long-term trend uses only complete years (≥ 330 valid days). Where the current
+  year is still in progress, the pipeline shows it separately — as a hollow “to date” marker
+  on the trend chart, and (for a fair record comparison) against the same calendar window
+  (Jan 1 → cutoff) of every prior year. A year enters that comparison only if it has
+  ≥ 150 valid days in the window *and* covers every month of it: a year holding
+  enough days bunched into part of the window is measuring a different season, not a
+  different year.
+- **Daily climatology.** Each year’s daily mean is smoothed with a centred
+  3-day rolling mean (unweighted, computed per year so December never bleeds
+  into January) for legibility; leap days are aligned across years. The normal is the
+  per-day average over all prior years.
+- **Threshold days.** Frost = `TN < 0`, hot day = `TX ≥ 30`, very hot =
+  `TX ≥ 35`, tropical night = `TN ≥ 20`, counted per complete year and
+  averaged over the first and last complete decade. A fixed threshold means different
+  things in different climates: where it falls near the middle of a city’s distribution,
+  that chapter says so, because the count then amplifies a modest shift in the mean.
+- **Rainfall.** Annual total of daily `RR` over complete years; the trend is a
+  least-squares slope with its two-sided p-value. Monthly climatology keeps only months
+  with ≥ 27 valid days.
+- **Trend.** Slope by linear regression (least squares); the curves on the line charts are
+  LOESS smoothings (span = 0.7). Rates are reported per decade.
+- **Reproducibility.** A 4-stage R pipeline (`R/00_prepare_data.R` → `R/01_plot.R` →
+  `R/02_report.R` → `R/03_readme.R`), driven by `SITE=<site> make all`. See
+  [How to run](#how-to-run).
+
 <sub>Figures and numbers above are generated — edit `R/04_compare.R`, not this block.</sub>
 
 <!-- END COMPARE -->
@@ -206,35 +240,16 @@ wettest month on average (72 mm), July the driest
 
 ### Methodology
 
+Only what is specific to this city is listed here. The variables, completeness rule,
+smoothing, thresholds and trend method are the same for every city and are stated once, in
+[How every chapter is built](#how-every-chapter-is-built) — which is also what makes the
+comparison at the top of this page legitimate.
+
 - **Source.** Météo-France — Données climatologiques de base – quotidiennes, Haute-Garonne, France. Full citation
-  below.
-- **Variables.** Minimum = `TN`, maximum = `TX`, mean = `(TN+TX)/2`, in °C;
-  rainfall = `RR` (daily precipitation, in mm).
-- **Annual aggregation.** Arithmetic mean of daily values over each calendar year. The
-  long-term trend uses only complete years (≥ 330 valid days). Where the current
-  year is still in progress, the pipeline shows it separately — as a hollow “to date” marker
-  on the trend chart, and (for a fair record comparison) against the same calendar window
-  (Jan 1 → cutoff) of every prior year, keeping only years with ≥ 150 valid
-  days in that window *and* data spread across the whole window, not bunched in part of it.
-- **Daily climatology.** Each year’s daily mean is smoothed with a centred
-  3-day rolling mean (unweighted moving average, computed per year so
-  December never bleeds into January; the first/last 1 day keep their raw
-  value) for legibility; leap days are aligned across years. The normal is the per-day
-  average over all prior years.
-- **Threshold days.** Frost = `TN < 0`, hot day = `TX ≥ 30`, very hot =
-  `TX ≥ 35`, tropical night = `TN ≥ 20`, counted per complete year and
-  averaged over the first/last complete decade. A fixed threshold means different things
-  in different climates — where it falls near the middle of a city’s distribution the
-  caption above says so.
-- **Rainfall.** Annual total of daily `RR` over complete years; the trend is a
-  least-squares slope with its two-sided p-value. Monthly climatology keeps only months
-  with ≥ 27 valid days.
-- **Trend.** Slope estimated by linear regression (least squares); the line-chart curves
-  use LOESS smoothing (span = 0.7).
-- **Reproducibility.** A 4-stage R pipeline (`R/00_prepare_data.R` → `R/01_plot.R` →
-  `R/02_report.R` → `R/03_readme.R`), driven by `SITE=castanet make all`. The figures
-  above and the numbers in this section are regenerated from the source data on every
-  run — see [Data sources](#data-sources) below for the full citation.
+  in [Data sources](#data-sources) below.
+- **Stations.** Auzeville-Tolosane-INRAE (31035001) and Toulouse-Blagnac (31069001).
+- **Rebuild this chapter.** `SITE=castanet make all` — every figure and number above is
+  regenerated from the source data on each run.
 
 <sub>Figures and numbers above are generated — edit `R/03_readme.R`, not this block.</sub>
 
@@ -376,35 +391,16 @@ wettest month on average (128 mm), February the driest
 
 ### Methodology
 
+Only what is specific to this city is listed here. The variables, completeness rule,
+smoothing, thresholds and trend method are the same for every city and are stated once, in
+[How every chapter is built](#how-every-chapter-is-built) — which is also what makes the
+comparison at the top of this page legitimate.
+
 - **Source.** MeteoSwiss — Open Government Data — climate stations (NBCN) & automatic weather stations (SMN), Kanton Zürich, Switzerland. Full citation
-  below.
-- **Variables.** Minimum = `TN`, maximum = `TX`, mean = `(TN+TX)/2`, in °C;
-  rainfall = `RR` (daily precipitation, in mm).
-- **Annual aggregation.** Arithmetic mean of daily values over each calendar year. The
-  long-term trend uses only complete years (≥ 330 valid days). Where the current
-  year is still in progress, the pipeline shows it separately — as a hollow “to date” marker
-  on the trend chart, and (for a fair record comparison) against the same calendar window
-  (Jan 1 → cutoff) of every prior year, keeping only years with ≥ 150 valid
-  days in that window *and* data spread across the whole window, not bunched in part of it.
-- **Daily climatology.** Each year’s daily mean is smoothed with a centred
-  3-day rolling mean (unweighted moving average, computed per year so
-  December never bleeds into January; the first/last 1 day keep their raw
-  value) for legibility; leap days are aligned across years. The normal is the per-day
-  average over all prior years.
-- **Threshold days.** Frost = `TN < 0`, hot day = `TX ≥ 30`, very hot =
-  `TX ≥ 35`, tropical night = `TN ≥ 20`, counted per complete year and
-  averaged over the first/last complete decade. A fixed threshold means different things
-  in different climates — where it falls near the middle of a city’s distribution the
-  caption above says so.
-- **Rainfall.** Annual total of daily `RR` over complete years; the trend is a
-  least-squares slope with its two-sided p-value. Monthly climatology keeps only months
-  with ≥ 27 valid days.
-- **Trend.** Slope estimated by linear regression (least squares); the line-chart curves
-  use LOESS smoothing (span = 0.7).
-- **Reproducibility.** A 4-stage R pipeline (`R/00_prepare_data.R` → `R/01_plot.R` →
-  `R/02_report.R` → `R/03_readme.R`), driven by `SITE=zurich make all`. The figures
-  above and the numbers in this section are regenerated from the source data on every
-  run — see [Data sources](#data-sources) below for the full citation.
+  in [Data sources](#data-sources) below.
+- **Stations.** Zürich-Affoltern (REH) and Zürich-Fluntern (SMA).
+- **Rebuild this chapter.** `SITE=zurich make all` — every figure and number above is
+  regenerated from the source data on each run.
 
 <sub>Figures and numbers above are generated — edit `R/03_readme.R`, not this block.</sub>
 
@@ -544,547 +540,20 @@ wettest month on average (82 mm), February the driest
 
 ### Methodology
 
+Only what is specific to this city is listed here. The variables, completeness rule,
+smoothing, thresholds and trend method are the same for every city and are stated once, in
+[How every chapter is built](#how-every-chapter-is-built) — which is also what makes the
+comparison at the top of this page legitimate.
+
 - **Source.** DWD (Deutscher Wetterdienst) — Climate Data Center — daily station observations (KL) & precipitation (RR), Baden-Württemberg, Germany. Full citation
-  below.
-- **Variables.** Minimum = `TN`, maximum = `TX`, mean = `(TN+TX)/2`, in °C;
-  rainfall = `RR` (daily precipitation, in mm).
-- **Annual aggregation.** Arithmetic mean of daily values over each calendar year. The
-  long-term trend uses only complete years (≥ 330 valid days). Where the current
-  year is still in progress, the pipeline shows it separately — as a hollow “to date” marker
-  on the trend chart, and (for a fair record comparison) against the same calendar window
-  (Jan 1 → cutoff) of every prior year, keeping only years with ≥ 150 valid
-  days in that window *and* data spread across the whole window, not bunched in part of it.
-- **Daily climatology.** Each year’s daily mean is smoothed with a centred
-  3-day rolling mean (unweighted moving average, computed per year so
-  December never bleeds into January; the first/last 1 day keep their raw
-  value) for legibility; leap days are aligned across years. The normal is the per-day
-  average over all prior years.
-- **Threshold days.** Frost = `TN < 0`, hot day = `TX ≥ 30`, very hot =
-  `TX ≥ 35`, tropical night = `TN ≥ 20`, counted per complete year and
-  averaged over the first/last complete decade. A fixed threshold means different things
-  in different climates — where it falls near the middle of a city’s distribution the
-  caption above says so.
-- **Rainfall.** Annual total of daily `RR` over complete years; the trend is a
-  least-squares slope with its two-sided p-value. Monthly climatology keeps only months
-  with ≥ 27 valid days.
-- **Trend.** Slope estimated by linear regression (least squares); the line-chart curves
-  use LOESS smoothing (span = 0.7).
-- **Reproducibility.** A 4-stage R pipeline (`R/00_prepare_data.R` → `R/01_plot.R` →
-  `R/02_report.R` → `R/03_readme.R`), driven by `SITE=karlsruhe make all`. The figures
-  above and the numbers in this section are regenerated from the source data on every
-  run — see [Data sources](#data-sources) below for the full citation.
+  in [Data sources](#data-sources) below.
+- **Stations.** Karlsruhe-Wolfartsweier (02523) and Rheinstetten (04177).
+- **Rebuild this chapter.** `SITE=karlsruhe make all` — every figure and number above is
+  regenerated from the source data on each run.
 
 <sub>Figures and numbers above are generated — edit `R/03_readme.R`, not this block.</sub>
 
 <!-- END REPORT:karlsruhe -->
-
-<!-- BEGIN REPORT:santafe -->
-
-## A warming climate, seen from Santa Fe
-
-*NOAA (National Centers for Environmental Information) daily temperature records, 1874 to 2025 — plus 2026 so far.*
-
-NOAA (National Centers for Environmental Information)’s daily records for the Santa Fe area are unambiguous: since
-the late 19th century, daily minimum, maximum and mean temperatures have all risen.
-
-| Headline number | Value |
-|---|---:|
-| Warming rate, mean temperature (Santa Fe) | **+0.08 °C / decade** |
-| Total rise over 151 years (1874 → 2025) | **+1.2 °C** |
-| Mean of the last decade (vs 9.5 °C in 1874–1883) | **10.7 °C** |
-| Frost days per year, 1874–1883 → 2016–2025 | **150 → 157** |
-| Hot days (≥ 30 °C) per year, 1874–1883 → 2016–2025 | **25 → 59** |
-| Complete station-years analysed | **182** |
-| 2026 year-to-date (Jan 1 – Jun 30), against 146 prior years | **#1 of 147 — record** |
-
-### The long view: annual means
-
-![Annual mean temperatures around Santa Fe, 1874 to 2025](outputs/santafe/figures/temperature_series.png)
-
-<sub>Annual means of daily temperatures. The thick curves are LOESS smoothings that
-highlight the climate trend; the points are annual means. The green series (Santa Fe Airport) is Santa Fe County Municipal Airport, a few miles southwest of downtown. It tracks the long Santa Fe reference mean closely.</sub>
-
-At Santa Fe — the station with the longest record (1874→2025) — the annual
-mean temperature rises by **+0.08 °C per decade**, about **+1.2 °C** over the
-whole period. The local Santa Fe Airport station only covers 1942→2025. Its slope over that shorter, more recent window is steeper (+0.16 °C/decade), and so is Santa Fe’s over the same years (+0.11 °C/decade): recent decades warm faster, and over these years the two stations agree to within 0.05 °C/decade.
-
-One caveat specific to this station: its daily minima have *fallen* (-0.10 °C/decade) while its maxima rose (+0.26 °C/decade), widening the average gap between day and night by 2.4 °C over the record. Greenhouse warming narrows that gap, minima rising fastest; a widening gap usually means something about the station changed — a move, or a shift in reading time — and these are raw observations, not a homogenised series. Treat this city's headline rate with more caution than the others here, and see the note below on which station this series is.
-
-### This year, against every year before it
-
-![Per-year mean over the same Jan-to-cutoff window, as a departure from the 1874–2025 mean, with 2026 the largest bar](outputs/santafe/figures/temperature_ytd.png)
-
-<sub>Each bar is a year’s mean over the <em>same window</em> — <strong>Jan 1 – Jun 30</strong> —
-shown as its departure from the 1874–2025 mean (7.7 °C): red above, blue
-below. Holding the part-of-year identical is what makes one year comparable with another. The bars swing from blue to red over
-the decades — and 2026 is the tallest of all.</sub>
-
-Measured like-for-like, **2026 is the warmest Jan 1 – Jun 30 in 147 years** at Santa Fe: **10.9 °C** — +0.3 °C above the previous record (1879, 10.6 °C) and **+3.3 °C above the 1874–2025 mean** (7.7 °C).
-
-> [!NOTE]
-> A part-year mean cannot be compared with other years' full-year means. That is why 2026 appears on the long-view chart above only as a marked, hollow "to date" point — a part-year mean on an axis of full-year means — while its like-for-like standing is the chart here.
-
-### Every year, day by day
-
-![Daily temperature climatology, every year January to December, hot years red and cold years blue](outputs/santafe/figures/temperature_climatology.png)
-
-<sub>Each thin line is a single year’s daily mean temperature from January to December
-(1874–2025, 152 years), smoothed with a centred
-<strong>3-day rolling mean</strong> (each day = the average of itself
-±1 day) to tame day-to-day jitter while keeping the shape. The dark line
-is the long-term daily normal; the bold red line is <strong>2026 so far</strong>.
-Years whose smoothed daily mean ever rose above <strong>+30 °C</strong> are
-highlighted in red and labelled; years that ever fell below
-<strong>-5 °C</strong> in blue.</sub>
-
-> [!NOTE]
-> **Hottest and coldest years.** Measured on the smoothed daily-mean curve,
-> **0** years pushed above +30 °C
-> while **148** years dropped below -5 °C — every year in the record.
->   <sub>(On the raw, unsmoothed daily mean, no year touches both extremes.)</sub>
-
-### The record days
-
-The single most extreme days in each station’s record. “Hottest” is the highest daily
-maximum (TX), “coldest” the lowest daily minimum (TN).
-
-| Station (record span) | Extreme | Date | Min (TN) | Max (TX) |
-|---|---|---|---:|---:|
-| Santa Fe <sub>1874–2026</sub> | Hottest 🔥 | 1994-06-26 | 13.9 | **37.2** |
-| Santa Fe <sub>1874–2026</sub> | Coldest ❄️ | 2011-02-03 | **-31.1** | -11.1 |
-| Santa Fe Airport <sub>1941–2026</sub> | Hottest 🔥 | 2013-06-27 | 18.3 | **38.9** |
-| Santa Fe Airport <sub>1941–2026</sub> | Coldest ❄️ | 2011-02-03 | **-27.7** | -8.8 |
-
-At Santa Fe the all-time cold (2011-02-03) postdates the all-time heat (1994-06-26) by 17 years: a single record day is noisy, and the mean trend above is the more reliable measure.
-
-> [!NOTE]
-> **Why Santa Fe Airport?** Santa Fe Airport (station USW00023049), a few miles southwest of downtown, is the nearest continuously-sited station and provides the local comparison. NOAA's own GHCN-Daily archive has no digitized daily temperature for it between 1959 and 1996 — a real gap in the upstream record, not a fetch issue here — so its trend uses only the complete years on either side. The reference series, labelled “Santa Fe”, splices the city's original in-town COOP station (298072, 1874–1972) with its direct successor a few miles south (298085, 1972–2026) for one gap-free record back to 1874.
-
-### The last decade (Santa Fe)
-
-| Year | Min (TN) | Max (TX) | Mean |
-|---|---:|---:|---:|
-| 2016 | 2.0 | 18.9 | **10.5** |
-| 2017 | 2.8 | 19.8 | **11.3** |
-| 2018 | 2.2 | 19.3 | **10.8** |
-| 2019 | 1.4 | 18.1 | **9.8** |
-| 2020 | 1.8 | 19.5 | **10.7** |
-| 2021 | 2.0 | 19.1 | **10.6** |
-| 2022 | 1.6 | 18.3 | **10.0** |
-| 2023 | 2.1 | 18.5 | **10.3** |
-| 2024 | 2.5 | 19.9 | **11.2** |
-| 2025 | 2.8 | 20.2 | **11.5** |
-| 2026 *(to date)* | 1.7 | 20.2 | **10.9** |
-
-### Frost days up, hot days up
-
-A degree of warming is abstract; a count of days is not. Santa Fe’s first
-complete decade (1874–1883) against its last (2016–2025):
-
-| Threshold days per year | 1874–1883 | 2016–2025 |
-|---|---:|---:|
-| Frost days (min < 0 °C) | 150 | **157** |
-| Hot days (max ≥ 30 °C) | 25 | **59** |
-| Very hot days (max ≥ 35 °C) | 1 | **6** |
-| Tropical nights (min ≥ 20 °C) | 0 | **0** |
-
-<sub>Counts of days per year crossing each threshold, averaged over the first and last
-complete decades of the record. Both counts have risen here — a reminder that year-to-year extreme-day counts are noisy even where the underlying mean trend, shown above, is unambiguous.</sub>
-
-### What about the rain?
-
-Temperature is only half of a climate. Over 1874–2025 (144 years),
-annual precipitation at Santa Fe shows **a statistically significant trend (-3 mm/decade, p = 0.04)**.
-
-![Annual rainfall totals around Santa Fe](outputs/santafe/figures/rain_series.png)
-
-<sub>Annual total precipitation. The dashed line is Santa Fe’s long-term mean
-(346 mm/yr); the thick curves are LOESS smoothings. The year-to-year swings are
-large — from 70 mm (1883) to 553 mm (1881) —
-but the long-run slope (-3 mm/decade) is measurable and statistically significant (p = 0.04).</sub>
-
-Rainfall here is not flat: the long run tilts drier. The tilt is small against the year-to-year spread above, which is why it is easy to miss in any single decade.
-
-![Monthly rainfall through the year at Santa Fe, one line per year](outputs/santafe/figures/rain_climatology.png)
-
-<sub>Rain through the year: each grey line is one year’s monthly totals, the dark line the
-long-term monthly normal, the bold blue line 2026 so far. July is the
-wettest month on average (59 mm), January the driest
-(16 mm) — but the spread between years is why that slow trend is easy to miss from the monthly shape alone.</sub>
-
-### Methodology
-
-- **Source.** NOAA (National Centers for Environmental Information) — GHCN-Daily — Global Historical Climatology Network, daily summaries, New Mexico, USA. Full citation
-  below.
-- **Variables.** Minimum = `TN`, maximum = `TX`, mean = `(TN+TX)/2`, in °C;
-  rainfall = `RR` (daily precipitation, in mm).
-- **Annual aggregation.** Arithmetic mean of daily values over each calendar year. The
-  long-term trend uses only complete years (≥ 330 valid days). Where the current
-  year is still in progress, the pipeline shows it separately — as a hollow “to date” marker
-  on the trend chart, and (for a fair record comparison) against the same calendar window
-  (Jan 1 → cutoff) of every prior year, keeping only years with ≥ 150 valid
-  days in that window *and* data spread across the whole window, not bunched in part of it.
-- **Daily climatology.** Each year’s daily mean is smoothed with a centred
-  3-day rolling mean (unweighted moving average, computed per year so
-  December never bleeds into January; the first/last 1 day keep their raw
-  value) for legibility; leap days are aligned across years. The normal is the per-day
-  average over all prior years.
-- **Threshold days.** Frost = `TN < 0`, hot day = `TX ≥ 30`, very hot =
-  `TX ≥ 35`, tropical night = `TN ≥ 20`, counted per complete year and
-  averaged over the first/last complete decade. A fixed threshold means different things
-  in different climates — where it falls near the middle of a city’s distribution the
-  caption above says so.
-- **Rainfall.** Annual total of daily `RR` over complete years; the trend is a
-  least-squares slope with its two-sided p-value. Monthly climatology keeps only months
-  with ≥ 27 valid days.
-- **Trend.** Slope estimated by linear regression (least squares); the line-chart curves
-  use LOESS smoothing (span = 0.7).
-- **Reproducibility.** A 4-stage R pipeline (`R/00_prepare_data.R` → `R/01_plot.R` →
-  `R/02_report.R` → `R/03_readme.R`), driven by `SITE=santafe make all`. The figures
-  above and the numbers in this section are regenerated from the source data on every
-  run — see [Data sources](#data-sources) below for the full citation.
-
-<sub>Figures and numbers above are generated — edit `R/03_readme.R`, not this block.</sub>
-
-<!-- END REPORT:santafe -->
-
-<!-- BEGIN REPORT:honolulu -->
-
-## A warming climate, seen from Honolulu
-
-*NOAA (National Centers for Environmental Information) daily temperature records, 1950 to 2025 — plus 2026 so far.*
-
-NOAA (National Centers for Environmental Information)’s daily records for the Honolulu area are unambiguous: since
-the mid-20th century, daily minimum, maximum and mean temperatures have all risen.
-
-| Headline number | Value |
-|---|---:|
-| Warming rate, mean temperature (Honolulu Airport) | **+0.20 °C / decade** |
-| Total rise over 75 years (1950 → 2025) | **+1.5 °C** |
-| Mean of the last decade (vs 24.3 °C in 1950–1959) | **25.9 °C** |
-| Frost days per year, 1950–1959 → 2016–2025 | **0 → 0** |
-| Hot days (≥ 30 °C) per year, 1950–1959 → 2016–2025 | **42 → 175** |
-| Complete station-years analysed | **76** |
-| 2026 year-to-date (Jan 1 – Aug 11), against 83 prior years | **#18 of 84** |
-
-### The long view: annual means
-
-![Annual mean temperatures around Honolulu, 1950 to 2025](outputs/honolulu/figures/temperature_series.png)
-
-<sub>Annual means of daily temperatures. The thick curves are LOESS smoothings that
-highlight the climate trend; the points are annual means.</sub>
-
-At Honolulu Airport — the station with the longest record (1950→2025) — the annual
-mean temperature rises by **+0.20 °C per decade**, about **+1.5 °C** over the
-whole period. Honolulu-Moanalua carries no temperature record; Honolulu Airport alone provides the temperature trend for this area. The local comparison here uses rainfall instead — see below.
-
-
-
-### This year, against every year before it
-
-![Per-year mean over the same Jan-to-cutoff window, as a departure from the 1941–2025 mean, with 2026 highlighted](outputs/honolulu/figures/temperature_ytd.png)
-
-<sub>Each bar is a year’s mean over the <em>same window</em> — <strong>Jan 1 – Aug 11</strong> —
-shown as its departure from the 1941–2025 mean (24.8 °C): red above, blue
-below. Holding the part-of-year identical is what makes one year comparable with another. The bars swing from blue to red over
-the decades.</sub>
-
-Measured like-for-like over Jan 1 – Aug 11, 2026 ranks **#18 of 84** at Honolulu Airport (25.3 °C). The warmest such window on record remains 2025 (26.0 °C).
-
-> [!NOTE]
-> A part-year mean cannot be compared with other years' full-year means. That is why 2026 appears on the long-view chart above only as a marked, hollow "to date" point — a part-year mean on an axis of full-year means — while its like-for-like standing is the chart here.
-
-### Every year, day by day
-
-![Daily temperature climatology, every year January to December, hot years red and cold years blue](outputs/honolulu/figures/temperature_climatology.png)
-
-<sub>Each thin line is a single year’s daily mean temperature from January to December
-(1940–2025, 86 years), smoothed with a centred
-<strong>3-day rolling mean</strong> (each day = the average of itself
-±1 day) to tame day-to-day jitter while keeping the shape. The dark line
-is the long-term daily normal; the bold red line is <strong>2026 so far</strong>.
-Years whose smoothed daily mean ever rose above <strong>+30 °C</strong> are
-highlighted in red and labelled; years that ever fell below
-<strong>-5 °C</strong> in blue.</sub>
-
-> [!NOTE]
-> **Hottest and coldest years.** Measured on the smoothed daily-mean curve,
-> **2** years pushed above +30 °C (1987, 2019)
-> while **0** years dropped below -5 °C.
->   <sub>(On the raw, unsmoothed daily mean, no year touches both extremes.)</sub>
-
-### The record days
-
-The single most extreme days in each station’s record. “Hottest” is the highest daily
-maximum (TX), “coldest” the lowest daily minimum (TN).
-
-| Station (record span) | Extreme | Date | Min (TN) | Max (TX) |
-|---|---|---|---:|---:|
-| Honolulu Airport <sub>1940–2026</sub> | Hottest 🔥 | 1994-09-19 | 25.6 | **35.0** |
-| Honolulu Airport <sub>1940–2026</sub> | Coldest ❄️ | 1969-01-20 | **11.1** | 23.9 |
-
-At Honolulu Airport, the all-time heat (1994-09-19) postdates the all-time cold (1969-01-20) by 25 years.
-
-> [!NOTE]
-> **Why Honolulu-Moanalua?** No other digitized GHCN-Daily station near Honolulu carries a temperature record independent of the airport. Moanalua (station USC00516395), a valley neighbourhood between the airport and downtown, has recorded rainfall since 1906 — 80 complete years of the 81 it reports — and stands in for local rainfall. Honolulu International Airport (station USW00022521) provides the temperature trend: its readings begin in 1940, but the 1940s years all fall short of the completeness rule used here, so the trend starts at its first complete year, 1950, and runs unbroken from there.
-
-### The last decade (Honolulu Airport)
-
-| Year | Min (TN) | Max (TX) | Mean |
-|---|---:|---:|---:|
-| 2016 | 22.0 | 28.9 | **25.5** |
-| 2017 | 22.1 | 29.3 | **25.7** |
-| 2018 | 22.7 | 29.3 | **26.0** |
-| 2019 | 22.5 | 30.1 | **26.3** |
-| 2020 | 22.4 | 29.7 | **26.1** |
-| 2021 | 22.1 | 29.3 | **25.7** |
-| 2022 | 22.1 | 29.4 | **25.7** |
-| 2023 | 22.3 | 29.5 | **25.9** |
-| 2024 | 22.2 | 29.2 | **25.7** |
-| 2025 | 22.7 | 29.9 | **26.3** |
-| 2026 *(to date)* | 22.0 | 28.6 | **25.3** |
-
-### Frost days at zero, hot days up
-
-A degree of warming is abstract; a count of days is not. Honolulu Airport’s first
-complete decade (1950–1959) against its last (2016–2025):
-
-| Threshold days per year | 1950–1959 | 2016–2025 |
-|---|---:|---:|
-| Frost days (min < 0 °C) | 0 | **0** |
-| Hot days (max ≥ 30 °C) | 42 | **175** |
-| Very hot days (max ≥ 35 °C) | 0 | **0** |
-| Tropical nights (min ≥ 20 °C) | 272 | **317** |
-
-<sub>Counts of days per year crossing each threshold, averaged over the first and last
-complete decades of the record. There was never a frost season here to retreat; the change shows up entirely on the hot side of the ledger. Read the hot-day jump with care here: 29% of recent days come within 1 °C of the 30 °C line, so the count amplifies what is really a +1.7 °C shift in the average daily maximum.</sub>
-
-### What about the rain?
-
-Temperature is only half of a climate. Over 1941–2025 (83 years),
-annual precipitation at Honolulu Airport shows **a statistically significant trend (-24 mm/decade, p = 0.02)**.
-
-![Annual rainfall totals around Honolulu](outputs/honolulu/figures/rain_series.png)
-
-<sub>Annual total precipitation. The dashed line is Honolulu Airport’s long-term mean
-(488 mm/yr); the thick curves are LOESS smoothings. The year-to-year swings are
-large — from 116 mm (1998) to 1087 mm (1965) —
-but the long-run slope (-24 mm/decade) is measurable and statistically significant (p = 0.02).</sub>
-
-Rainfall here is not flat: the long run tilts drier. The tilt is small against the year-to-year spread above, which is why it is easy to miss in any single decade.
-
-![Monthly rainfall through the year at Honolulu Airport, one line per year](outputs/honolulu/figures/rain_climatology.png)
-
-<sub>Rain through the year: each grey line is one year’s monthly totals, the dark line the
-long-term monthly normal, the bold blue line 2026 so far. January is the
-wettest month on average (79 mm), June the driest
-(10 mm) — but the spread between years is why that slow trend is easy to miss from the monthly shape alone.</sub>
-
-### Methodology
-
-- **Source.** NOAA (National Centers for Environmental Information) — GHCN-Daily — Global Historical Climatology Network, daily summaries, Oʻahu, Hawaiʻi, USA. Full citation
-  below.
-- **Variables.** Minimum = `TN`, maximum = `TX`, mean = `(TN+TX)/2`, in °C;
-  rainfall = `RR` (daily precipitation, in mm).
-- **Annual aggregation.** Arithmetic mean of daily values over each calendar year. The
-  long-term trend uses only complete years (≥ 330 valid days). Where the current
-  year is still in progress, the pipeline shows it separately — as a hollow “to date” marker
-  on the trend chart, and (for a fair record comparison) against the same calendar window
-  (Jan 1 → cutoff) of every prior year, keeping only years with ≥ 150 valid
-  days in that window *and* data spread across the whole window, not bunched in part of it.
-- **Daily climatology.** Each year’s daily mean is smoothed with a centred
-  3-day rolling mean (unweighted moving average, computed per year so
-  December never bleeds into January; the first/last 1 day keep their raw
-  value) for legibility; leap days are aligned across years. The normal is the per-day
-  average over all prior years.
-- **Threshold days.** Frost = `TN < 0`, hot day = `TX ≥ 30`, very hot =
-  `TX ≥ 35`, tropical night = `TN ≥ 20`, counted per complete year and
-  averaged over the first/last complete decade. A fixed threshold means different things
-  in different climates — where it falls near the middle of a city’s distribution the
-  caption above says so.
-- **Rainfall.** Annual total of daily `RR` over complete years; the trend is a
-  least-squares slope with its two-sided p-value. Monthly climatology keeps only months
-  with ≥ 27 valid days.
-- **Trend.** Slope estimated by linear regression (least squares); the line-chart curves
-  use LOESS smoothing (span = 0.7).
-- **Reproducibility.** A 4-stage R pipeline (`R/00_prepare_data.R` → `R/01_plot.R` →
-  `R/02_report.R` → `R/03_readme.R`), driven by `SITE=honolulu make all`. The figures
-  above and the numbers in this section are regenerated from the source data on every
-  run — see [Data sources](#data-sources) below for the full citation.
-
-<sub>Figures and numbers above are generated — edit `R/03_readme.R`, not this block.</sub>
-
-<!-- END REPORT:honolulu -->
-
-<!-- BEGIN REPORT:noumea -->
-
-## A warming climate, seen from Nouméa
-
-*Météo-France daily temperature records, 1951 to 2025 — plus 2026 so far.*
-
-Météo-France’s daily records for the Nouméa area are unambiguous: since
-the mid-20th century, daily minimum, maximum and mean temperatures have all risen.
-
-| Headline number | Value |
-|---|---:|
-| Warming rate, mean temperature (Nouméa) | **+0.19 °C / decade** |
-| Total rise over 74 years (1951 → 2025) | **+1.4 °C** |
-| Mean of the last decade (vs 23.0 °C in 1951–1960) | **24.2 °C** |
-| Frost days per year, 1951–1960 → 2016–2025 | **0 → 0** |
-| Hot days (≥ 30 °C) per year, 1951–1960 → 2016–2025 | **32 → 74** |
-| Complete station-years analysed | **137** |
-| 2026 year-to-date (Jan 1 – Aug 14), against 75 prior years | **#5 of 76** |
-
-### The long view: annual means
-
-![Annual mean temperatures around Nouméa, 1951 to 2025](outputs/noumea/figures/temperature_series.png)
-
-<sub>Annual means of daily temperatures. The thick curves are LOESS smoothings that
-highlight the climate trend; the points are annual means. The green series (Nouméa-Magenta) is Nouméa's in-town domestic airfield, Magenta. It tracks the long Nouméa reference mean closely.</sub>
-
-At Nouméa — the station with the longest record (1951→2025) — the annual
-mean temperature rises by **+0.19 °C per decade**, about **+1.4 °C** over the
-whole period. The local Nouméa-Magenta station only covers 1964→2025. Its slope over that shorter, more recent window is steeper (+0.25 °C/decade), and so is Nouméa’s over the same years (+0.23 °C/decade): recent decades warm faster, and over these years the two stations agree to within 0.02 °C/decade.
-
-
-
-### This year, against every year before it
-
-![Per-year mean over the same Jan-to-cutoff window, as a departure from the 1951–2025 mean, with 2026 highlighted](outputs/noumea/figures/temperature_ytd.png)
-
-<sub>Each bar is a year’s mean over the <em>same window</em> — <strong>Jan 1 – Aug 14</strong> —
-shown as its departure from the 1951–2025 mean (23.7 °C): red above, blue
-below. Holding the part-of-year identical is what makes one year comparable with another. The bars swing from blue to red over
-the decades.</sub>
-
-Measured like-for-like over Jan 1 – Aug 14, 2026 ranks **#5 of 76** at Nouméa (24.6 °C). The warmest such window on record remains 2022 (25.1 °C).
-
-> [!NOTE]
-> A part-year mean cannot be compared with other years' full-year means. That is why 2026 appears on the long-view chart above only as a marked, hollow "to date" point — a part-year mean on an axis of full-year means — while its like-for-like standing is the chart here.
-
-### Every year, day by day
-
-![Daily temperature climatology, every year January to December, hot years red and cold years blue](outputs/noumea/figures/temperature_climatology.png)
-
-<sub>Each thin line is a single year’s daily mean temperature from January to December
-(1950–2025, 76 years), smoothed with a centred
-<strong>3-day rolling mean</strong> (each day = the average of itself
-±1 day) to tame day-to-day jitter while keeping the shape. The dark line
-is the long-term daily normal; the bold red line is <strong>2026 so far</strong>.
-Years whose smoothed daily mean ever rose above <strong>+30 °C</strong> are
-highlighted in red and labelled; years that ever fell below
-<strong>-5 °C</strong> in blue.</sub>
-
-> [!NOTE]
-> **Hottest and coldest years.** Measured on the smoothed daily-mean curve,
-> **12** years pushed above +30 °C (1954, 1986, 1991, 1992, 1995, 1996, 2009, 2010, 2015, 2019, 2020, 2024)
-> while **0** years dropped below -5 °C.
->   <sub>(On the raw, unsmoothed daily mean, no year touches both extremes.)</sub>
-
-### The record days
-
-The single most extreme days in each station’s record. “Hottest” is the highest daily
-maximum (TX), “coldest” the lowest daily minimum (TN).
-
-| Station (record span) | Extreme | Date | Min (TN) | Max (TX) |
-|---|---|---|---:|---:|
-| Nouméa <sub>1950–2026</sub> | Hottest 🔥 | 1986-01-25 | 26.4 | **36.8** |
-| Nouméa <sub>1950–2026</sub> | Coldest ❄️ | 1961-08-10 | **13.2** | 20.8 |
-| Nouméa-Magenta <sub>1964–2026</sub> | Hottest 🔥 | 1986-01-25 | 24.8 | **36.8** |
-| Nouméa-Magenta <sub>1964–2026</sub> | Coldest ❄️ | 1968-07-28 | **8.9** | 21.2 |
-
-At Nouméa, the all-time heat (1986-01-25) postdates the all-time cold (1961-08-10) by 25 years.
-
-> [!NOTE]
-> **Why Nouméa-Magenta?** Nouméa-Magenta (station 98818002), the in-town domestic airfield, has carried a complete, gap-free temperature record since 1964 and provides the local comparison. Nouméa (station 98818001) provides the historical depth needed to see the underlying trend, back to 1950.
-
-### The last decade (Nouméa)
-
-| Year | Min (TN) | Max (TX) | Mean |
-|---|---:|---:|---:|
-| 2016 | 21.3 | 27.2 | **24.2** |
-| 2017 | 21.1 | 27.2 | **24.1** |
-| 2018 | 20.8 | 26.7 | **23.8** |
-| 2019 | 20.6 | 26.8 | **23.7** |
-| 2020 | 21.1 | 27.6 | **24.4** |
-| 2021 | 21.0 | 27.5 | **24.2** |
-| 2022 | 21.8 | 28.0 | **24.9** |
-| 2023 | 20.6 | 27.1 | **23.9** |
-| 2024 | 21.3 | 27.9 | **24.6** |
-| 2025 | 21.5 | 28.1 | **24.8** |
-| 2026 *(to date)* | 21.4 | 27.8 | **24.6** |
-
-### Frost days at zero, hot days up
-
-A degree of warming is abstract; a count of days is not. Nouméa’s first
-complete decade (1951–1960) against its last (2016–2025):
-
-| Threshold days per year | 1951–1960 | 2016–2025 |
-|---|---:|---:|
-| Frost days (min < 0 °C) | 0 | **0** |
-| Hot days (max ≥ 30 °C) | 32 | **74** |
-| Very hot days (max ≥ 35 °C) | 0 | **1** |
-| Tropical nights (min ≥ 20 °C) | 194 | **237** |
-
-<sub>Counts of days per year crossing each threshold, averaged over the first and last
-complete decades of the record. There was never a frost season here to retreat; the change shows up entirely on the hot side of the ledger. Read the hot-day jump with care here: 21% of recent days come within 1 °C of the 30 °C line, so the count amplifies what is really a +1.5 °C shift in the average daily maximum.</sub>
-
-### What about the rain?
-
-Temperature is only half of a climate. Over 1951–2025 (75 years),
-annual precipitation at Nouméa shows **no statistically significant trend**.
-
-![Annual rainfall totals around Nouméa](outputs/noumea/figures/rain_series.png)
-
-<sub>Annual total precipitation. The dashed line is Nouméa’s long-term mean
-(1054 mm/yr); the thick curves are LOESS smoothings. The year-to-year swings are
-large — from 577 mm (1953) to 1951 mm (2022) —
-but the long-run slope (+5 mm/decade) is flat and not significant (p = 0.71).</sub>
-
-The same daily records that carry a strong warming signal carry *no* comparable signal in how much it rains: annual totals swing widely from year to year around a flat long-run mean.
-
-![Monthly rainfall through the year at Nouméa, one line per year](outputs/noumea/figures/rain_climatology.png)
-
-<sub>Rain through the year: each grey line is one year’s monthly totals, the dark line the
-long-term monthly normal, the bold blue line 2026 so far. March is the
-wettest month on average (143 mm), September the driest
-(43 mm) — but the spread between years dwarfs the seasonal cycle, which is exactly why no annual trend emerges.</sub>
-
-### Methodology
-
-- **Source.** Météo-France — Données climatologiques de base – quotidiennes, New Caledonia, France. Full citation
-  below.
-- **Variables.** Minimum = `TN`, maximum = `TX`, mean = `(TN+TX)/2`, in °C;
-  rainfall = `RR` (daily precipitation, in mm).
-- **Annual aggregation.** Arithmetic mean of daily values over each calendar year. The
-  long-term trend uses only complete years (≥ 330 valid days). Where the current
-  year is still in progress, the pipeline shows it separately — as a hollow “to date” marker
-  on the trend chart, and (for a fair record comparison) against the same calendar window
-  (Jan 1 → cutoff) of every prior year, keeping only years with ≥ 150 valid
-  days in that window *and* data spread across the whole window, not bunched in part of it.
-- **Daily climatology.** Each year’s daily mean is smoothed with a centred
-  3-day rolling mean (unweighted moving average, computed per year so
-  December never bleeds into January; the first/last 1 day keep their raw
-  value) for legibility; leap days are aligned across years. The normal is the per-day
-  average over all prior years.
-- **Threshold days.** Frost = `TN < 0`, hot day = `TX ≥ 30`, very hot =
-  `TX ≥ 35`, tropical night = `TN ≥ 20`, counted per complete year and
-  averaged over the first/last complete decade. A fixed threshold means different things
-  in different climates — where it falls near the middle of a city’s distribution the
-  caption above says so.
-- **Rainfall.** Annual total of daily `RR` over complete years; the trend is a
-  least-squares slope with its two-sided p-value. Monthly climatology keeps only months
-  with ≥ 27 valid days.
-- **Trend.** Slope estimated by linear regression (least squares); the line-chart curves
-  use LOESS smoothing (span = 0.7).
-- **Reproducibility.** A 4-stage R pipeline (`R/00_prepare_data.R` → `R/01_plot.R` →
-  `R/02_report.R` → `R/03_readme.R`), driven by `SITE=noumea make all`. The figures
-  above and the numbers in this section are regenerated from the source data on every
-  run — see [Data sources](#data-sources) below for the full citation.
-
-<sub>Figures and numbers above are generated — edit `R/03_readme.R`, not this block.</sub>
-
-<!-- END REPORT:noumea -->
 
 <!-- BEGIN REPORT:moscow -->
 
@@ -1219,35 +688,16 @@ wettest month on average (86 mm), March the driest
 
 ### Methodology
 
+Only what is specific to this city is listed here. The variables, completeness rule,
+smoothing, thresholds and trend method are the same for every city and are stated once, in
+[How every chapter is built](#how-every-chapter-is-built) — which is also what makes the
+comparison at the top of this page legitimate.
+
 - **Source.** Roshydromet / RIHMI-WDC — AISORI-M — AISORI-M daily archive, Сутки → TTTR (temperature + precipitation), Moscow, Russia. Full citation
-  below.
-- **Variables.** Minimum = `TN`, maximum = `TX`, mean = `(TN+TX)/2`, in °C;
-  rainfall = `RR` (daily precipitation, in mm).
-- **Annual aggregation.** Arithmetic mean of daily values over each calendar year. The
-  long-term trend uses only complete years (≥ 330 valid days). Where the current
-  year is still in progress, the pipeline shows it separately — as a hollow “to date” marker
-  on the trend chart, and (for a fair record comparison) against the same calendar window
-  (Jan 1 → cutoff) of every prior year, keeping only years with ≥ 150 valid
-  days in that window *and* data spread across the whole window, not bunched in part of it.
-- **Daily climatology.** Each year’s daily mean is smoothed with a centred
-  3-day rolling mean (unweighted moving average, computed per year so
-  December never bleeds into January; the first/last 1 day keep their raw
-  value) for legibility; leap days are aligned across years. The normal is the per-day
-  average over all prior years.
-- **Threshold days.** Frost = `TN < 0`, hot day = `TX ≥ 30`, very hot =
-  `TX ≥ 35`, tropical night = `TN ≥ 20`, counted per complete year and
-  averaged over the first/last complete decade. A fixed threshold means different things
-  in different climates — where it falls near the middle of a city’s distribution the
-  caption above says so.
-- **Rainfall.** Annual total of daily `RR` over complete years; the trend is a
-  least-squares slope with its two-sided p-value. Monthly climatology keeps only months
-  with ≥ 27 valid days.
-- **Trend.** Slope estimated by linear regression (least squares); the line-chart curves
-  use LOESS smoothing (span = 0.7).
-- **Reproducibility.** A 4-stage R pipeline (`R/00_prepare_data.R` → `R/01_plot.R` →
-  `R/02_report.R` → `R/03_readme.R`), driven by `SITE=moscow make all`. The figures
-  above and the numbers in this section are regenerated from the source data on every
-  run — see [Data sources](#data-sources) below for the full citation.
+  in [Data sources](#data-sources) below.
+- **Stations.** Moscow (27612).
+- **Rebuild this chapter.** `SITE=moscow make all` — every figure and number above is
+  regenerated from the source data on each run.
 
 <sub>Figures and numbers above are generated — edit `R/03_readme.R`, not this block.</sub>
 
@@ -1387,35 +837,16 @@ wettest month on average (65 mm), March the driest
 
 ### Methodology
 
+Only what is specific to this city is listed here. The variables, completeness rule,
+smoothing, thresholds and trend method are the same for every city and are stated once, in
+[How every chapter is built](#how-every-chapter-is-built) — which is also what makes the
+comparison at the top of this page legitimate.
+
 - **Source.** Roshydromet / RIHMI-WDC — AISORI-M — AISORI-M daily archive, Сутки → TTTR (temperature + precipitation), Voronezh Oblast, Russia. Full citation
-  below.
-- **Variables.** Minimum = `TN`, maximum = `TX`, mean = `(TN+TX)/2`, in °C;
-  rainfall = `RR` (daily precipitation, in mm).
-- **Annual aggregation.** Arithmetic mean of daily values over each calendar year. The
-  long-term trend uses only complete years (≥ 330 valid days). Where the current
-  year is still in progress, the pipeline shows it separately — as a hollow “to date” marker
-  on the trend chart, and (for a fair record comparison) against the same calendar window
-  (Jan 1 → cutoff) of every prior year, keeping only years with ≥ 50 valid
-  days in that window *and* data spread across the whole window, not bunched in part of it.
-- **Daily climatology.** Each year’s daily mean is smoothed with a centred
-  3-day rolling mean (unweighted moving average, computed per year so
-  December never bleeds into January; the first/last 1 day keep their raw
-  value) for legibility; leap days are aligned across years. The normal is the per-day
-  average over all prior years.
-- **Threshold days.** Frost = `TN < 0`, hot day = `TX ≥ 30`, very hot =
-  `TX ≥ 35`, tropical night = `TN ≥ 20`, counted per complete year and
-  averaged over the first/last complete decade. A fixed threshold means different things
-  in different climates — where it falls near the middle of a city’s distribution the
-  caption above says so.
-- **Rainfall.** Annual total of daily `RR` over complete years; the trend is a
-  least-squares slope with its two-sided p-value. Monthly climatology keeps only months
-  with ≥ 27 valid days.
-- **Trend.** Slope estimated by linear regression (least squares); the line-chart curves
-  use LOESS smoothing (span = 0.7).
-- **Reproducibility.** A 4-stage R pipeline (`R/00_prepare_data.R` → `R/01_plot.R` →
-  `R/02_report.R` → `R/03_readme.R`), driven by `SITE=voronezh make all`. The figures
-  above and the numbers in this section are regenerated from the source data on every
-  run — see [Data sources](#data-sources) below for the full citation.
+  in [Data sources](#data-sources) below.
+- **Stations.** Voronezh (34123).
+- **Rebuild this chapter.** `SITE=voronezh make all` — every figure and number above is
+  regenerated from the source data on each run.
 
 <sub>Figures and numbers above are generated — edit `R/03_readme.R`, not this block.</sub>
 
@@ -1557,35 +988,16 @@ wettest month on average (68 mm), July the driest
 
 ### Methodology
 
+Only what is specific to this city is listed here. The variables, completeness rule,
+smoothing, thresholds and trend method are the same for every city and are stated once, in
+[How every chapter is built](#how-every-chapter-is-built) — which is also what makes the
+comparison at the top of this page legitimate.
+
 - **Source.** NOAA (National Centers for Environmental Information) — GHCN-Daily — Global Historical Climatology Network, daily summaries, California, USA. Full citation
-  below.
-- **Variables.** Minimum = `TN`, maximum = `TX`, mean = `(TN+TX)/2`, in °C;
-  rainfall = `RR` (daily precipitation, in mm).
-- **Annual aggregation.** Arithmetic mean of daily values over each calendar year. The
-  long-term trend uses only complete years (≥ 330 valid days). Where the current
-  year is still in progress, the pipeline shows it separately — as a hollow “to date” marker
-  on the trend chart, and (for a fair record comparison) against the same calendar window
-  (Jan 1 → cutoff) of every prior year, keeping only years with ≥ 128 valid
-  days in that window *and* data spread across the whole window, not bunched in part of it.
-- **Daily climatology.** Each year’s daily mean is smoothed with a centred
-  3-day rolling mean (unweighted moving average, computed per year so
-  December never bleeds into January; the first/last 1 day keep their raw
-  value) for legibility; leap days are aligned across years. The normal is the per-day
-  average over all prior years.
-- **Threshold days.** Frost = `TN < 0`, hot day = `TX ≥ 30`, very hot =
-  `TX ≥ 35`, tropical night = `TN ≥ 20`, counted per complete year and
-  averaged over the first/last complete decade. A fixed threshold means different things
-  in different climates — where it falls near the middle of a city’s distribution the
-  caption above says so.
-- **Rainfall.** Annual total of daily `RR` over complete years; the trend is a
-  least-squares slope with its two-sided p-value. Monthly climatology keeps only months
-  with ≥ 27 valid days.
-- **Trend.** Slope estimated by linear regression (least squares); the line-chart curves
-  use LOESS smoothing (span = 0.7).
-- **Reproducibility.** A 4-stage R pipeline (`R/00_prepare_data.R` → `R/01_plot.R` →
-  `R/02_report.R` → `R/03_readme.R`), driven by `SITE=irvine make all`. The figures
-  above and the numbers in this section are regenerated from the source data on every
-  run — see [Data sources](#data-sources) below for the full citation.
+  in [Data sources](#data-sources) below.
+- **Stations.** John Wayne Airport (USW00093184) and Irvine (USC00044303).
+- **Rebuild this chapter.** `SITE=irvine make all` — every figure and number above is
+  regenerated from the source data on each run.
 
 <sub>Figures and numbers above are generated — edit `R/03_readme.R`, not this block.</sub>
 
@@ -1727,39 +1139,471 @@ wettest month on average (36 mm), January the driest
 
 ### Methodology
 
+Only what is specific to this city is listed here. The variables, completeness rule,
+smoothing, thresholds and trend method are the same for every city and are stated once, in
+[How every chapter is built](#how-every-chapter-is-built) — which is also what makes the
+comparison at the top of this page legitimate.
+
 - **Source.** NOAA (National Centers for Environmental Information) — GHCN-Daily — Global Historical Climatology Network, daily summaries, New Mexico, USA. Full citation
-  below.
-- **Variables.** Minimum = `TN`, maximum = `TX`, mean = `(TN+TX)/2`, in °C;
-  rainfall = `RR` (daily precipitation, in mm).
-- **Annual aggregation.** Arithmetic mean of daily values over each calendar year. The
-  long-term trend uses only complete years (≥ 330 valid days). Where the current
-  year is still in progress, the pipeline shows it separately — as a hollow “to date” marker
-  on the trend chart, and (for a fair record comparison) against the same calendar window
-  (Jan 1 → cutoff) of every prior year, keeping only years with ≥ 150 valid
-  days in that window *and* data spread across the whole window, not bunched in part of it.
-- **Daily climatology.** Each year’s daily mean is smoothed with a centred
-  3-day rolling mean (unweighted moving average, computed per year so
-  December never bleeds into January; the first/last 1 day keep their raw
-  value) for legibility; leap days are aligned across years. The normal is the per-day
-  average over all prior years.
-- **Threshold days.** Frost = `TN < 0`, hot day = `TX ≥ 30`, very hot =
-  `TX ≥ 35`, tropical night = `TN ≥ 20`, counted per complete year and
-  averaged over the first/last complete decade. A fixed threshold means different things
-  in different climates — where it falls near the middle of a city’s distribution the
-  caption above says so.
-- **Rainfall.** Annual total of daily `RR` over complete years; the trend is a
-  least-squares slope with its two-sided p-value. Monthly climatology keeps only months
-  with ≥ 27 valid days.
-- **Trend.** Slope estimated by linear regression (least squares); the line-chart curves
-  use LOESS smoothing (span = 0.7).
-- **Reproducibility.** A 4-stage R pipeline (`R/00_prepare_data.R` → `R/01_plot.R` →
-  `R/02_report.R` → `R/03_readme.R`), driven by `SITE=albuquerque make all`. The figures
-  above and the numbers in this section are regenerated from the source data on every
-  run — see [Data sources](#data-sources) below for the full citation.
+  in [Data sources](#data-sources) below.
+- **Stations.** Albuquerque Foothills NE (USC00290225) and Albuquerque Airport (USW00023050).
+- **Rebuild this chapter.** `SITE=albuquerque make all` — every figure and number above is
+  regenerated from the source data on each run.
 
 <sub>Figures and numbers above are generated — edit `R/03_readme.R`, not this block.</sub>
 
 <!-- END REPORT:albuquerque -->
+
+<!-- BEGIN REPORT:santafe -->
+
+## A warming climate, seen from Santa Fe
+
+*NOAA (National Centers for Environmental Information) daily temperature records, 1874 to 2025 — plus 2026 so far.*
+
+NOAA (National Centers for Environmental Information)’s daily records for the Santa Fe area are unambiguous: since
+the late 19th century, daily minimum, maximum and mean temperatures have all risen.
+
+| Headline number | Value |
+|---|---:|
+| Warming rate, mean temperature (Santa Fe) | **+0.08 °C / decade** |
+| Total rise over 151 years (1874 → 2025) | **+1.2 °C** |
+| Mean of the last decade (vs 9.5 °C in 1874–1883) | **10.7 °C** |
+| Frost days per year, 1874–1883 → 2016–2025 | **150 → 157** |
+| Hot days (≥ 30 °C) per year, 1874–1883 → 2016–2025 | **25 → 59** |
+| Complete station-years analysed | **182** |
+| 2026 year-to-date (Jan 1 – Jun 30), against 146 prior years | **#1 of 147 — record** |
+
+### The long view: annual means
+
+![Annual mean temperatures around Santa Fe, 1874 to 2025](outputs/santafe/figures/temperature_series.png)
+
+<sub>Annual means of daily temperatures. The thick curves are LOESS smoothings that
+highlight the climate trend; the points are annual means. The green series (Santa Fe Airport) is Santa Fe County Municipal Airport, a few miles southwest of downtown. It tracks the long Santa Fe reference mean closely.</sub>
+
+At Santa Fe — the station with the longest record (1874→2025) — the annual
+mean temperature rises by **+0.08 °C per decade**, about **+1.2 °C** over the
+whole period. The local Santa Fe Airport station only covers 1942→2025. Its slope over that shorter, more recent window is steeper (+0.16 °C/decade), and so is Santa Fe’s over the same years (+0.11 °C/decade): recent decades warm faster, and over these years the two stations agree to within 0.05 °C/decade.
+
+One caveat specific to this station: its daily minima have *fallen* (-0.10 °C/decade) while its maxima rose (+0.26 °C/decade), widening the average gap between day and night by 2.4 °C over the record. Greenhouse warming narrows that gap, minima rising fastest; a widening gap usually means something about the station changed — a move, or a shift in reading time — and these are raw observations, not a homogenised series. Treat this city's headline rate with more caution than the others here, and see the note below on which station this series is.
+
+### This year, against every year before it
+
+![Per-year mean over the same Jan-to-cutoff window, as a departure from the 1874–2025 mean, with 2026 the largest bar](outputs/santafe/figures/temperature_ytd.png)
+
+<sub>Each bar is a year’s mean over the <em>same window</em> — <strong>Jan 1 – Jun 30</strong> —
+shown as its departure from the 1874–2025 mean (7.7 °C): red above, blue
+below. Holding the part-of-year identical is what makes one year comparable with another. The bars swing from blue to red over
+the decades — and 2026 is the tallest of all.</sub>
+
+Measured like-for-like, **2026 is the warmest Jan 1 – Jun 30 in 147 years** at Santa Fe: **10.9 °C** — +0.3 °C above the previous record (1879, 10.6 °C) and **+3.3 °C above the 1874–2025 mean** (7.7 °C).
+
+> [!NOTE]
+> A part-year mean cannot be compared with other years' full-year means. That is why 2026 appears on the long-view chart above only as a marked, hollow "to date" point — a part-year mean on an axis of full-year means — while its like-for-like standing is the chart here.
+
+### Every year, day by day
+
+![Daily temperature climatology, every year January to December, hot years red and cold years blue](outputs/santafe/figures/temperature_climatology.png)
+
+<sub>Each thin line is a single year’s daily mean temperature from January to December
+(1874–2025, 152 years), smoothed with a centred
+<strong>3-day rolling mean</strong> (each day = the average of itself
+±1 day) to tame day-to-day jitter while keeping the shape. The dark line
+is the long-term daily normal; the bold red line is <strong>2026 so far</strong>.
+Years whose smoothed daily mean ever rose above <strong>+30 °C</strong> are
+highlighted in red and labelled; years that ever fell below
+<strong>-5 °C</strong> in blue.</sub>
+
+> [!NOTE]
+> **Hottest and coldest years.** Measured on the smoothed daily-mean curve,
+> **0** years pushed above +30 °C
+> while **148** years dropped below -5 °C — every year in the record.
+>   <sub>(On the raw, unsmoothed daily mean, no year touches both extremes.)</sub>
+
+### The record days
+
+The single most extreme days in each station’s record. “Hottest” is the highest daily
+maximum (TX), “coldest” the lowest daily minimum (TN).
+
+| Station (record span) | Extreme | Date | Min (TN) | Max (TX) |
+|---|---|---|---:|---:|
+| Santa Fe <sub>1874–2026</sub> | Hottest 🔥 | 1994-06-26 | 13.9 | **37.2** |
+| Santa Fe <sub>1874–2026</sub> | Coldest ❄️ | 2011-02-03 | **-31.1** | -11.1 |
+| Santa Fe Airport <sub>1941–2026</sub> | Hottest 🔥 | 2013-06-27 | 18.3 | **38.9** |
+| Santa Fe Airport <sub>1941–2026</sub> | Coldest ❄️ | 2011-02-03 | **-27.7** | -8.8 |
+
+At Santa Fe the all-time cold (2011-02-03) postdates the all-time heat (1994-06-26) by 17 years: a single record day is noisy, and the mean trend above is the more reliable measure.
+
+> [!NOTE]
+> **Why Santa Fe Airport?** Santa Fe Airport (station USW00023049), a few miles southwest of downtown, is the nearest continuously-sited station and provides the local comparison. NOAA's own GHCN-Daily archive has no digitized daily temperature for it between 1959 and 1996 — a real gap in the upstream record, not a fetch issue here — so its trend uses only the complete years on either side. The reference series, labelled “Santa Fe”, splices the city's original in-town COOP station (298072, 1874–1972) with its direct successor a few miles south (298085, 1972–2026) for one gap-free record back to 1874.
+
+### The last decade (Santa Fe)
+
+| Year | Min (TN) | Max (TX) | Mean |
+|---|---:|---:|---:|
+| 2016 | 2.0 | 18.9 | **10.5** |
+| 2017 | 2.8 | 19.8 | **11.3** |
+| 2018 | 2.2 | 19.3 | **10.8** |
+| 2019 | 1.4 | 18.1 | **9.8** |
+| 2020 | 1.8 | 19.5 | **10.7** |
+| 2021 | 2.0 | 19.1 | **10.6** |
+| 2022 | 1.6 | 18.3 | **10.0** |
+| 2023 | 2.1 | 18.5 | **10.3** |
+| 2024 | 2.5 | 19.9 | **11.2** |
+| 2025 | 2.8 | 20.2 | **11.5** |
+| 2026 *(to date)* | 1.7 | 20.2 | **10.9** |
+
+### Frost days up, hot days up
+
+A degree of warming is abstract; a count of days is not. Santa Fe’s first
+complete decade (1874–1883) against its last (2016–2025):
+
+| Threshold days per year | 1874–1883 | 2016–2025 |
+|---|---:|---:|
+| Frost days (min < 0 °C) | 150 | **157** |
+| Hot days (max ≥ 30 °C) | 25 | **59** |
+| Very hot days (max ≥ 35 °C) | 1 | **6** |
+| Tropical nights (min ≥ 20 °C) | 0 | **0** |
+
+<sub>Counts of days per year crossing each threshold, averaged over the first and last
+complete decades of the record. Both counts have risen here — a reminder that year-to-year extreme-day counts are noisy even where the underlying mean trend, shown above, is unambiguous.</sub>
+
+### What about the rain?
+
+Temperature is only half of a climate. Over 1874–2025 (144 years),
+annual precipitation at Santa Fe shows **a statistically significant trend (-3 mm/decade, p = 0.04)**.
+
+![Annual rainfall totals around Santa Fe](outputs/santafe/figures/rain_series.png)
+
+<sub>Annual total precipitation. The dashed line is Santa Fe’s long-term mean
+(346 mm/yr); the thick curves are LOESS smoothings. The year-to-year swings are
+large — from 70 mm (1883) to 553 mm (1881) —
+but the long-run slope (-3 mm/decade) is measurable and statistically significant (p = 0.04).</sub>
+
+Rainfall here is not flat: the long run tilts drier. The tilt is small against the year-to-year spread above, which is why it is easy to miss in any single decade.
+
+![Monthly rainfall through the year at Santa Fe, one line per year](outputs/santafe/figures/rain_climatology.png)
+
+<sub>Rain through the year: each grey line is one year’s monthly totals, the dark line the
+long-term monthly normal, the bold blue line 2026 so far. July is the
+wettest month on average (59 mm), January the driest
+(16 mm) — but the spread between years is why that slow trend is easy to miss from the monthly shape alone.</sub>
+
+### Methodology
+
+Only what is specific to this city is listed here. The variables, completeness rule,
+smoothing, thresholds and trend method are the same for every city and are stated once, in
+[How every chapter is built](#how-every-chapter-is-built) — which is also what makes the
+comparison at the top of this page legitimate.
+
+- **Source.** NOAA (National Centers for Environmental Information) — GHCN-Daily — Global Historical Climatology Network, daily summaries, New Mexico, USA. Full citation
+  in [Data sources](#data-sources) below.
+- **Stations.** Santa Fe Airport (USW00023049) and Santa Fe (USC00298085).
+- **Rebuild this chapter.** `SITE=santafe make all` — every figure and number above is
+  regenerated from the source data on each run.
+
+<sub>Figures and numbers above are generated — edit `R/03_readme.R`, not this block.</sub>
+
+<!-- END REPORT:santafe -->
+
+<!-- BEGIN REPORT:honolulu -->
+
+## A warming climate, seen from Honolulu
+
+*NOAA (National Centers for Environmental Information) daily temperature records, 1950 to 2025 — plus 2026 so far.*
+
+NOAA (National Centers for Environmental Information)’s daily records for the Honolulu area are unambiguous: since
+the mid-20th century, daily minimum, maximum and mean temperatures have all risen.
+
+| Headline number | Value |
+|---|---:|
+| Warming rate, mean temperature (Honolulu Airport) | **+0.20 °C / decade** |
+| Total rise over 75 years (1950 → 2025) | **+1.5 °C** |
+| Mean of the last decade (vs 24.3 °C in 1950–1959) | **25.9 °C** |
+| Frost days per year, 1950–1959 → 2016–2025 | **0 → 0** |
+| Hot days (≥ 30 °C) per year, 1950–1959 → 2016–2025 | **42 → 175** |
+| Complete station-years analysed | **76** |
+| 2026 year-to-date (Jan 1 – Aug 11), against 83 prior years | **#18 of 84** |
+
+### The long view: annual means
+
+![Annual mean temperatures around Honolulu, 1950 to 2025](outputs/honolulu/figures/temperature_series.png)
+
+<sub>Annual means of daily temperatures. The thick curves are LOESS smoothings that
+highlight the climate trend; the points are annual means.</sub>
+
+At Honolulu Airport — the station with the longest record (1950→2025) — the annual
+mean temperature rises by **+0.20 °C per decade**, about **+1.5 °C** over the
+whole period. Honolulu-Moanalua carries no temperature record; Honolulu Airport alone provides the temperature trend for this area. The local comparison here uses rainfall instead — see below.
+
+
+
+### This year, against every year before it
+
+![Per-year mean over the same Jan-to-cutoff window, as a departure from the 1941–2025 mean, with 2026 highlighted](outputs/honolulu/figures/temperature_ytd.png)
+
+<sub>Each bar is a year’s mean over the <em>same window</em> — <strong>Jan 1 – Aug 11</strong> —
+shown as its departure from the 1941–2025 mean (24.8 °C): red above, blue
+below. Holding the part-of-year identical is what makes one year comparable with another. The bars swing from blue to red over
+the decades.</sub>
+
+Measured like-for-like over Jan 1 – Aug 11, 2026 ranks **#18 of 84** at Honolulu Airport (25.3 °C). The warmest such window on record remains 2025 (26.0 °C).
+
+> [!NOTE]
+> A part-year mean cannot be compared with other years' full-year means. That is why 2026 appears on the long-view chart above only as a marked, hollow "to date" point — a part-year mean on an axis of full-year means — while its like-for-like standing is the chart here.
+
+### Every year, day by day
+
+![Daily temperature climatology, every year January to December, hot years red and cold years blue](outputs/honolulu/figures/temperature_climatology.png)
+
+<sub>Each thin line is a single year’s daily mean temperature from January to December
+(1940–2025, 86 years), smoothed with a centred
+<strong>3-day rolling mean</strong> (each day = the average of itself
+±1 day) to tame day-to-day jitter while keeping the shape. The dark line
+is the long-term daily normal; the bold red line is <strong>2026 so far</strong>.
+Years whose smoothed daily mean ever rose above <strong>+30 °C</strong> are
+highlighted in red and labelled; years that ever fell below
+<strong>-5 °C</strong> in blue.</sub>
+
+> [!NOTE]
+> **Hottest and coldest years.** Measured on the smoothed daily-mean curve,
+> **2** years pushed above +30 °C (1987, 2019)
+> while **0** years dropped below -5 °C.
+>   <sub>(On the raw, unsmoothed daily mean, no year touches both extremes.)</sub>
+
+### The record days
+
+The single most extreme days in each station’s record. “Hottest” is the highest daily
+maximum (TX), “coldest” the lowest daily minimum (TN).
+
+| Station (record span) | Extreme | Date | Min (TN) | Max (TX) |
+|---|---|---|---:|---:|
+| Honolulu Airport <sub>1940–2026</sub> | Hottest 🔥 | 1994-09-19 | 25.6 | **35.0** |
+| Honolulu Airport <sub>1940–2026</sub> | Coldest ❄️ | 1969-01-20 | **11.1** | 23.9 |
+
+At Honolulu Airport, the all-time heat (1994-09-19) postdates the all-time cold (1969-01-20) by 25 years.
+
+> [!NOTE]
+> **Why Honolulu-Moanalua?** No other digitized GHCN-Daily station near Honolulu carries a temperature record independent of the airport. Moanalua (station USC00516395), a valley neighbourhood between the airport and downtown, has recorded rainfall since 1906 — 80 complete years of the 81 it reports — and stands in for local rainfall. Honolulu International Airport (station USW00022521) provides the temperature trend: its readings begin in 1940, but the 1940s years all fall short of the completeness rule used here, so the trend starts at its first complete year, 1950, and runs unbroken from there.
+
+### The last decade (Honolulu Airport)
+
+| Year | Min (TN) | Max (TX) | Mean |
+|---|---:|---:|---:|
+| 2016 | 22.0 | 28.9 | **25.5** |
+| 2017 | 22.1 | 29.3 | **25.7** |
+| 2018 | 22.7 | 29.3 | **26.0** |
+| 2019 | 22.5 | 30.1 | **26.3** |
+| 2020 | 22.4 | 29.7 | **26.1** |
+| 2021 | 22.1 | 29.3 | **25.7** |
+| 2022 | 22.1 | 29.4 | **25.7** |
+| 2023 | 22.3 | 29.5 | **25.9** |
+| 2024 | 22.2 | 29.2 | **25.7** |
+| 2025 | 22.7 | 29.9 | **26.3** |
+| 2026 *(to date)* | 22.0 | 28.6 | **25.3** |
+
+### Frost days at zero, hot days up
+
+A degree of warming is abstract; a count of days is not. Honolulu Airport’s first
+complete decade (1950–1959) against its last (2016–2025):
+
+| Threshold days per year | 1950–1959 | 2016–2025 |
+|---|---:|---:|
+| Frost days (min < 0 °C) | 0 | **0** |
+| Hot days (max ≥ 30 °C) | 42 | **175** |
+| Very hot days (max ≥ 35 °C) | 0 | **0** |
+| Tropical nights (min ≥ 20 °C) | 272 | **317** |
+
+<sub>Counts of days per year crossing each threshold, averaged over the first and last
+complete decades of the record. There was never a frost season here to retreat; the change shows up entirely on the hot side of the ledger. Read the hot-day jump with care here: 29% of recent days come within 1 °C of the 30 °C line, so the count amplifies what is really a +1.7 °C shift in the average daily maximum.</sub>
+
+### What about the rain?
+
+Temperature is only half of a climate. Over 1941–2025 (83 years),
+annual precipitation at Honolulu Airport shows **a statistically significant trend (-24 mm/decade, p = 0.02)**.
+
+![Annual rainfall totals around Honolulu](outputs/honolulu/figures/rain_series.png)
+
+<sub>Annual total precipitation. The dashed line is Honolulu Airport’s long-term mean
+(488 mm/yr); the thick curves are LOESS smoothings. The year-to-year swings are
+large — from 116 mm (1998) to 1087 mm (1965) —
+but the long-run slope (-24 mm/decade) is measurable and statistically significant (p = 0.02).</sub>
+
+Rainfall here is not flat: the long run tilts drier. The tilt is small against the year-to-year spread above, which is why it is easy to miss in any single decade.
+
+![Monthly rainfall through the year at Honolulu Airport, one line per year](outputs/honolulu/figures/rain_climatology.png)
+
+<sub>Rain through the year: each grey line is one year’s monthly totals, the dark line the
+long-term monthly normal, the bold blue line 2026 so far. January is the
+wettest month on average (79 mm), June the driest
+(10 mm) — but the spread between years is why that slow trend is easy to miss from the monthly shape alone.</sub>
+
+### Methodology
+
+Only what is specific to this city is listed here. The variables, completeness rule,
+smoothing, thresholds and trend method are the same for every city and are stated once, in
+[How every chapter is built](#how-every-chapter-is-built) — which is also what makes the
+comparison at the top of this page legitimate.
+
+- **Source.** NOAA (National Centers for Environmental Information) — GHCN-Daily — Global Historical Climatology Network, daily summaries, Oʻahu, Hawaiʻi, USA. Full citation
+  in [Data sources](#data-sources) below.
+- **Stations.** Honolulu-Moanalua (USC00516395) and Honolulu Airport (USW00022521).
+- **Rebuild this chapter.** `SITE=honolulu make all` — every figure and number above is
+  regenerated from the source data on each run.
+
+<sub>Figures and numbers above are generated — edit `R/03_readme.R`, not this block.</sub>
+
+<!-- END REPORT:honolulu -->
+
+<!-- BEGIN REPORT:noumea -->
+
+## A warming climate, seen from Nouméa
+
+*Météo-France daily temperature records, 1951 to 2025 — plus 2026 so far.*
+
+Météo-France’s daily records for the Nouméa area are unambiguous: since
+the mid-20th century, daily minimum, maximum and mean temperatures have all risen.
+
+| Headline number | Value |
+|---|---:|
+| Warming rate, mean temperature (Nouméa) | **+0.19 °C / decade** |
+| Total rise over 74 years (1951 → 2025) | **+1.4 °C** |
+| Mean of the last decade (vs 23.0 °C in 1951–1960) | **24.2 °C** |
+| Frost days per year, 1951–1960 → 2016–2025 | **0 → 0** |
+| Hot days (≥ 30 °C) per year, 1951–1960 → 2016–2025 | **32 → 74** |
+| Complete station-years analysed | **137** |
+| 2026 year-to-date (Jan 1 – Aug 14), against 75 prior years | **#5 of 76** |
+
+### The long view: annual means
+
+![Annual mean temperatures around Nouméa, 1951 to 2025](outputs/noumea/figures/temperature_series.png)
+
+<sub>Annual means of daily temperatures. The thick curves are LOESS smoothings that
+highlight the climate trend; the points are annual means. The green series (Nouméa-Magenta) is Nouméa's in-town domestic airfield, Magenta. It tracks the long Nouméa reference mean closely.</sub>
+
+At Nouméa — the station with the longest record (1951→2025) — the annual
+mean temperature rises by **+0.19 °C per decade**, about **+1.4 °C** over the
+whole period. The local Nouméa-Magenta station only covers 1964→2025. Its slope over that shorter, more recent window is steeper (+0.25 °C/decade), and so is Nouméa’s over the same years (+0.23 °C/decade): recent decades warm faster, and over these years the two stations agree to within 0.02 °C/decade.
+
+
+
+### This year, against every year before it
+
+![Per-year mean over the same Jan-to-cutoff window, as a departure from the 1951–2025 mean, with 2026 highlighted](outputs/noumea/figures/temperature_ytd.png)
+
+<sub>Each bar is a year’s mean over the <em>same window</em> — <strong>Jan 1 – Aug 14</strong> —
+shown as its departure from the 1951–2025 mean (23.7 °C): red above, blue
+below. Holding the part-of-year identical is what makes one year comparable with another. The bars swing from blue to red over
+the decades.</sub>
+
+Measured like-for-like over Jan 1 – Aug 14, 2026 ranks **#5 of 76** at Nouméa (24.6 °C). The warmest such window on record remains 2022 (25.1 °C).
+
+> [!NOTE]
+> A part-year mean cannot be compared with other years' full-year means. That is why 2026 appears on the long-view chart above only as a marked, hollow "to date" point — a part-year mean on an axis of full-year means — while its like-for-like standing is the chart here.
+
+### Every year, day by day
+
+![Daily temperature climatology, every year January to December, hot years red and cold years blue](outputs/noumea/figures/temperature_climatology.png)
+
+<sub>Each thin line is a single year’s daily mean temperature from January to December
+(1950–2025, 76 years), smoothed with a centred
+<strong>3-day rolling mean</strong> (each day = the average of itself
+±1 day) to tame day-to-day jitter while keeping the shape. The dark line
+is the long-term daily normal; the bold red line is <strong>2026 so far</strong>.
+Years whose smoothed daily mean ever rose above <strong>+30 °C</strong> are
+highlighted in red and labelled; years that ever fell below
+<strong>-5 °C</strong> in blue.</sub>
+
+> [!NOTE]
+> **Hottest and coldest years.** Measured on the smoothed daily-mean curve,
+> **12** years pushed above +30 °C (1954, 1986, 1991, 1992, 1995, 1996, 2009, 2010, 2015, 2019, 2020, 2024)
+> while **0** years dropped below -5 °C.
+>   <sub>(On the raw, unsmoothed daily mean, no year touches both extremes.)</sub>
+
+### The record days
+
+The single most extreme days in each station’s record. “Hottest” is the highest daily
+maximum (TX), “coldest” the lowest daily minimum (TN).
+
+| Station (record span) | Extreme | Date | Min (TN) | Max (TX) |
+|---|---|---|---:|---:|
+| Nouméa <sub>1950–2026</sub> | Hottest 🔥 | 1986-01-25 | 26.4 | **36.8** |
+| Nouméa <sub>1950–2026</sub> | Coldest ❄️ | 1961-08-10 | **13.2** | 20.8 |
+| Nouméa-Magenta <sub>1964–2026</sub> | Hottest 🔥 | 1986-01-25 | 24.8 | **36.8** |
+| Nouméa-Magenta <sub>1964–2026</sub> | Coldest ❄️ | 1968-07-28 | **8.9** | 21.2 |
+
+At Nouméa, the all-time heat (1986-01-25) postdates the all-time cold (1961-08-10) by 25 years.
+
+> [!NOTE]
+> **Why Nouméa-Magenta?** Nouméa-Magenta (station 98818002), the in-town domestic airfield, has carried a complete, gap-free temperature record since 1964 and provides the local comparison. Nouméa (station 98818001) provides the historical depth needed to see the underlying trend, back to 1950.
+
+### The last decade (Nouméa)
+
+| Year | Min (TN) | Max (TX) | Mean |
+|---|---:|---:|---:|
+| 2016 | 21.3 | 27.2 | **24.2** |
+| 2017 | 21.1 | 27.2 | **24.1** |
+| 2018 | 20.8 | 26.7 | **23.8** |
+| 2019 | 20.6 | 26.8 | **23.7** |
+| 2020 | 21.1 | 27.6 | **24.4** |
+| 2021 | 21.0 | 27.5 | **24.2** |
+| 2022 | 21.8 | 28.0 | **24.9** |
+| 2023 | 20.6 | 27.1 | **23.9** |
+| 2024 | 21.3 | 27.9 | **24.6** |
+| 2025 | 21.5 | 28.1 | **24.8** |
+| 2026 *(to date)* | 21.4 | 27.8 | **24.6** |
+
+### Frost days at zero, hot days up
+
+A degree of warming is abstract; a count of days is not. Nouméa’s first
+complete decade (1951–1960) against its last (2016–2025):
+
+| Threshold days per year | 1951–1960 | 2016–2025 |
+|---|---:|---:|
+| Frost days (min < 0 °C) | 0 | **0** |
+| Hot days (max ≥ 30 °C) | 32 | **74** |
+| Very hot days (max ≥ 35 °C) | 0 | **1** |
+| Tropical nights (min ≥ 20 °C) | 194 | **237** |
+
+<sub>Counts of days per year crossing each threshold, averaged over the first and last
+complete decades of the record. There was never a frost season here to retreat; the change shows up entirely on the hot side of the ledger. Read the hot-day jump with care here: 21% of recent days come within 1 °C of the 30 °C line, so the count amplifies what is really a +1.5 °C shift in the average daily maximum.</sub>
+
+### What about the rain?
+
+Temperature is only half of a climate. Over 1951–2025 (75 years),
+annual precipitation at Nouméa shows **no statistically significant trend**.
+
+![Annual rainfall totals around Nouméa](outputs/noumea/figures/rain_series.png)
+
+<sub>Annual total precipitation. The dashed line is Nouméa’s long-term mean
+(1054 mm/yr); the thick curves are LOESS smoothings. The year-to-year swings are
+large — from 577 mm (1953) to 1951 mm (2022) —
+but the long-run slope (+5 mm/decade) is flat and not significant (p = 0.71).</sub>
+
+The same daily records that carry a strong warming signal carry *no* comparable signal in how much it rains: annual totals swing widely from year to year around a flat long-run mean.
+
+![Monthly rainfall through the year at Nouméa, one line per year](outputs/noumea/figures/rain_climatology.png)
+
+<sub>Rain through the year: each grey line is one year’s monthly totals, the dark line the
+long-term monthly normal, the bold blue line 2026 so far. March is the
+wettest month on average (143 mm), September the driest
+(43 mm) — but the spread between years dwarfs the seasonal cycle, which is exactly why no annual trend emerges.</sub>
+
+### Methodology
+
+Only what is specific to this city is listed here. The variables, completeness rule,
+smoothing, thresholds and trend method are the same for every city and are stated once, in
+[How every chapter is built](#how-every-chapter-is-built) — which is also what makes the
+comparison at the top of this page legitimate.
+
+- **Source.** Météo-France — Données climatologiques de base – quotidiennes, New Caledonia, France. Full citation
+  in [Data sources](#data-sources) below.
+- **Stations.** Nouméa-Magenta (98818002) and Nouméa (98818001).
+- **Rebuild this chapter.** `SITE=noumea make all` — every figure and number above is
+  regenerated from the source data on each run.
+
+<sub>Figures and numbers above are generated — edit `R/03_readme.R`, not this block.</sub>
+
+<!-- END REPORT:noumea -->
 
 ## Data sources
 
@@ -1773,13 +1617,13 @@ only, which is why their raw exports are never committed to this repository:
 | Castanet-Tolosan | Météo-France — *Données climatologiques de base – quotidiennes* | dept. 31 (Haute-Garonne), `RR-T-Vent` daily files, three eras (`avant-1949`, `previous-1950-2024`, `latest-2025-2026`) | Licence Ouverte / Open Licence (Etalab 2.0) |
 | Zurich | MeteoSwiss — Open Government Data | `ogd-nbcn` (homogeneous climate stations) + `ogd-smn` (automatic weather stations) | MeteoSwiss Open Data (attribution: "Source: MeteoSwiss") |
 | Karlsruhe | DWD (Deutscher Wetterdienst) — Climate Data Center | `kl` (daily station observations) + `more_precip` (precipitation only) | Creative Commons BY 4.0 |
-| Santa Fe | NOAA — GHCN-Daily, Access Data Service v1 | `daily-summaries` (TMAX/TMIN/PRCP), stations USC00298072/298085 (spliced) + USW00023049 | U.S. Government work — no copyright restriction |
-| Honolulu | NOAA — GHCN-Daily, Access Data Service v1 | `daily-summaries` (TMAX/TMIN/PRCP), stations USW00022521 + USC00516395 | U.S. Government work — no copyright restriction |
-| Nouméa | Météo-France — *Données climatologiques de base – quotidiennes* | dept. 988 (Nouvelle-Calédonie), `RR-T-Vent` daily files, same three eras | Licence Ouverte / Open Licence (Etalab 2.0) |
 | Moscow | Roshydromet / RIHMI-WDC — AISORI-M | Сутки → TTTR (temp. + precip.), WMO 27612, manually exported (login-gated, no stable URL) | Not openly licensed — Rospatent 2019621537; personal, non-commercial use only |
 | Voronezh | Roshydromet / RIHMI-WDC — AISORI-M | Сутки → TTTR (temp. + precip.), WMO 34123, manually exported (login-gated, no stable URL) | Not openly licensed — Rospatent 2019621537; personal, non-commercial use only |
 | Irvine | NOAA — GHCN-Daily, Access Data Service v1 | `daily-summaries` (TMAX/TMIN/PRCP), stations USC00049087/044303 (spliced) + USW00093184 | U.S. Government work — no copyright restriction |
 | Albuquerque | NOAA — GHCN-Daily, Access Data Service v1 | `daily-summaries` (TMAX/TMIN/PRCP), stations USW00023050 (GSN) + USC00290225 | U.S. Government work — no copyright restriction |
+| Santa Fe | NOAA — GHCN-Daily, Access Data Service v1 | `daily-summaries` (TMAX/TMIN/PRCP), stations USC00298072/298085 (spliced) + USW00023049 | U.S. Government work — no copyright restriction |
+| Honolulu | NOAA — GHCN-Daily, Access Data Service v1 | `daily-summaries` (TMAX/TMIN/PRCP), stations USW00022521 + USC00516395 | U.S. Government work — no copyright restriction |
+| Nouméa | Météo-France — *Données climatologiques de base – quotidiennes* | dept. 988 (Nouvelle-Calédonie), `RR-T-Vent` daily files, same three eras | Licence Ouverte / Open Licence (Etalab 2.0) |
 
 Full dataset URLs and citation text are in each site's report above and in
 `R/sites/<site>.R`. Météo-France field definitions land in
@@ -1795,18 +1639,18 @@ Full dataset URLs and citation text are in each site's report above and in
 | Zurich | `SMA` | Zürich-Fluntern | 1864→ (TN/TX 1881→) | Long regional reference; MeteoSwiss's homogeneous series for the trend and climatology |
 | Karlsruhe | `02523` | Karlsruhe-Wolfartsweier | 1931→ | Local station — **rainfall only**, no temperature record near Grötzingen (see below) |
 | Karlsruhe | `04177` | Rheinstetten | 1876→ | Long regional reference — spliced with predecessor 02522 (city-centre, 1876→2008) at its 2008-11-01 handoff to Rheinstetten, closing what would otherwise be a 1985–2008 gap in 04177's own record |
-| Santa Fe | `USW00023049` | Santa Fe Airport | 1941→ | Local station — NOAA's own GHCN-Daily archive has no digitized daily temperature for it between 1959 and 1996 |
-| Santa Fe | `USC00298085` | Santa Fe | 1874→ | Long reference — spliced with predecessor 298072 (in-town, 1874→1972) at its 1972-04-01 handoff to 298085, a few miles south |
-| Honolulu | `USC00516395` | Honolulu-Moanalua | 1906→ | Local station — **rainfall only**; a valley neighbourhood between the airport and downtown, 80 complete years of the 81 it reports |
-| Honolulu | `USW00022521` | Honolulu Airport | 1940→ | Long regional reference; no splice needed, but the 1940s years fall short of the completeness rule, so the trend starts at 1950 |
-| Nouméa | `98818002` | Nouméa-Magenta | 1964→ | Local station, the in-town domestic airfield; complete, no gaps |
-| Nouméa | `98818001` | Nouméa | 1950→ | Long regional reference; used for the trend and the daily climatology |
 | Moscow | `27612` | Moscow | 1948→2025 | Single station — no local pairing; this export has no second WMO index |
 | Voronezh | `34123` | Voronezh | 1940→2026 | Single station — no local pairing; this export has no second WMO index |
 | Irvine | `USW00093184` | John Wayne Airport | 1999→ | Local station, on Irvine's border — no splice needed, but the shortest record of the pair |
 | Irvine | `USC00044303` | Irvine | 1915→ | Long reference — spliced with predecessor 049087 (Tustin Irvine Ranch, 1915→2003) at its 2003 handoff to 044303, a few miles away |
 | Albuquerque | `USC00290225` | Albuquerque Foothills NE | 1991→ | Local station, a different microclimate in the city's northeast foothills — its own temperature reporting has a real gap from June 2026 |
 | Albuquerque | `USW00023050` | Albuquerque Airport | 1931→ | Long reference — one continuous record, no splice needed; flagged by NOAA as a GSN station |
+| Santa Fe | `USW00023049` | Santa Fe Airport | 1941→ | Local station — NOAA's own GHCN-Daily archive has no digitized daily temperature for it between 1959 and 1996 |
+| Santa Fe | `USC00298085` | Santa Fe | 1874→ | Long reference — spliced with predecessor 298072 (in-town, 1874→1972) at its 1972-04-01 handoff to 298085, a few miles south |
+| Honolulu | `USC00516395` | Honolulu-Moanalua | 1906→ | Local station — **rainfall only**; a valley neighbourhood between the airport and downtown, 80 complete years of the 81 it reports |
+| Honolulu | `USW00022521` | Honolulu Airport | 1940→ | Long regional reference; no splice needed, but the 1940s years fall short of the completeness rule, so the trend starts at 1950 |
+| Nouméa | `98818002` | Nouméa-Magenta | 1964→ | Local station, the in-town domestic airfield; complete, no gaps |
+| Nouméa | `98818001` | Nouméa | 1950→ | Long regional reference; used for the trend and the daily climatology |
 
 > The "Record" column is each station's raw first→last year; the trend prose and
 > "last decade" tables instead start from each station's first *complete* year
@@ -1823,16 +1667,22 @@ target town, so every pairing is a compromise. The compromises:
 | Castanet-Tolosan | Auzeville-Tolosane-INRAE | None to speak of — it sits on the town boundary. |
 | Zurich | Zürich-Affoltern | Affoltern is outside MeteoSwiss's homogeneous long-term network, so this is the closest full station. |
 | Karlsruhe | Karlsruhe-Wolfartsweier | Rainfall only. The nearest station that also measured temperature (Augustenberg, under 1 km from Grötzingen) closed in 1985. |
+| Moscow, Voronezh | *none* | Exported from AISORI-M with one WMO index each; there is no second station to pair. |
+| Irvine | John Wayne Airport | Gap-free, but only from 1999, against the reference series' 1915. |
+| Albuquerque | Albuquerque Foothills NE | A genuinely different microclimate, but its temperature reporting stops in June 2026. |
 | Santa Fe | Santa Fe Airport | NOAA's archive holds no digitized daily temperature for it between 1959 and 1996. |
 | Honolulu | Honolulu-Moanalua | Rainfall only. No in-town station measures temperature independently of the airport. |
 | Nouméa | Nouméa-Magenta | None — a complete, gap-free local record. |
-| Irvine | John Wayne Airport | Gap-free, but only from 1999, against the reference series' 1915. |
-| Albuquerque | Albuquerque Foothills NE | A genuinely different microclimate, but its temperature reporting stops in June 2026. |
-| Moscow, Voronezh | *none* | Exported from AISORI-M with one WMO index each; there is no second station to pair. |
 
 Each chapter's own "Why…?" note gives the detail.
 
 ## Project layout
+
+Sites appear in the same order everywhere on this page — chapters, the tables
+above, the tree below, and `SITE_ORDER` in `R/04_compare.R`: **Europe, then North
+America, then the Pacific, west to east within each.** Adding a city means
+inserting it geographically in all of them, not appending. (The comparison chart
+and table are the exception: they sort themselves by warming rate.)
 
 ```
 climatudes/
@@ -1846,13 +1696,13 @@ climatudes/
 │   │   ├── castanet.R         Castanet-Tolosan: stations, paths, citation, narrative facts
 │   │   ├── zurich.R           Zurich: same, for MeteoSwiss
 │   │   ├── karlsruhe.R        Karlsruhe: same, for DWD
-│   │   ├── santafe.R          Santa Fe: same, for NOAA GHCN-Daily
-│   │   ├── honolulu.R         Honolulu: same, for NOAA GHCN-Daily
-│   │   ├── noumea.R           Nouméa: same, for Météo-France dept. 988
 │   │   ├── moscow.R           Moscow: same, for Roshydromet/AISORI-M (manual export)
 │   │   ├── voronezh.R         Voronezh: same, for Roshydromet/AISORI-M (manual export)
 │   │   ├── irvine.R           Irvine: same, for NOAA GHCN-Daily
-│   │   └── albuquerque.R      Albuquerque: same, for NOAA GHCN-Daily
+│   │   ├── albuquerque.R      Albuquerque: same, for NOAA GHCN-Daily
+│   │   ├── santafe.R          Santa Fe: same, for NOAA GHCN-Daily
+│   │   ├── honolulu.R         Honolulu: same, for NOAA GHCN-Daily
+│   │   └── noumea.R           Nouméa: same, for Météo-France dept. 988
 │   ├── sources/
 │   │   ├── meteofrance.R      fetch + normalize Météo-France's format (Castanet-Tolosan, Nouméa)
 │   │   ├── meteoswiss.R       fetch + normalize MeteoSwiss's format
@@ -1984,13 +1834,17 @@ so they can't drift.)
 
 Source data:
 
-- Castanet-Tolosan © Météo-France, *Licence Ouverte / Open Licence (Etalab 2.0)*.
+Grouped by provider, since the licence follows the source rather than the city:
+
+- Castanet-Tolosan and Nouméa © Météo-France, *Licence Ouverte / Open Licence
+  (Etalab 2.0)*.
 - Zurich © MeteoSwiss Open Data — attribution required: "Source: MeteoSwiss".
 - Karlsruhe © DWD (Deutscher Wetterdienst), *Creative Commons BY 4.0*.
-- Santa Fe and Honolulu — NOAA / NCEI GHCN-Daily, U.S. Government work, no copyright restriction.
-- Nouméa © Météo-France, *Licence Ouverte / Open Licence (Etalab 2.0)*.
-- Moscow and Voronezh © Roshydromet / RIHMI-WDC (AISORI-M) — not openly
-  licensed (registered as an official reference publication, Rospatent
-  2019621537); used here for personal, non-commercial analysis only.
+- Irvine, Albuquerque, Santa Fe and Honolulu — NOAA / NCEI GHCN-Daily, U.S.
+  Government work, no copyright restriction.
+- Moscow and Voronezh © Roshydromet / RIHMI-WDC (AISORI-M) — **not openly
+  licensed** (registered as an official reference publication, Rospatent
+  2019621537); used here for personal, non-commercial analysis only, which is
+  why their raw exports are not committed to this repository.
 
 Please retain the attribution above when reusing the figures or data.

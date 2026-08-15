@@ -8,6 +8,12 @@
 # The template uses {{TOKEN}} placeholders filled by a single gsub pass, rather
 # than sprintf — sprintf caps the format string at 8192 bytes, which a full HTML
 # page (plus citation) exceeds.
+#
+# DELIBERATE DIVERGENCE FROM STAGE 03 — do not "fix" this in a parity pass.
+# The Methodology section below is COMPLETE, because each of these reports ships
+# as a single standalone file that has to explain itself. Stage 03's README
+# version is cut to the per-site facts and links to one shared "How every
+# chapter is built" section, since all ten chapters share a page there.
 # =============================================================================
 
 suppressPackageStartupMessages({

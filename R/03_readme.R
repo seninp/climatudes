@@ -14,6 +14,15 @@
 #
 # As in stage 02 the template uses {{TOKEN}} placeholders filled by a single
 # gsub pass rather than sprintf, whose format string caps at 8192 bytes.
+#
+# DELIBERATE DIVERGENCE FROM STAGE 02 — do not "fix" this in a parity pass.
+# Stage 02's Methodology section is complete, because each HTML report ships as
+# a standalone file with nothing to link to. Here it is cut to the two per-site
+# facts, because all ten chapters live on ONE page: the shared method (variables,
+# completeness rule, smoothing, thresholds, trend) is stated once by
+# R/04_compare.R under "How every chapter is built" and linked from each chapter.
+# Repeating it ten times added ~290 near-identical lines and ten duplicate
+# entries to GitHub's outline.
 # =============================================================================
 
 suppressPackageStartupMessages({
@@ -194,35 +203,16 @@ wettest month on average ({{WET_MONTH_MM}} mm), {{DRY_MONTH}} the driest
 
 ### Methodology
 
+Only what is specific to this city is listed here. The variables, completeness rule,
+smoothing, thresholds and trend method are the same for every city and are stated once, in
+[How every chapter is built](#how-every-chapter-is-built) — which is also what makes the
+comparison at the top of this page legitimate.
+
 - **Source.** {{SOURCE_NAME}} — {{DATASET_LABEL}}, {{REGION}}, {{COUNTRY}}. Full citation
-  below.
-- **Variables.** Minimum = `TN`, maximum = `TX`, mean = `(TN+TX)/2`, in °C;
-  rainfall = `RR` (daily precipitation, in mm).
-- **Annual aggregation.** Arithmetic mean of daily values over each calendar year. The
-  long-term trend uses only complete years (≥ {{MIN_DAYS}} valid days). Where the current
-  year is still in progress, the pipeline shows it separately — as a hollow “to date” marker
-  on the trend chart, and (for a fair record comparison) against the same calendar window
-  (Jan 1 → cutoff) of every prior year, keeping only years with ≥ {{MIN_YTD_DAYS}} valid
-  days in that window *and* data spread across the whole window, not bunched in part of it.
-- **Daily climatology.** Each year’s daily mean is smoothed with a centred
-  {{SMOOTH_WINDOW}}-day rolling mean (unweighted moving average, computed per year so
-  December never bleeds into January; the first/last {{SMOOTH_HALF}} {{SMOOTH_HALF_WORD}} keep their raw
-  value) for legibility; leap days are aligned across years. The normal is the per-day
-  average over all prior years.
-- **Threshold days.** Frost = `TN < 0`, hot day = `TX ≥ {{HOT_TX}}`, very hot =
-  `TX ≥ {{VHOT_TX}}`, tropical night = `TN ≥ {{TROP_TX}}`, counted per complete year and
-  averaged over the first/last complete decade. A fixed threshold means different things
-  in different climates — where it falls near the middle of a city’s distribution the
-  caption above says so.
-- **Rainfall.** Annual total of daily `RR` over complete years; the trend is a
-  least-squares slope with its two-sided p-value. Monthly climatology keeps only months
-  with ≥ 27 valid days.
-- **Trend.** Slope estimated by linear regression (least squares); the line-chart curves
-  use LOESS smoothing (span = 0.7).
-- **Reproducibility.** A 4-stage R pipeline (`R/00_prepare_data.R` → `R/01_plot.R` →
-  `R/02_report.R` → `R/03_readme.R`), driven by `SITE={{SITE_KEY}} make all`. The figures
-  above and the numbers in this section are regenerated from the source data on every
-  run — see [Data sources](#data-sources) below for the full citation.
+  in [Data sources](#data-sources) below.
+- **Stations.** {{STATIONS_BARE}}
+- **Rebuild this chapter.** `SITE={{SITE_KEY}} make all` — every figure and number above is
+  regenerated from the source data on each run.
 
 <sub>Figures and numbers above are generated — edit `R/03_readme.R`, not this block.</sub>'
 

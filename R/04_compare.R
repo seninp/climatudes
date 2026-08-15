@@ -10,6 +10,13 @@
 # R/sites/*.R) so a new site is a deliberate addition here, not a silent
 # extra row.
 #
+# SITE_ORDER is presentational only: both the chart and the table re-sort by
+# warming rate. It mirrors the chapter order in README.md — Europe, then North
+# America, then the Pacific, west to east within each — so the registry reads
+# the same way the page does. Do NOT sort the chapters by warming rate instead:
+# the chart re-ranks itself on every data refresh while the chapter order is
+# hand-maintained, so the two would drift apart silently.
+#
 #   Rscript R/04_compare.R
 # =============================================================================
 
@@ -23,7 +30,8 @@ suppressPackageStartupMessages({
 source("R/lib/common.R")
 source("R/lib/narrative.R")   # shares ytd_standing_text() with every per-site chapter
 
-SITE_ORDER <- c("castanet", "zurich", "karlsruhe", "santafe", "honolulu", "noumea", "moscow", "voronezh", "irvine", "albuquerque")
+SITE_ORDER <- c("castanet", "zurich", "karlsruhe", "moscow", "voronezh",
+                "irvine", "albuquerque", "santafe", "honolulu", "noumea")
 
 load_site <- function(key) {
   env <- new.env()
@@ -242,6 +250,40 @@ standings substantially, and several cities holding a "record" badge here do not
 a January-to-May mean and a January-to-August mean are different statistics. A "#55 of 84" over two
 months of winter is not the same kind of statement as an eight-month "#5 of 76".
 ', nm_note, '
+## How every chapter is built
+
+The comparison above is only meaningful because every city is measured the same way. That
+method is stated here once, rather than repeated in all ', num_word(N_SITES), ' chapters; each chapter adds only
+its own source, stations and rebuild command.
+
+- **Variables.** Minimum = `TN`, maximum = `TX`, mean = `(TN+TX)/2`, in °C;
+  rainfall = `RR` (daily precipitation, in mm).
+- **Annual aggregation.** Arithmetic mean of daily values over each calendar year. The
+  long-term trend uses only complete years (≥ ', MIN_DAYS, ' valid days). Where the current
+  year is still in progress, the pipeline shows it separately — as a hollow “to date” marker
+  on the trend chart, and (for a fair record comparison) against the same calendar window
+  (Jan 1 → cutoff) of every prior year. A year enters that comparison only if it has
+  ≥ ', MIN_YTD_DAYS, ' valid days in the window *and* covers every month of it: a year holding
+  enough days bunched into part of the window is measuring a different season, not a
+  different year.
+- **Daily climatology.** Each year’s daily mean is smoothed with a centred
+  ', SMOOTH_WINDOW, '-day rolling mean (unweighted, computed per year so December never bleeds
+  into January) for legibility; leap days are aligned across years. The normal is the
+  per-day average over all prior years.
+- **Threshold days.** Frost = `TN < 0`, hot day = `TX ≥ ', HOT_TX, '`, very hot =
+  `TX ≥ ', VHOT_TX, '`, tropical night = `TN ≥ ', TROPNIGHT, '`, counted per complete year and
+  averaged over the first and last complete decade. A fixed threshold means different
+  things in different climates: where it falls near the middle of a city’s distribution,
+  that chapter says so, because the count then amplifies a modest shift in the mean.
+- **Rainfall.** Annual total of daily `RR` over complete years; the trend is a
+  least-squares slope with its two-sided p-value. Monthly climatology keeps only months
+  with ≥ 27 valid days.
+- **Trend.** Slope by linear regression (least squares); the curves on the line charts are
+  LOESS smoothings (span = 0.7). Rates are reported per decade.
+- **Reproducibility.** A 4-stage R pipeline (`R/00_prepare_data.R` → `R/01_plot.R` →
+  `R/02_report.R` → `R/03_readme.R`), driven by `SITE=<site> make all`. See
+  [How to run](#how-to-run).
+
 <sub>Figures and numbers above are generated — edit `R/04_compare.R`, not this block.</sub>
 
 <!-- END COMPARE -->'

@@ -341,6 +341,15 @@ build_common_fills <- function(stats, site) {
             site$reference_station, station_id(site, site$reference_station)) else
     sprintf("Station: %s (%s).", site$reference_station, station_id(site, site$reference_station))
 
+  # Same list without the leading "Stations:" label, for contexts that supply
+  # their own (the README chapter's bulleted "**Stations.**" item, which would
+  # otherwise read "Stations. Stations: ...").
+  stations_bare <- if (HAS_LOCAL)
+    sprintf("%s (%s) and %s (%s).",
+            site$local_station, station_id(site, site$local_station),
+            site$reference_station, station_id(site, site$reference_station)) else
+    sprintf("%s (%s).", site$reference_station, station_id(site, site$reference_station))
+
   ref_rec <- stats$records[[which(vapply(stats$records, function(r) r$station, character(1)) ==
                                    site$reference_station)]]
   # "Heat more recent than cold" was a fixed claim that happened to hold for the
@@ -491,7 +500,7 @@ build_common_fills <- function(stats, site) {
     LOCAL_RATIONALE = site$local_rationale,
     LOCAL_NOTE_HEADER = local_note_header,
     RAIN_STATIONS_ALT = rain_stations_alt,
-    STATIONS_LINE = stations_line,
+    STATIONS_LINE = stations_line, STATIONS_BARE = stations_bare,
     LOCAL_TEMP_PARAGRAPH = local_temp_paragraph,
     FIG1_LOCAL_CAPTION = fig1_local_caption,
     CLOSING_RECORD_NOTE = closing_record_note
