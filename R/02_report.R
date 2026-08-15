@@ -77,6 +77,13 @@ template <- '<!DOCTYPE html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Declared light-only on purpose: all five figures are rendered with a white
+     background (R/01_plot.R), so a browser that auto-darkens an undeclared page
+     would invert the text around five white images. -->
+<meta name="color-scheme" content="light">
+<!-- Generated file: its version is the version of its source. Do not hand-edit. -->
+<meta name="generator" content="R/02_report.R (climatudes)">
+<meta name="source" content="R/sites/{{SITE_KEY}}.R">
 <title>Temperatures around {{CITY}}</title>
 <style>
   :root {
@@ -102,17 +109,34 @@ template <- '<!DOCTYPE html>
   figure { margin:30px 0; background:var(--card); border:1px solid var(--line);
            border-radius:14px; padding:16px; box-shadow:0 1px 3px rgba(20,30,40,.05); }
   figure img { width:100%; height:auto; display:block; border-radius:6px; }
-  figcaption { color:var(--faint); font-size:0.85rem; margin-top:12px; padding:0 4px; }
+  /* --muted, not --faint: these captions run to 60+ words and --faint (#8A97A0)
+     is only ~3.2:1 on white, below WCAG AA. --faint is for the footer and the
+     tiny "(to date)" markers, where it is a label rather than prose. */
+  figcaption { color:var(--muted); font-size:0.85rem; margin-top:12px; padding:0 4px; }
   .stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
            gap:16px; margin:28px 0; }
   .stat { background:var(--card); border:1px solid var(--line); border-radius:12px;
           padding:20px; box-shadow:0 1px 3px rgba(20,30,40,.04); }
   .stat .num { font-size:1.9rem; font-weight:700; line-height:1.1; color:var(--accent); }
+  /* The standing tile holds a phrase ("#1 of 147 — record"), not a short number,
+     so it needs a smaller size to stay on one line in a 180px grid cell. */
+  .stat .num.phrase { font-size:1.15rem; }
+  .stat .num strong { font-weight:inherit; }
   .stat .lab { color:var(--muted); font-size:0.86rem; margin-top:6px; }
-  table { width:100%; border-collapse:collapse; margin:18px 0; font-size:0.95rem;
-          background:var(--card); border:1px solid var(--line); border-radius:10px; overflow:hidden; }
+  /* border-collapse:separate (not collapse) so the 10px radius actually clips the
+     header-cell fill in Safari/Firefox instead of squaring off the top corners. */
+  table { width:100%; border-collapse:separate; border-spacing:0; margin:18px 0;
+          font-size:0.95rem; background:var(--card); border:1px solid var(--line);
+          border-radius:10px; overflow:hidden; }
   th,td { padding:9px 14px; text-align:right; border-bottom:1px solid var(--line); }
   th:first-child,td:first-child { text-align:left; }
+  /* The record-days table is 5 columns with a full station name and an unwrappable
+     date; on a narrow phone it would otherwise widen the whole page. */
+  .tablewrap { overflow-x:auto; -webkit-overflow-scrolling:touch; }
+  @media (max-width:520px) {
+    table { font-size:0.86rem; }
+    th,td { padding:7px 8px; }
+  }
   thead th { background:#F0F3F6; color:var(--muted); font-weight:600;
              text-transform:uppercase; font-size:0.72rem; letter-spacing:0.05em; }
   tbody tr:last-child td { border-bottom:none; }
@@ -139,9 +163,9 @@ template <- '<!DOCTYPE html>
   </header>
 
   <p class="lead">
-    {{SOURCE_NAME}} daily records for the {{CITY}} area tell an unambiguous
-    story: since {{SINCE_PHRASE}}, minimum, maximum and mean temperatures have
-    all risen — steadily and continuously.
+    {{SOURCE_NAME}}&rsquo;s daily records for the {{CITY}} area are unambiguous:
+    since {{SINCE_PHRASE}}, daily minimum, maximum and mean temperatures have
+    all risen.
   </p>
 
   <div class="stats">
@@ -153,6 +177,8 @@ template <- '<!DOCTYPE html>
       <div class="lab">mean of the last decade<br>(vs {{MEAN_EARLY}}&nbsp;°C in {{EARLY_SPAN}})</div></div>
     <div class="stat"><div class="num">{{N_STATION_YEARS}}</div>
       <div class="lab">complete station-years analysed</div></div>
+    <div class="stat"><div class="num phrase">{{YTD_STANDING}}</div>
+      <div class="lab">{{YTD_ROW_LABEL}}, against {{YTD_NYEARS_PRIOR}} prior years</div></div>
   </div>
 
   <h2>The long view: annual means</h2>
@@ -170,16 +196,17 @@ template <- '<!DOCTYPE html>
     <strong>+{{RISE}}&nbsp;°C</strong> over the whole period. {{LOCAL_TEMP_PARAGRAPH}}
   </p>
 
+  <p>{{HOMOGENEITY_NOTE}}</p>
+
   <h2>{{YTD_SECTION_YEAR}}, against every year before it</h2>
   <figure>
-    <img src="data:image/png;base64,{{IMG_YTD}}" alt="Per-year departure of the same-window mean temperature from the long-term normal, current year {{YTD_ALT_SUFFIX}}">
+    <img src="data:image/png;base64,{{IMG_YTD}}" alt="Per-year departure of the same-window mean temperature from the {{YTD_NORM_SPAN}} mean, current year {{YTD_ALT_SUFFIX}}">
     <figcaption>
       Each bar is a year&rsquo;s mean over the <em>same window</em> —
-      <strong>{{YTD_WINDOW}}</strong> — shown as its departure from the long-term
-      normal ({{YTD_NORMAL}}&nbsp;°C): red above, blue below. Comparing each year over
-      the identical part-of-year is the only fair way to place any one year against
-      every other. The bars swing from blue to red over the decades —
-      the warming{{YTD_TALLEST_CLAUSE}}.
+      <strong>{{YTD_WINDOW}}</strong> — shown as its departure from the
+      {{YTD_NORM_SPAN}} mean ({{YTD_NORMAL}}&nbsp;°C): red above, blue below.
+      {{YTD_FAIRNESS_SENTENCE}} The bars swing from blue to red over the
+      decades{{YTD_TALLEST_CLAUSE}}.
     </figcaption>
   </figure>
   <p>{{YTD_SENTENCE}}</p>
@@ -207,8 +234,8 @@ template <- '<!DOCTYPE html>
     curve, <strong>{{N_HOT}}</strong> {{N_HOT_WORD}} pushed above +{{HOT_THR}}&nbsp;°C
    {{HOT_YEARS_PAREN}}{{HOT_RECENT_CLAUSE}} while <strong>{{N_COLD}}</strong> {{N_COLD_WORD}}
     dropped below {{COLD_THR}}&nbsp;°C{{COLD_YEARS_PAREN}}{{COLD_ERA_CLAUSE}}.
-    <strong>{{BOTH_SENTENCE}}</strong> {{ERA_CLAUSE}}
-    <span style="color:#8A97A0;">{{RAW_BOTH_SENTENCE}}</span>
+    {{BOTH_SENTENCE}} {{ERA_CLAUSE}}
+    <span style="color:var(--muted);">{{RAW_BOTH_SENTENCE}}</span>
   </div>
 
   <h2>The record days</h2>
@@ -216,7 +243,7 @@ template <- '<!DOCTYPE html>
     The single most extreme days in each station&rsquo;s record. &ldquo;Hottest&rdquo;
     is the highest daily maximum (TX), &ldquo;coldest&rdquo; the lowest daily minimum (TN).
   </p>
-  <table>
+  <div class="tablewrap"><table>
     <thead><tr>
       <th>Station (record span)</th><th>Extreme</th><th>Date</th>
       <th>Min (TN)</th><th>Max (TX)</th>
@@ -224,7 +251,7 @@ template <- '<!DOCTYPE html>
     <tbody>
 {{RECORD_ROWS}}
     </tbody>
-  </table>
+  </table></div>
   <p style="color:#8A97A0; font-size:0.9rem;">{{CLOSING_RECORD_NOTE}}</p>
 
   <div class="note">
@@ -232,18 +259,18 @@ template <- '<!DOCTYPE html>
   </div>
 
   <h2>The last decade ({{REF_STATION}})</h2>
-  <table>
+  <div class="tablewrap"><table>
     <thead><tr><th>Year</th><th>Min (TN)</th><th>Max (TX)</th><th>Mean</th></tr></thead>
     <tbody>
 {{ROWS}}
     </tbody>
-  </table>
+  </table></div>
 
   <h2>{{EXTREMES_HEADER}}</h2>
   <p>
-    A degree of warming is abstract; the count of extreme days is not. Comparing
-    {{REF_STATION}}&rsquo;s first complete decade ({{EXT_SPAN0}}) with its last
-    ({{EXT_SPAN1}}), the everyday texture of the year has changed sharply:
+    A degree of warming is abstract; a count of days is not.
+    {{REF_STATION}}&rsquo;s first complete decade ({{EXT_SPAN0}}) against its last
+    ({{EXT_SPAN1}}):
   </p>
   <div class="stats">
     <div class="stat"><div class="num" style="color:var(--blue)">{{FROST_EARLY}}&nbsp;→&nbsp;{{FROST_RECENT}}</div>
@@ -255,16 +282,16 @@ template <- '<!DOCTYPE html>
     <div class="stat"><div class="num">{{TROP_EARLY}}&nbsp;→&nbsp;{{TROP_RECENT}}</div>
       <div class="lab">tropical nights per year<br>(min&nbsp;≥&nbsp;{{TROP_TX}}&nbsp;°C)</div></div>
   </div>
-  <p style="color:#8A97A0; font-size:0.9rem;">
+  <p style="color:var(--muted); font-size:0.9rem;">
     Counts of days per year crossing each threshold, averaged over the first and
-    last complete decades of the record. {{EXTREMES_CLOSING}}
+    last complete decades of the record.{{EXTREMES_CLOSING}}
   </p>
 
   <h2>What about the rain?</h2>
   <p>
-    Temperature is only half of a climate. Rainfall, it turns out, tells a very
-    different — and much quieter — story: over the same {{RAIN_NYEARS}}&nbsp;years,
-    annual precipitation at {{REF_STATION}} shows {{RAIN_SIG_CLAUSE}}.
+    Temperature is only half of a climate. Over {{RAIN_YR0}}&ndash;{{RAIN_YR1}}
+    ({{RAIN_NYEARS}}&nbsp;years), annual precipitation at {{REF_STATION}} shows
+    {{RAIN_SIG_CLAUSE}}.
   </p>
   <figure>
     <img src="data:image/png;base64,{{IMG_RAIN}}" alt="Annual rainfall totals, {{RAIN_STATIONS_ALT}}, {{RAIN_YR0}}-{{RAIN_YR1}}">
@@ -299,32 +326,35 @@ template <- '<!DOCTYPE html>
         maximum&nbsp;=&nbsp;<code>TX</code>, mean&nbsp;=&nbsp;<code>(TN+TX)/2</code>,
         in&nbsp;°C; rainfall&nbsp;=&nbsp;<code>RR</code>
         (daily precipitation, in&nbsp;mm).</li>
-    <li><strong>Threshold days.</strong> Frost&nbsp;=&nbsp;<code>TN&nbsp;&lt;&nbsp;0</code>,
-        hot&nbsp;day&nbsp;=&nbsp;<code>TX&nbsp;≥&nbsp;{{HOT_TX}}</code>,
-        very&nbsp;hot&nbsp;=&nbsp;<code>TX&nbsp;≥&nbsp;{{VHOT_TX}}</code>,
-        tropical&nbsp;night&nbsp;=&nbsp;<code>TN&nbsp;≥&nbsp;{{TROP_TX}}</code>,
-        counted per complete year and averaged over the first/last complete decade.</li>
-    <li><strong>Rainfall.</strong> Annual total of daily <code>RR</code> over complete
-        years; the trend is a least-squares slope with its two-sided p-value.
-        Monthly climatology keeps only months with&nbsp;≥&nbsp;27 valid days.</li>
     <li><strong>Annual aggregation.</strong> Arithmetic mean of daily values over each
         calendar year. The long-term trend uses only complete years (≥&nbsp;{{MIN_DAYS}} valid
-        days). Where the current year is still in progress, it is shown separately — as a
+        days). Where the current year is still in progress, the pipeline shows it separately — as a
         hollow &ldquo;to&nbsp;date&rdquo; marker on the trend chart, and (for a fair record
         comparison) against the same calendar window (Jan&nbsp;1&nbsp;→&nbsp;cutoff)
         of every prior year, keeping only years with ≥&nbsp;{{MIN_YTD_DAYS}} valid days
-        in that window.</li>
+        in that window <em>and</em> data spread across the whole window, not bunched
+        in part of it.</li>
     <li><strong>Daily climatology.</strong> Each year&rsquo;s daily mean is smoothed
         with a centred {{SMOOTH_WINDOW}}-day rolling mean (unweighted moving average,
         computed per year so December never bleeds into January; the first/last
         {{SMOOTH_HALF}} {{SMOOTH_HALF_WORD}} keep their raw value) for legibility; leap days are aligned
         across years. The normal is the per-day average over all prior years.</li>
+    <li><strong>Threshold days.</strong> Frost&nbsp;=&nbsp;<code>TN&nbsp;&lt;&nbsp;0</code>,
+        hot&nbsp;day&nbsp;=&nbsp;<code>TX&nbsp;≥&nbsp;{{HOT_TX}}</code>,
+        very&nbsp;hot&nbsp;=&nbsp;<code>TX&nbsp;≥&nbsp;{{VHOT_TX}}</code>,
+        tropical&nbsp;night&nbsp;=&nbsp;<code>TN&nbsp;≥&nbsp;{{TROP_TX}}</code>,
+        counted per complete year and averaged over the first/last complete decade.
+        A fixed threshold means different things in different climates — where it falls
+        near the middle of a city&rsquo;s distribution the caption above says so.</li>
+    <li><strong>Rainfall.</strong> Annual total of daily <code>RR</code> over complete
+        years; the trend is a least-squares slope with its two-sided p-value.
+        Monthly climatology keeps only months with&nbsp;≥&nbsp;27 valid days.</li>
     <li><strong>Trend.</strong> Slope estimated by linear regression (least squares);
         the line-chart curves use LOESS smoothing (span&nbsp;=&nbsp;0.7).</li>
     <li><strong>Reproducibility.</strong> A 4-stage R pipeline
         (<code>R/00_prepare_data.R</code> → <code>R/01_plot.R</code> →
         <code>R/02_report.R</code> → <code>R/03_readme.R</code>), driven by
-        <code>make all</code> (R&nbsp;{{R_VERSION}}, ggplot2).</li>
+        <code>SITE={{SITE_KEY}} make all</code> (R&nbsp;{{R_VERSION}}, ggplot2).</li>
   </ul>
 
   <h2>Data source &amp; citation</h2>
@@ -363,10 +393,18 @@ for (key in names(fills)) {
   html <- gsub(paste0("{{", key, "}}"), fills[[key]], html, fixed = TRUE)
 }
 
-# safety: warn if any placeholder went unfilled
+# Conditional fills (e.g. HOMOGENEITY_NOTE, which fires for one site) leave an
+# empty <p></p> behind on every other site. Markdown collapses a blank line;
+# HTML keeps the element and its margin, so drop the empties here.
+html <- gsub("<p>[[:space:]]*</p>", "", html)
+
+# safety: STOP if any placeholder went unfilled. This was a warning(), but
+# Rscript exits 0 on a warning — so an unfilled {{TOKEN}} would ship verbatim
+# into the committed report, and during `make all-sites` (10 sites) the warning
+# scrolls past unnoticed. A missing fill is a bug, not a note.
 leftover <- regmatches(html, gregexpr("\\{\\{[A-Z_0-9]+\\}\\}", html))[[1]]
 if (length(leftover) > 0)
-  warning("Unfilled placeholders: ", paste(unique(leftover), collapse = ", "))
+  stop("Unfilled placeholders: ", paste(unique(leftover), collapse = ", "))
 
 out <- file.path(PATHS$outputs, "temperature_report.html")
 writeLines(html, out)

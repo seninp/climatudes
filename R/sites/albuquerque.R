@@ -34,15 +34,15 @@ SITE <- list(
   reference_station = "Albuquerque Airport",
   local_station      = "Albuquerque Foothills NE",
   local_has_temp     = TRUE,
-  local_relation_clause = "is Albuquerque's foothills district in the northeast of the city",
+  local_relation_clause = "sits in the foothills district in the northeast of the city, well above the valley-floor airport",
   local_rationale = paste(
     "Albuquerque Foothills NE (station USC00290225), in the northeast of the city, is a",
     "genuinely different microclimate from the valley-floor airport and provides the local",
-    "comparison — though its own temperature reporting has a real gap from late June 2026",
-    "onward (rainfall continues, TMAX/TMIN go blank), confirmed against the raw feed rather",
-    "than a fetch issue here. Albuquerque Airport (station USW00023050) provides the",
-    "temperature trend: one continuous record back to 1931, no splice needed, and flagged by",
-    "NOAA as a GSN station — one of the global network's long-term reference stations."
+    "comparison — though its temperature reporting stops in late June 2026 (rainfall",
+    "continues, TMAX/TMIN go blank), a real gap in the upstream feed, not a fetch issue here.",
+    "Albuquerque Airport (station USW00023050) provides the temperature trend: one continuous",
+    "record back to 1931, no splice needed, and one of NOAA's long-term global climate",
+    "reference stations."
   ),
 
   city = "Albuquerque", region = "New Mexico", country = "USA",

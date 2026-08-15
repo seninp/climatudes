@@ -13,6 +13,23 @@ STATION_EXTRACT <- "stations_daily.csv.gz"   # per-site: <site>$paths$processed/
 MIN_DAYS      <- 330L   # a year needs >= this many valid days to count as "complete"
 SMOOTH_WINDOW <- 3L     # centred rolling-mean window (days) for the daily climatology
 MIN_YTD_DAYS  <- 150L   # a year needs >= this many valid days in the YTD window
+# ...and those days must be SPREAD ACROSS the window, not bunched in part of it:
+# every calendar month the window covers must be at least this fraction present.
+# A raw day-count floor alone is not enough. Albuquerque Airport's feed starts
+# 1931-03-01, so 1931 cleared the 150-day floor for a Jan 1 - Aug 11 window while
+# missing January and February entirely — the two coldest months. Its "Jan-Aug
+# mean" was really a Mar-Aug mean, 3.9 degC too warm, which made 1931 the
+# apparent record holder and shrank the current year's true margin from
+# +1.6 degC to +0.3. A part-of-window mean must not enter a same-window ranking.
+MIN_YTD_MONTH_FRAC <- 1/3
+
+# The longest window EVERY site shares — the latest first-complete-year across
+# all sites (Nouméa, 1951). Used for the cross-site comparison's like-for-like
+# rate column, so a raw-rate ranking cannot be mistaken for a speed ranking when
+# the records run 74 to 151 years. R/04_compare.R asserts no site starts later
+# than this; if one ever does, bump this constant rather than silently comparing
+# a site against a window it does not cover.
+COMMON_YR0 <- 1951L
 
 # ---- temperature-extremes day-count thresholds -------------------------------
 FROST_TX  <- 0    # frost day:      daily minimum TN <  0 °C

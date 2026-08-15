@@ -1,9 +1,10 @@
 # =============================================================================
 # Site: Honolulu (Oʻahu, Hawaiʻi, USA), via NOAA GHCN-Daily.
 #
-# Honolulu International Airport (USW00022521, WMO 91182) has one clean,
-# continuous daily TMAX/TMIN/PRCP record from 1940 to today — no splice
-# needed. No other digitized GHCN-Daily station near Honolulu carries an
+# Honolulu International Airport (USW00022521, WMO 91182) reports daily
+# TMAX/TMIN/PRCP from 1940 to today with no splice needed — though every year
+# of the 1940s falls below the MIN_DAYS completeness bar, so the trend here
+# actually starts at 1950. No other digitized GHCN-Daily station near Honolulu carries an
 # independent temperature record, so the local tier is rainfall-only, the way
 # Karlsruhe-Wolfartsweier is for Karlsruhe — `local_has_temp = FALSE`.
 #
@@ -11,8 +12,8 @@
 # out to have only 6 complete (>= 330 valid days) years in 18 — too sparse and
 # unevenly spaced for a stable LOESS fit (verified: it produces a wildly
 # oscillating curve). Moanalua (USC00516395), a valley neighbourhood between
-# the airport and downtown, has 107 complete years of 122 (1905-> ) and is
-# used instead.
+# the airport and downtown, reports 81 rain years since 1906 of which 80 are
+# complete, and is used instead.
 # =============================================================================
 
 SITE <- list(
@@ -36,10 +37,11 @@ SITE <- list(
   local_rationale = paste(
     "No other digitized GHCN-Daily station near Honolulu carries a temperature record",
     "independent of the airport. Moanalua (station USC00516395), a valley neighbourhood",
-    "between the airport and downtown, has recorded rainfall since 1905 — 107 complete",
-    "years of 122 — and stands in for local rainfall. Honolulu International Airport",
-    "(station USW00022521) provides the temperature trend, a single continuous record",
-    "back to 1940 with no gaps."
+    "between the airport and downtown, has recorded rainfall since 1906 — 80 complete years",
+    "of the 81 it reports — and stands in for local rainfall. Honolulu International Airport",
+    "(station USW00022521) provides the temperature trend: its readings begin in 1940, but the",
+    "1940s years all fall short of the completeness rule used here, so the trend starts at its",
+    "first complete year, 1950, and runs unbroken from there."
   ),
 
   city = "Honolulu", region = "Oʻahu, Hawaiʻi", country = "USA",

@@ -125,6 +125,26 @@ fit_ref <- lm(TMEAN ~ year, data = ref)
 slope_dec_ref <- unname(coef(fit_ref)[2]) * 10
 yr0 <- min(ref$year); yr1 <- max(ref$year)
 rise_ref <- unname(coef(fit_ref)[2]) * (yr1 - yr0)
+n_years_ref <- nrow(ref)   # COMPLETE years, not the yr1-yr0 span
+
+# Slope over the window every site shares (COMMON_YR0, R/lib/common.R), so the
+# cross-site comparison can show a like-for-like rate beside each city's own.
+# Without it the ranked chart reads as a speed ranking when much of its middle
+# is really record length: Zurich and Karlsruhe each gain 3 places on the common
+# window, Honolulu and Nouméa each lose 3.
+ref_common <- ref[year >= COMMON_YR0]
+slope_dec_ref_common <- if (nrow(ref_common) >= 20)
+  unname(coef(lm(TMEAN ~ year, data = ref_common))[2]) * 10 else NA_real_
+
+# Separate TN and TX trends. A station whose nights cool while its days warm is
+# showing a widening diurnal range, which is the opposite of the greenhouse
+# signature and a standard red flag for station-history artifacts (site moves,
+# observation-time drift) in an unadjusted record. Computed, not asserted, so
+# the caveat in R/lib/narrative.R fires only where the data actually shows it.
+slope_dec_tn <- unname(coef(lm(TN ~ year, data = ref))[2]) * 10
+slope_dec_tx <- unname(coef(lm(TX ~ year, data = ref))[2]) * 10
+dtr_early <- mean(ref[year <= yr0 + 9]$TX - ref[year <= yr0 + 9]$TN)
+dtr_recent <- mean(ref[year >= yr1 - 9]$TX - ref[year >= yr1 - 9]$TN)
 
 if (SITE$local_has_temp) {
   fit_local <- lm(TMEAN ~ year, data = local)
@@ -399,7 +419,30 @@ win_lab  <- sprintf("Jan 1 – %s %d", month.abb[cutM], cutD)   # e.g. "Jan 1 �
 cutoff_doy <- as.integer(strftime(as.Date(sprintf("2001-%02d-%02d", cutM, cutD)), "%j"))
 YTD_MIN_DAYS <- min(MIN_YTD_DAYS, floor(0.85 * cutoff_doy))
 
-ytd <- refd[in_window(month, day), .(ytd = mean(TNTXM), n = .N), by = year][n >= YTD_MIN_DAYS]
+# A year also has to COVER the window, not merely have enough days somewhere
+# inside it — see MIN_YTD_MONTH_FRAC in R/lib/common.R for the Albuquerque 1931
+# case this rejects. Coverage is measured per calendar month against the days
+# the window actually contains, since the cutoff month is partial by definition.
+# (Feb is counted as 28 days, so a leap year reads slightly over 100% — harmless.)
+MONTH_LEN <- c(31L, 28L, 31L, 30L, 31L, 30L, 31L, 31L, 30L, 31L, 30L, 31L)
+win_ref <- data.table(month = rep(1:12, times = MONTH_LEN),
+                      day   = unlist(lapply(MONTH_LEN, seq_len)))
+win_ref <- win_ref[in_window(month, day)]
+win_month_len <- win_ref[, .(win_len = .N), by = month]
+
+cover <- refd[in_window(month, day), .(nd = .N), by = .(year, month)]
+cover <- merge(cover, win_month_len, by = "month")
+# A month absent entirely is absent from `cover`, so the count test catches it.
+spread <- cover[, .(covered_months = .N, min_frac = min(nd / win_len)), by = year]
+spread_ok <- spread[covered_months == nrow(win_month_len) &
+                      min_frac >= MIN_YTD_MONTH_FRAC]$year
+
+ytd_all <- refd[in_window(month, day), .(ytd = mean(TNTXM), n = .N), by = year]
+ytd <- ytd_all[n >= YTD_MIN_DAYS & year %in% spread_ok]
+dropped <- setdiff(ytd_all[n >= YTD_MIN_DAYS]$year, ytd$year)
+if (length(dropped))
+  message(sprintf("  YTD: dropped %s — enough days, but not spread across %s",
+                  paste(dropped, collapse = ", "), win_lab))
 setorder(ytd, year)
 ytd[, is_cur := year == cur_year]
 
@@ -581,14 +624,32 @@ ext_ann <- tb[, .(
 setorder(ext_ann, year)
 edec1 <- ext_ann[year <= min(year) + 9]   # first complete decade
 edec2 <- ext_ann[year >= max(year) - 9]   # last complete decade
+# Where does the hot-day threshold SIT in this city's distribution? A fixed
+# 30 degC line means very different things across ten climates. At Honolulu the
+# recent-decade median TX is 29.4 degC, so the threshold cuts through the middle
+# of the distribution and a mean shift of +1.8 degC reads as a 4x jump in the
+# count (42 -> 175); at Castanet 30 degC sits out near the 90th percentile, where
+# the same count is a genuine tail measure. Reporting the ratio without saying
+# which case applies overstates the tropical sites. Computed here so the caveat
+# in R/lib/narrative.R fires only where the threshold really is mid-distribution.
+tx_recent <- tb[year >= max(ext_ann$year) - 9 & !is.na(TX)]$TX
+hot_thr_pctile <- mean(tx_recent < HOT_TX)              # 0.5 = dead centre
+hot_thr_near   <- mean(abs(tx_recent - HOT_TX) <= 1)    # crowding at the line
+tx_mean_early  <- mean(tb[year %in% edec1$year & !is.na(TX)]$TX)
+tx_mean_recent <- mean(tx_recent)
+
 extremes <- list(
   yr0 = min(ext_ann$year), yr1 = max(ext_ann$year),
   frost_thr = FROST_TX, hot_thr = HOT_TX, vhot_thr = VHOT_TX, trop_thr = TROPNIGHT,
   frost_early = round(mean(edec1$frost)), frost_recent = round(mean(edec2$frost)),
   hot_early   = round(mean(edec1$hot)),   hot_recent   = round(mean(edec2$hot)),
   vhot_early  = round(mean(edec1$vhot)),  vhot_recent  = round(mean(edec2$vhot)),
-  trop_early  = round(mean(edec1$trop)),  trop_recent  = round(mean(edec2$trop))
+  trop_early  = round(mean(edec1$trop)),  trop_recent  = round(mean(edec2$trop)),
+  hot_thr_pctile = hot_thr_pctile, hot_thr_near = hot_thr_near,
+  tx_shift = tx_mean_recent - tx_mean_early
 )
+message(sprintf("Hot-day threshold sits at p%.0f of recent TX (%.0f%% of days within +/-1 degC); mean TX shift %+.2f",
+                100 * hot_thr_pctile, 100 * hot_thr_near, tx_mean_recent - tx_mean_early))
 message(sprintf("Extremes (%d-%d decade vs last): frost %d->%d | hot %d->%d | v.hot %d->%d | trop.nights %d->%d",
                 extremes$yr0, extremes$yr0 + 9,
                 extremes$frost_early, extremes$frost_recent,
@@ -788,6 +849,10 @@ stats <- list(
   slope_dec_local = slope_dec_local,
   slope_dec_ref_localwin = slope_dec_ref_localwin,
   local_yr0 = local_yr0, local_yr1 = local_yr1,
+  n_years_ref = n_years_ref,
+  common_yr0 = COMMON_YR0, slope_dec_ref_common = slope_dec_ref_common,
+  slope_dec_tn = slope_dec_tn, slope_dec_tx = slope_dec_tx,
+  dtr_early = dtr_early, dtr_recent = dtr_recent,
   mean_recent = round(mean(ref[year >= yr1 - 9]$TMEAN), 2),
   mean_early  = round(mean(ref[year <= yr0 + 9]$TMEAN), 2),
   clim_yr0 = min(prev_years$year), clim_yr1 = max(prev_years$year),
@@ -813,6 +878,12 @@ stats <- list(
     rec_val   = round(best_oth$ytd, 1),
     delta     = round(delta, 1),
     normal    = round(normal, 1),
+    # The span the `normal` is averaged over. The prose must NAME it: this
+    # baseline is the whole qualifying record, so a longer record gives a cooler
+    # normal and a larger anomaly. Zurich's "+3.5 degC above normal" is against
+    # an 1882-2025 mean and Karlsruhe's "+2.4" against 1876-2025 — calling both
+    # "the long-term normal" invites a comparison the numbers do not support.
+    norm_yr0  = min(ytd$year), norm_yr1 = norm_yr1,
     cur_anom  = round(cur_anom, 1)
   ),
   extremes = extremes,

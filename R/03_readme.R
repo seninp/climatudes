@@ -77,9 +77,8 @@ template <- '## A warming climate, seen from {{CITY}}
 
 *{{SOURCE_NAME}} daily temperature records, {{YR0}} to {{YR1}}{{CUR_YEAR_CLAUSE}}.*
 
-{{SOURCE_NAME}} daily records for the {{CITY}} area tell an unambiguous story:
-since {{SINCE_PHRASE}}, minimum, maximum and mean temperatures have all risen —
-steadily and continuously.
+{{SOURCE_NAME}}’s daily records for the {{CITY}} area are unambiguous: since
+{{SINCE_PHRASE}}, daily minimum, maximum and mean temperatures have all risen.
 
 | Headline number | Value |
 |---|---:|
@@ -89,7 +88,7 @@ steadily and continuously.
 | Frost days per year, {{EXT_SPAN0}} → {{EXT_SPAN1}} | **{{FROST_EARLY}} → {{FROST_RECENT}}** |
 | Hot days (≥ {{HOT_TX}} °C) per year, {{EXT_SPAN0}} → {{EXT_SPAN1}} | **{{HOT_EARLY}} → {{HOT_RECENT}}** |
 | Complete station-years analysed | **{{N_STATION_YEARS}}** |
-| {{CUR_YEAR}} year-to-date ({{YTD_WINDOW}}), against {{YTD_NYEARS_PRIOR}} prior years | {{YTD_STANDING}} |
+| {{YTD_ROW_LABEL}}, against {{YTD_NYEARS_PRIOR}} prior years | {{YTD_STANDING}} |
 
 ### The long view: annual means
 
@@ -102,15 +101,16 @@ At {{REF_STATION}} — the station with the longest record ({{YR0}}→{{YR1}}) �
 mean temperature rises by **+{{SLOPE_DEC}} °C per decade**, about **+{{RISE}} °C** over the
 whole period. {{LOCAL_TEMP_PARAGRAPH}}
 
+{{HOMOGENEITY_NOTE}}
+
 ### {{YTD_SECTION_YEAR}}, against every year before it
 
-![Per-year mean over the same Jan-to-cutoff window, as a departure from the long-term normal, with {{CUR_YEAR}} {{YTD_ALT_SUFFIX}}]({{FIG_YTD}})
+![Per-year mean over the same Jan-to-cutoff window, as a departure from the {{YTD_NORM_SPAN}} mean, with {{CUR_YEAR}} {{YTD_ALT_SUFFIX}}]({{FIG_YTD}})
 
 <sub>Each bar is a year’s mean over the <em>same window</em> — <strong>{{YTD_WINDOW}}</strong> —
-shown as its departure from the long-term normal ({{YTD_NORMAL}} °C): red above, blue
-below. Comparing each year over the identical part-of-year is the only fair way to place
-any one year against every other. The bars swing from blue to red over
-the decades — the warming{{YTD_TALLEST_CLAUSE}}.</sub>
+shown as its departure from the {{YTD_NORM_SPAN}} mean ({{YTD_NORMAL}} °C): red above, blue
+below. {{YTD_FAIRNESS_SENTENCE}} The bars swing from blue to red over
+the decades{{YTD_TALLEST_CLAUSE}}.</sub>
 
 {{YTD_SENTENCE}}
 
@@ -158,9 +158,8 @@ maximum (TX), “coldest” the lowest daily minimum (TN).
 
 ### {{EXTREMES_HEADER}}
 
-A degree of warming is abstract; the count of extreme days is not. Comparing
-{{REF_STATION}}’s first complete decade ({{EXT_SPAN0}}) with its last ({{EXT_SPAN1}}),
-the everyday texture of the year has changed sharply:
+A degree of warming is abstract; a count of days is not. {{REF_STATION}}’s first
+complete decade ({{EXT_SPAN0}}) against its last ({{EXT_SPAN1}}):
 
 | Threshold days per year | {{EXT_SPAN0}} | {{EXT_SPAN1}} |
 |---|---:|---:|
@@ -170,13 +169,12 @@ the everyday texture of the year has changed sharply:
 | Tropical nights (min ≥ {{TROP_TX}} °C) | {{TROP_EARLY}} | **{{TROP_RECENT}}** |
 
 <sub>Counts of days per year crossing each threshold, averaged over the first and last
-complete decades. {{EXTREMES_CLOSING}}</sub>
+complete decades of the record.{{EXTREMES_CLOSING}}</sub>
 
 ### What about the rain?
 
-Temperature is only half of a climate. Rainfall tells a very different — and much
-quieter — story: over the same {{RAIN_NYEARS}} years, annual precipitation at
-{{REF_STATION}} shows {{RAIN_SIG_CLAUSE}}.
+Temperature is only half of a climate. Over {{RAIN_YR0}}–{{RAIN_YR1}} ({{RAIN_NYEARS}} years),
+annual precipitation at {{REF_STATION}} shows {{RAIN_SIG_CLAUSE}}.
 
 ![Annual rainfall totals around {{CITY}}]({{FIG_RAIN}})
 
@@ -202,10 +200,10 @@ wettest month on average ({{WET_MONTH_MM}} mm), {{DRY_MONTH}} the driest
   rainfall = `RR` (daily precipitation, in mm).
 - **Annual aggregation.** Arithmetic mean of daily values over each calendar year. The
   long-term trend uses only complete years (≥ {{MIN_DAYS}} valid days). Where the current
-  year is still in progress, it is shown separately — as a hollow “to date” marker on the
-  trend chart, and (for a fair record comparison) against the same calendar window
+  year is still in progress, the pipeline shows it separately — as a hollow “to date” marker
+  on the trend chart, and (for a fair record comparison) against the same calendar window
   (Jan 1 → cutoff) of every prior year, keeping only years with ≥ {{MIN_YTD_DAYS}} valid
-  days in that window.
+  days in that window *and* data spread across the whole window, not bunched in part of it.
 - **Daily climatology.** Each year’s daily mean is smoothed with a centred
   {{SMOOTH_WINDOW}}-day rolling mean (unweighted moving average, computed per year so
   December never bleeds into January; the first/last {{SMOOTH_HALF}} {{SMOOTH_HALF_WORD}} keep their raw
@@ -213,7 +211,9 @@ wettest month on average ({{WET_MONTH_MM}} mm), {{DRY_MONTH}} the driest
   average over all prior years.
 - **Threshold days.** Frost = `TN < 0`, hot day = `TX ≥ {{HOT_TX}}`, very hot =
   `TX ≥ {{VHOT_TX}}`, tropical night = `TN ≥ {{TROP_TX}}`, counted per complete year and
-  averaged over the first/last complete decade.
+  averaged over the first/last complete decade. A fixed threshold means different things
+  in different climates — where it falls near the middle of a city’s distribution the
+  caption above says so.
 - **Rainfall.** Annual total of daily `RR` over complete years; the trend is a
   least-squares slope with its two-sided p-value. Monthly climatology keeps only months
   with ≥ 27 valid days.
@@ -222,7 +222,7 @@ wettest month on average ({{WET_MONTH_MM}} mm), {{DRY_MONTH}} the driest
 - **Reproducibility.** A 4-stage R pipeline (`R/00_prepare_data.R` → `R/01_plot.R` →
   `R/02_report.R` → `R/03_readme.R`), driven by `SITE={{SITE_KEY}} make all`. The figures
   above and the numbers in this section are regenerated from the source data on every
-  run — see [Data source](#data-source--citation) below for the full citation.
+  run — see [Data sources](#data-sources) below for the full citation.
 
 <sub>Figures and numbers above are generated — edit `R/03_readme.R`, not this block.</sub>'
 
@@ -232,7 +232,8 @@ fills <- vapply(fills, resolve_bold_md, character(1))
 fills <- vapply(fills, resolve_italic_md, character(1))
 
 fills <- c(fills,
-  SITE_KEY  = SITE$key,
+  # SITE_KEY now comes from build_common_fills() — both stages print the
+  # reproduce-me command, so it belongs in the shared fills, not here.
   ROWS      = rows_md,
   RECORD_ROWS = record_rows_md,
   FIG_SERIES = fig_series, FIG_YTD = fig_ytd, FIG_CLIM = fig_clim,
@@ -244,10 +245,13 @@ for (key in names(fills)) {
   block <- gsub(paste0("{{", key, "}}"), fills[[key]], block, fixed = TRUE)
 }
 
-# safety: warn if any placeholder went unfilled
+# safety: STOP if any placeholder went unfilled. This was a warning(), but
+# Rscript exits 0 on a warning — so an unfilled {{TOKEN}} would ship verbatim
+# into the committed README, and during `make all-sites` (10 sites) the warning
+# scrolls past unnoticed. A missing fill is a bug, not a note.
 leftover <- regmatches(block, gregexpr("\\{\\{[A-Z_0-9]+\\}\\}", block))[[1]]
 if (length(leftover) > 0)
-  warning("Unfilled placeholders: ", paste(unique(leftover), collapse = ", "))
+  stop("Unfilled placeholders: ", paste(unique(leftover), collapse = ", "))
 
 # ---- splice the block into README.md between this site's markers -----------
 lines <- readLines(readme, warn = FALSE)
