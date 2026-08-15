@@ -79,7 +79,6 @@ if (any(cmp$yr0 > COMMON_YR0))
 
 N_SITES     <- nrow(cmp)
 N_AUTOMATED <- sum(!cmp$manual_source)
-N_MANUAL    <- sum(cmp$manual_source)
 # Spelled out, since these appear in prose. Hardcoding "ten" meant every new
 # city silently made the page lie.
 num_word <- function(n) c("one","two","three","four","five","six","seven","eight",
@@ -238,8 +237,9 @@ amounts of evidence — the record span and the count of complete years are in t
 ', paste(table_rows, collapse = "\n"), '
 
 † Moscow and Voronezh are manually exported from Roshydromet’s AISORI-M (login-gated, no automated
-refresh), so their "current through" date lags the automated feeds by however long it has been since
-the last hand export. See each city’s own "Why only one station?" note below.
+refresh), so their "current through" date lags the other ', num_word(N_AUTOMATED), ' sites’ automated feeds by
+however long it has been since the last hand export. See each city’s own "Why only one station?"
+note below.
 
 Each row names the window its standing is measured over, because the rows do not all make the same
 claim. The windows run from Voronezh’s 59 midwinter days through Irvine’s five months to the eight

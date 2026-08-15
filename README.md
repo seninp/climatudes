@@ -13,7 +13,7 @@ consistent temperature signal finds no matching one in precipitation.
 Start with the ranked comparison below; its city links lead to the chapters,
 which all follow the same eight sections in the same order.
 
-Nine sites come from national open-data portals. Moscow and Voronezh come from
+Most sites come from national open-data portals. Moscow and Voronezh come from
 Roshydromet's AISORI-M, which is **not** openly licensed — personal,
 non-commercial use only (see [Licence](#licence)).
 
@@ -50,8 +50,9 @@ amounts of evidence — the record span and the count of complete years are in t
 | [Santa Fe](#a-warming-climate-seen-from-santa-fe) | USA | 1874→2025 (152 yr, 138 complete) | **+0.08** | +0.13 | #1 of 147 — record | 2026, Jan 1 – Jun 30 · 181 d | Jun 30, 2026 |
 
 † Moscow and Voronezh are manually exported from Roshydromet’s AISORI-M (login-gated, no automated
-refresh), so their "current through" date lags the automated feeds by however long it has been since
-the last hand export. See each city’s own "Why only one station?" note below.
+refresh), so their "current through" date lags the other nine sites’ automated feeds by
+however long it has been since the last hand export. See each city’s own "Why only one station?"
+note below.
 
 Each row names the window its standing is measured over, because the rows do not all make the same
 claim. The windows run from Voronezh’s 59 midwinter days through Irvine’s five months to the eight
