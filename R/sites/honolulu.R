@@ -44,6 +44,11 @@ SITE <- list(
     "first complete year, 1950, and runs unbroken from there."
   ),
 
+  # Reference-station geography. Source: NOAA ghcnd-stations.txt, station USW00022521.
+  # Latitude drives the hemisphere test in the Köppen classification, so it
+  # must be the real signed value, not a magnitude.
+  latitude = 21.3239, longitude = -157.9394, elevation_m = 2,
+
   city = "Honolulu", region = "Oʻahu, Hawaiʻi", country = "USA",
 
   citation = list(

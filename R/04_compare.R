@@ -62,7 +62,12 @@ load_site <- function(key) {
     window = y$window, window_days = y$window_days,
     ytd_rank = y$rank, ytd_n = y$n_years, is_record = isTRUE(y$is_record),
     has_ytd = isTRUE(y$has_ytd),
-    manual_source = identical(site$source, "meteoru")
+    manual_source = identical(site$source, "meteoru"),
+    ref_station = site$reference_station,
+    latitude = stats$latitude, elevation_m = stats$elevation_m,
+    koppen = stats$koppen, koppen_label = stats$koppen_label,
+    koppen_near = stats$koppen_borderline,
+    koppen_yr0 = stats$koppen_yr0, koppen_yr1 = stats$koppen_yr1
   )
 }
 
@@ -203,6 +208,30 @@ row_md <- function(r) {
 }
 table_rows <- vapply(seq_len(nrow(plot_ord)), function(i) row_md(plot_ord[i]), character(1))
 
+# ---- CONTEXT TABLE — what kind of places these are ---------------------------
+# Kept separate from the results table above rather than bolted onto it: that one
+# answers "how fast", this one answers "where and what kind of place", and an
+# eleven-column table answers neither legibly. Ordered north to south, which is
+# the one ordering a reader can check against the numbers in front of them.
+geo_ord <- cmp[order(-latitude)]
+hemi <- function(lat) sprintf("%.1f°%s", abs(lat), if (lat >= 0) "N" else "S")
+geo_rows <- vapply(seq_len(nrow(geo_ord)), function(i) {
+  r <- geo_ord[i]
+  clim <- if (is.na(r$koppen)) "—" else
+    sprintf("**%s** — %s%s", r$koppen, r$koppen_label,
+            if (!is.na(r$koppen_near)) " ‡" else "")
+  sprintf("| [%s](%s) | %s | %s | %s m | %s |",
+          r$city, chapter_anchor(r$city), r$country, hemi(r$latitude),
+          format(round(r$elevation_m), big.mark = ","), clim)
+}, character(1))
+# Only mention the boundary footnote if some site actually sits on one.
+near_any <- cmp[!is.na(koppen_near)]
+clim_note <- if (nrow(near_any))
+  sprintf(paste0("\n‡ Within one baseline period of a class boundary, so reference works using a ",
+                 "different 30-year normal may place these differently: %s. Köppen classes are hard ",
+                 "thresholds, not gradients.\n"),
+          paste(sprintf("%s (%s)", near_any$city, near_any$koppen_near), collapse = "; ")) else ""
+
 # Named exemplars for the record-length caveat, picked from the data rather than
 # hardcoded — "a century longer" was wrong (the widest gap is 77 years) and the
 # two cities named drifted out of date as sites were added.
@@ -265,6 +294,26 @@ standings substantially, and several cities holding a "record" badge here do not
 a January-to-May mean and a January-to-August mean are different statistics. A "#55 of 84" over two
 months of winter is not the same kind of statement as an eight-month "#5 of 76".
 ', nm_note, '
+### What kind of places these are
+
+Warming rates read differently once you know whether a city sits at sea level in the tropics
+or on a high desert plateau. North to south:
+
+| City | Country | Latitude | Elevation | Climate (Köppen, last ', KOPPEN_YEARS, ' complete years) |
+|---|---|---:|---:|---|
+', paste(geo_rows, collapse = "\n"), '
+
+Latitude and elevation are the **reference station\'s**, not the city centre\'s: they are where the
+measurements were actually taken, which is the honest thing to print beside a rate derived from
+them. Sources are each provider\'s own station metadata, except Moscow and Voronezh — their
+AISORI-M export carries no coordinates, so those two come from the WMO station registry.
+
+The climate class is computed from each station\'s own monthly normals rather than looked up, which
+has two consequences worth stating. It describes **the station**, not the city: Honolulu Airport,
+on the dry leeward side of Oʻahu, classifies drier than windward Honolulu would. And the ',
+KOPPEN_YEARS, ' years are each station\'s most recent ', KOPPEN_YEARS, ' *complete* ones, so the
+exact span differs by a few years where a record has gaps.
+', clim_note, '
 ## How every chapter is built
 
 The comparison above is only meaningful because every city is measured the same way. That

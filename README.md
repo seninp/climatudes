@@ -65,6 +65,37 @@ months of winter is not the same kind of statement as an eight-month "#5 of 76".
 
 The two New Mexico rows deserve a note, because they look like a contradiction. Santa Fe and Albuquerque sit about 90 km apart in the same high-desert climate, yet Santa Fe warms at +0.08 °C/decade against Albuquerque's +0.18. Record length is not the explanation — over the shared 1951-onward window they are still +0.13 and +0.22. The difference is in the stations: Santa Fe's daily minima have *fallen* while its maxima rose, widening the gap between day and night, which is the opposite of the greenhouse signature and a known symptom of station history (a site move, a change in reading time) in a record that has not been homogenised. GHCN-Daily is raw. Read the slowest bar on this chart as a measurement result, not as evidence that Santa Fe is barely warming; its own airport station, and its neighbour here, both give roughly +0.2. See Santa Fe's chapter for the numbers.
 
+### What kind of places these are
+
+Warming rates read differently once you know whether a city sits at sea level in the tropics
+or on a high desert plateau. North to south:
+
+| City | Country | Latitude | Elevation | Climate (Köppen, last 30 complete years) |
+|---|---|---:|---:|---|
+| [Moscow](#a-warming-climate-seen-from-moscow) | Russia | 55.8°N | 156 m | **Dfb** — humid continental, warm summer |
+| [Voronezh](#a-warming-climate-seen-from-voronezh) | Russia | 51.6°N | 154 m | **Dfa** — humid continental, hot summer ‡ |
+| [Karlsruhe](#a-warming-climate-seen-from-karlsruhe) | Germany | 49.0°N | 116 m | **Cfb** — temperate oceanic |
+| [Zurich](#a-warming-climate-seen-from-zurich) | Switzerland | 47.4°N | 604 m | **Cfb** — temperate oceanic |
+| [Lyon](#a-warming-climate-seen-from-lyon) | France | 45.7°N | 202 m | **Cfa** — humid subtropical |
+| [Castanet-Tolosan](#a-warming-climate-seen-from-castanet-tolosan) | France | 43.6°N | 151 m | **Cfa** — humid subtropical |
+| [Santa Fe](#a-warming-climate-seen-from-santa-fe) | USA | 35.6°N | 2,059 m | **BSk** — cold semi-arid |
+| [Albuquerque](#a-warming-climate-seen-from-albuquerque) | USA | 35.0°N | 1,619 m | **BWk** — cold desert ‡ |
+| [Irvine](#a-warming-climate-seen-from-irvine) | USA | 33.7°N | 165 m | **BSh** — hot semi-arid |
+| [Honolulu](#a-warming-climate-seen-from-honolulu) | USA | 21.3°N | 2 m | **BSh** — hot semi-arid |
+| [Nouméa](#a-warming-climate-seen-from-nouméa) | France | 22.3°S | 69 m | **As** — tropical savanna, dry summer |
+
+Latitude and elevation are the **reference station's**, not the city centre's: they are where the
+measurements were actually taken, which is the honest thing to print beside a rate derived from
+them. Sources are each provider's own station metadata, except Moscow and Voronezh — their
+AISORI-M export carries no coordinates, so those two come from the WMO station registry.
+
+The climate class is computed from each station's own monthly normals rather than looked up, which
+has two consequences worth stating. It describes **the station**, not the city: Honolulu Airport,
+on the dry leeward side of Oʻahu, classifies drier than windward Honolulu would. And the 30 years are each station's most recent 30 *complete* ones, so the
+exact span differs by a few years where a record has gaps.
+
+‡ Within one baseline period of a class boundary, so reference works using a different 30-year normal may place these differently: Voronezh (hot/warm summer); Albuquerque (steppe/desert). Köppen classes are hard thresholds, not gradients.
+
 ## How every chapter is built
 
 The comparison above is only meaningful because every city is measured the same way. That

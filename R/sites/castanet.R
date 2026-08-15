@@ -32,6 +32,11 @@ SITE <- list(
     "depth needed to see the underlying trend and to draw the day-by-day climatology."
   ),
 
+  # Reference-station geography. Source: Meteo-France station metadata (LAT/LON/ALTI in the daily CSV), station 31069001.
+  # Latitude drives the hemisphere test in the Köppen classification, so it
+  # must be the real signed value, not a magnitude.
+  latitude = 43.621, longitude = 1.378833, elevation_m = 151,
+
   city = "Castanet-Tolosan", region = "Haute-Garonne", country = "France",
 
   citation = list(

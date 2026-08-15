@@ -126,3 +126,101 @@ write_extract <- function(dat, dest) {
     stop("gzip compression of the station extract failed (exit ", ret, ").")
   message(sprintf("Wrote %d rows -> %s (%.0f KB)", nrow(dat), dest, file.size(dest) / 1024))
 }
+
+# ---- Köppen-Geiger climate classification ------------------------------------
+# Computed from a station's own monthly normals rather than asserted, for the
+# same reason every other claim here is computed: a hardcoded "Cfb" cannot be
+# checked and goes stale silently. Follows the standard Peel/Finlayson/McMahon
+# (2007) formulation of the criteria.
+#
+# Two things to be honest about when reading the result:
+#  * It classifies THE REFERENCE STATION, not the city. A leeward airport can
+#    land in a drier class than the city it serves — Honolulu Airport takes
+#    about a third of the rain that windward Oʻahu does.
+#  * Classes sit on hard thresholds, so a station near one can flip between
+#    neighbouring classes with the baseline period. KOPPEN_YEARS below fixes the
+#    baseline at the most recent 30 complete years, which describes the climate
+#    a reader lives in now rather than the record average.
+KOPPEN_YEARS <- 30L
+
+koppen_code <- function(tmon, pmon, southern) {
+  if (anyNA(tmon) || anyNA(pmon)) return(NA_character_)
+  Tann <- mean(tmon); Pann <- sum(pmon)
+  Thot <- max(tmon);  Tcold <- min(tmon)
+  n10  <- sum(tmon >= 10)
+  Pdry <- min(pmon)
+  # "Summer" is the warmer half-year: Apr-Sep north of the equator, Oct-Mar south.
+  summer <- if (southern) c(10:12, 1:3) else 4:9
+  winter <- setdiff(1:12, summer)
+  Psdry <- min(pmon[summer]); Pswet <- max(pmon[summer])
+  Pwdry <- min(pmon[winter]); Pwwet <- max(pmon[winter])
+  # Aridity threshold depends on WHEN the rain falls, not just how much.
+  frac_summer <- sum(pmon[summer]) / Pann
+  Pthr <- if (frac_summer >= 0.7) 2 * Tann + 28 else
+          if (frac_summer <= 0.3) 2 * Tann else 2 * Tann + 14
+
+  if (Pann < 10 * Pthr) {                                   # B — arid
+    paste0("B", if (Pann < 5 * Pthr) "W" else "S",
+                if (Tann >= 18) "h" else "k")
+  } else if (Tcold >= 18) {                                 # A — tropical
+    if (Pdry >= 60) "Af"
+    else if (Pdry >= 100 - Pann / 25) "Am"
+    else paste0("A", if (which.min(pmon) %in% summer) "s" else "w")
+  } else if (Thot > 10) {                                   # C / D
+    main <- if (Tcold > 0) "C" else "D"
+    second <- if (Psdry < 40 && Psdry < Pwwet / 3) "s" else
+              if (Pwdry < Pswet / 10) "w" else "f"
+    third <- if (Thot >= 22) "a" else if (n10 >= 4) "b" else
+             if (main == "D" && Tcold < -38) "d" else "c"
+    paste0(main, second, third)
+  } else "E"                                                # polar
+}
+
+# Plain-language gloss, so the table does not require the reader to know the codes.
+KOPPEN_LABELS <- c(
+  Af = "tropical rainforest", Am = "tropical monsoon",
+  Aw = "tropical savanna, dry winter", As = "tropical savanna, dry summer",
+  BWh = "hot desert", BWk = "cold desert",
+  BSh = "hot semi-arid", BSk = "cold semi-arid",
+  Csa = "Mediterranean, hot summer", Csb = "Mediterranean, warm summer",
+  Cfa = "humid subtropical", Cfb = "temperate oceanic", Cfc = "subpolar oceanic",
+  Cwa = "humid subtropical, dry winter", Cwb = "temperate, dry winter",
+  Dfa = "humid continental, hot summer", Dfb = "humid continental, warm summer",
+  Dfc = "subarctic", Dfd = "extremely cold subarctic",
+  Dsa = "continental, dry hot summer", Dsb = "continental, dry warm summer",
+  Dwa = "continental, dry winter", Dwb = "continental, dry warm summer",
+  E = "polar")
+koppen_label <- function(code) if (is.na(code)) NA_character_ else
+  unname(ifelse(code %in% names(KOPPEN_LABELS), KOPPEN_LABELS[code], code))
+
+# Köppen classes sit on hard thresholds, so a station sitting almost exactly on
+# one gets a label that flips with the baseline period — Albuquerque's 30-year
+# rainfall is within about 5 mm of the steppe/desert line, and Voronezh's warmest
+# month is within a tenth of a degree of the hot/warm-summer split. Reference
+# works that use a different normal period will disagree in exactly those cases.
+# Report which sites are near a boundary rather than presenting them as settled.
+koppen_borderline <- function(tmon, pmon, southern, tol_frac = 0.05, tol_deg = 0.5) {
+  if (anyNA(tmon) || anyNA(pmon)) return(NA_character_)
+  code <- koppen_code(tmon, pmon, southern)
+  if (is.na(code)) return(NA_character_)
+  main <- substr(code, 1, 1)
+  Tann <- mean(tmon); Pann <- sum(pmon)
+  summer <- if (southern) c(10:12, 1:3) else 4:9
+  frac_summer <- sum(pmon[summer]) / Pann
+  Pthr <- if (frac_summer >= 0.7) 2 * Tann + 28 else
+          if (frac_summer <= 0.3) 2 * Tann else 2 * Tann + 14
+  near <- function(x, target, tol) abs(x - target) <= tol
+  r <- character(0)
+  # Only test boundaries that this class actually sits on. The summer-heat and
+  # winter-cold letters exist only for C and D, so checking Thot against 22 for an
+  # arid station reported a "hot/warm summer" boundary that means nothing there —
+  # Santa Fe (BSk) was flagged for a letter its code does not have.
+  if (near(Pann, 10 * Pthr, tol_frac * 10 * Pthr)) r <- c(r, "arid/humid")
+  if (main == "B" && near(Pann, 5 * Pthr, tol_frac * 5 * Pthr)) r <- c(r, "steppe/desert")
+  if (main %in% c("C", "D")) {
+    if (near(max(tmon), 22, tol_deg)) r <- c(r, "hot/warm summer")
+    if (near(min(tmon),  0, tol_deg)) r <- c(r, "temperate/continental")
+  }
+  if (main %in% c("A", "C") && near(min(tmon), 18, tol_deg)) r <- c(r, "tropical/temperate")
+  if (length(r)) paste(r, collapse = ", ") else NA_character_
+}

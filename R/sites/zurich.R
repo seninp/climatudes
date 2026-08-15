@@ -39,6 +39,11 @@ SITE <- list(
     "the day-by-day climatology."
   ),
 
+  # Reference-station geography. Source: MeteoSwiss ogd-nbcn_meta_stations.csv, station SMA.
+  # Latitude drives the hemisphere test in the Köppen classification, so it
+  # must be the real signed value, not a magnitude.
+  latitude = 47.381003, longitude = 8.567194, elevation_m = 604,
+
   city = "Zurich", region = "Kanton Zürich", country = "Switzerland",
 
   citation = list(

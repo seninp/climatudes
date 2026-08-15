@@ -54,6 +54,11 @@ SITE <- list(
     "sounder basis for a slope than a longer record with a hole through its middle."
   ),
 
+  # Reference-station geography. Source: Meteo-France station metadata (LAT/LON/ALTI in the daily CSV), station 69029001.
+  # Latitude drives the hemisphere test in the Köppen classification, so it
+  # must be the real signed value, not a magnitude.
+  latitude = 45.721333, longitude = 4.949167, elevation_m = 202,
+
   city = "Lyon", region = "Rhône", country = "France",
 
   citation = list(

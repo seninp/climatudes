@@ -45,6 +45,11 @@ SITE <- list(
     "reference stations."
   ),
 
+  # Reference-station geography. Source: NOAA ghcnd-stations.txt, station USW00023050.
+  # Latitude drives the hemisphere test in the Köppen classification, so it
+  # must be the real signed value, not a magnitude.
+  latitude = 35.0419, longitude = -106.6156, elevation_m = 1619,
+
   city = "Albuquerque", region = "New Mexico", country = "USA",
 
   citation = list(

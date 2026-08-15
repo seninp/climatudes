@@ -42,6 +42,11 @@ SITE <- list(
     "station selected would let a future update add that pairing here too."
   ),
 
+  # Reference-station geography. Source: WMO station registry, index 27612 -- NOT from the AISORI-M export, which carries no coordinates.
+  # Latitude drives the hemisphere test in the Köppen classification, so it
+  # must be the real signed value, not a magnitude.
+  latitude = 55.833, longitude = 37.617, elevation_m = 156,
+
   city = "Moscow", region = "Moscow", country = "Russia",
 
   citation = list(

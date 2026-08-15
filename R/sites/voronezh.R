@@ -38,6 +38,11 @@ SITE <- list(
     "would let a future update add that pairing here too."
   ),
 
+  # Reference-station geography. Source: WMO station registry, index 34123 -- NOT from the AISORI-M export, which carries no coordinates.
+  # Latitude drives the hemisphere test in the Köppen classification, so it
+  # must be the real signed value, not a magnitude.
+  latitude = 51.65, longitude = 39.25, elevation_m = 154,
+
   city = "Voronezh", region = "Voronezh Oblast", country = "Russia",
 
   citation = list(

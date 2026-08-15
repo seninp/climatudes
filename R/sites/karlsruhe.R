@@ -49,6 +49,11 @@ SITE <- list(
     "to see the underlying trend."
   ),
 
+  # Reference-station geography. Source: DWD Metadaten_Geographie_04177.txt shipped in the station zip.
+  # Latitude drives the hemisphere test in the Köppen classification, so it
+  # must be the real signed value, not a magnitude.
+  latitude = 48.9726, longitude = 8.3301, elevation_m = 116,
+
   city = "Karlsruhe", region = "Baden-Württemberg", country = "Germany",
 
   citation = list(

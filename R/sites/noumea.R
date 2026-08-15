@@ -40,6 +40,11 @@ SITE <- list(
     "the underlying trend, back to 1950."
   ),
 
+  # Reference-station geography. Source: Meteo-France station metadata (LAT/LON/ALTI in the daily CSV), station 98818001.
+  # Latitude drives the hemisphere test in the Köppen classification, so it
+  # must be the real signed value, not a magnitude.
+  latitude = -22.276, longitude = 166.452833, elevation_m = 69,
+
   city = "Nouméa", region = "New Caledonia", country = "France",
 
   citation = list(

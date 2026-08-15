@@ -657,6 +657,22 @@ message(sprintf("Extremes (%d-%d decade vs last): frost %d->%d | hot %d->%d | v.
                 extremes$vhot_early, extremes$vhot_recent,
                 extremes$trop_early, extremes$trop_recent))
 
+# ---- Köppen-Geiger class of the reference station ---------------------------
+# From its own monthly normals over the most recent KOPPEN_YEARS complete years,
+# so the label is checkable and moves with the data. Months need >= 27 valid days
+# to count, the same rule the monthly rainfall climatology uses.
+kop_yrs <- tail(sort(ext_ann$year), KOPPEN_YEARS)
+kop_t <- tb[year %in% kop_yrs & !is.na(TNTXM), .(t = mean(TNTXM), nd = .N),
+            by = .(year, month)][nd >= 27, .(t = mean(t)), by = month][order(month)]
+kop_p <- tb[year %in% kop_yrs & !is.na(RR), .(p = sum(RR), nd = .N),
+            by = .(year, month)][nd >= 27, .(p = mean(p)), by = month][order(month)]
+kop_ok  <- nrow(kop_t) == 12 && nrow(kop_p) == 12
+koppen  <- if (kop_ok) koppen_code(kop_t$t, kop_p$p, SITE$latitude < 0) else NA_character_
+kop_near <- if (kop_ok) koppen_borderline(kop_t$t, kop_p$p, SITE$latitude < 0) else NA_character_
+message(sprintf("Köppen (%d-%d): %s — %s%s", min(kop_yrs), max(kop_yrs),
+                koppen, koppen_label(koppen),
+                if (!is.na(kop_near)) sprintf("  [near %s boundary]", kop_near) else ""))
+
 # =============================================================================
 # PLOT 4 — annual rainfall totals (both stations). Rainfall pairs normally for
 # every site, even Karlsruhe, whose local station is rain-only: this plot never
@@ -850,6 +866,11 @@ stats <- list(
   slope_dec_ref_localwin = slope_dec_ref_localwin,
   local_yr0 = local_yr0, local_yr1 = local_yr1,
   n_years_ref = n_years_ref,
+  koppen = koppen, koppen_label = koppen_label(koppen),
+  koppen_borderline = kop_near,
+  koppen_yr0 = min(kop_yrs), koppen_yr1 = max(kop_yrs),
+  latitude = SITE$latitude, longitude = SITE$longitude,
+  elevation_m = SITE$elevation_m,
   common_yr0 = COMMON_YR0, slope_dec_ref_common = slope_dec_ref_common,
   slope_dec_tn = slope_dec_tn, slope_dec_tx = slope_dec_tx,
   dtr_early = dtr_early, dtr_recent = dtr_recent,

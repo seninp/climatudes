@@ -44,6 +44,11 @@ SITE <- list(
     "status."
   ),
 
+  # Reference-station geography. Source: NOAA ghcnd-stations.txt, station USC00044303.
+  # Latitude drives the hemisphere test in the Köppen classification, so it
+  # must be the real signed value, not a magnitude.
+  latitude = 33.72, longitude = -117.7231, elevation_m = 165,
+
   city = "Irvine", region = "California", country = "USA",
 
   citation = list(

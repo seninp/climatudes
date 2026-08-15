@@ -44,6 +44,11 @@ SITE <- list(
     "successor a few miles south (298085, 1972–2026) for one gap-free record back to 1874."
   ),
 
+  # Reference-station geography. Source: NOAA ghcnd-stations.txt, station USC00298085.
+  # Latitude drives the hemisphere test in the Köppen classification, so it
+  # must be the real signed value, not a magnitude.
+  latitude = 35.6194, longitude = -105.9753, elevation_m = 2059,
+
   city = "Santa Fe", region = "New Mexico", country = "USA",
 
   citation = list(
