@@ -79,6 +79,12 @@ outputs/irvine/*
 outputs/irvine/figures/*
 !outputs/irvine/figures/*.png
 
+!outputs/albuquerque/
+outputs/albuquerque/*
+!outputs/albuquerque/figures/
+outputs/albuquerque/figures/*
+!outputs/albuquerque/figures/*.png
+
 !outputs/compare/
 outputs/compare/*
 !outputs/compare/figures/

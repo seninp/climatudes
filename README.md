@@ -2,7 +2,7 @@
 
 A small, reproducible analytics pipeline that turns national weather-service
 daily records into a readable report on local warming. It currently covers
-nine sites, each from its own national open-data source:
+ten sites, each from its own national open-data source:
 
 | Site | Country | Source |
 |---|---|---|
@@ -15,10 +15,11 @@ nine sites, each from its own national open-data source:
 | [Moscow](#a-warming-climate-seen-from-moscow) | Russia | Roshydromet (AISORI-M, manual export) |
 | [Voronezh](#a-warming-climate-seen-from-voronezh) | Russia | Roshydromet (AISORI-M, manual export) |
 | [Irvine](#a-warming-climate-seen-from-irvine) | USA | NOAA (GHCN-Daily) |
+| [Albuquerque](#a-warming-climate-seen-from-albuquerque) | USA | NOAA (GHCN-Daily) |
 
 <!-- BEGIN COMPARE -->
 
-## All nine cities, side by side
+## All ten cities, side by side
 
 Every chapter below uses the same variables, the same completeness rule (>= 330 valid
 days/year) and the same trend method (least-squares on annual means) — the numbers below are those
@@ -26,7 +27,7 @@ same headline figures, gathered in one place rather than recomputed. These are r
 they are not adjusted for the very different length and era of each record. The record span in the
 table is the honest caveat, not a footnote to skip.
 
-![Warming rate compared across all nine cities, ranked fastest to slowest](outputs/compare/figures/warming_rate.png)
+![Warming rate compared across all ten cities, ranked fastest to slowest](outputs/compare/figures/warming_rate.png)
 
 <sub>Ranked fastest to slowest. Record span and length for each city are in the table below, not
 repeated on the bars — Santa Fe’s and Karlsruhe’s records run a century longer than Honolulu’s or
@@ -40,6 +41,7 @@ Nouméa’s, so the same-looking rate rests on very different amounts of evidenc
 | Irvine | USA | 1915→2025 (110 yr) | **+0.27 °C/decade** | #2 of 101 (2026, Jan 1 – May 31) | May 31, 2026 |
 | Honolulu | USA | 1950→2025 (75 yr) | **+0.20 °C/decade** | #18 of 84 (2026, Jan 1 – Aug 11) | Aug 11, 2026 |
 | Nouméa | France | 1951→2025 (74 yr) | **+0.19 °C/decade** | #5 of 76 (2026, Jan 1 – Aug 14) | Aug 14, 2026 |
+| Albuquerque | USA | 1932→2025 (93 yr) | **+0.18 °C/decade** | #1 of 96 — record (2026, Jan 1 – Aug 11) | Aug 11, 2026 |
 | Zurich | Switzerland | 1882→2025 (143 yr) | **+0.18 °C/decade** | #1 of 144 — record (2026, Jan 1 – Aug 13) | Aug 13, 2026 |
 | Karlsruhe | Germany | 1876→2025 (149 yr) | **+0.14 °C/decade** | #2 of 150 (2026, Jan 1 – Aug 13) | Aug 13, 2026 |
 | Santa Fe | USA | 1874→2025 (151 yr) | **+0.08 °C/decade** | #1 of 149 — record (2026, Jan 1 – Jun 30) | Jun 30, 2026 |
@@ -49,7 +51,7 @@ refresh) — their "current through" date is not "today" the way the other seven
 are; see each city’s own "Why only one station?" note in its chapter below.
 
 Each row’s standing also names its own year and window in parentheses, since they are not all the
-same claim: the seven automated sites all rank 2026 over comparable multi-month windows, but Moscow’s
+same claim: the eight automated sites all rank 2026 over comparable multi-month windows, but Moscow’s
 row ranks a complete, already-finished 2025 and Voronezh’s ranks a 59-day midwinter fragment — a
 "#55 of 84" over two months of winter is not the same kind of statement as an 8-month "#5 of 76".
 
@@ -1584,6 +1586,176 @@ wettest month on average (68 mm), July the driest
 
 <!-- END REPORT:irvine -->
 
+<!-- BEGIN REPORT:albuquerque -->
+
+## A warming climate, seen from Albuquerque
+
+*NOAA (National Centers for Environmental Information) daily temperature records, 1932 to 2025 — plus 2026 so far.*
+
+NOAA (National Centers for Environmental Information) daily records for the Albuquerque area tell an unambiguous story:
+since the mid-20th century, minimum, maximum and mean temperatures have all risen —
+steadily and continuously.
+
+| Headline number | Value |
+|---|---:|
+| Warming rate, mean temperature (Albuquerque Airport) | **+0.18 °C / decade** |
+| Total rise over 93 years (1932 → 2025) | **+1.7 °C** |
+| Mean of the last decade (vs 13.1 °C in 1932–1941) | **15.1 °C** |
+| Frost days per year, 1932–1941 → 2016–2025 | **120 → 79** |
+| Hot days (≥ 30 °C) per year, 1932–1941 → 2016–2025 | **92 → 106** |
+| Complete station-years analysed | **124** |
+| 2026 year-to-date (Jan 1 – Aug 11), against 95 prior years | **#1 of 96 — record** |
+
+### The long view: annual means
+
+![Annual mean temperatures around Albuquerque, 1932 to 2025](outputs/albuquerque/figures/temperature_series.png)
+
+<sub>Annual means of daily temperatures. The thick curves are LOESS smoothings that
+highlight the climate trend; the points are annual means. The green series (Albuquerque Foothills NE) is Albuquerque's foothills district in the northeast of the city; it tracks the long Albuquerque Airport reference mean almost exactly.</sub>
+
+At Albuquerque Airport — the station with the longest record (1932→2025) — the annual
+mean temperature rises by **+0.18 °C per decade**, about **+1.7 °C** over the
+whole period. The local Albuquerque Foothills NE station only covers 1992→2025. Its slope over that shorter, more recent window is steeper (+0.82 °C/decade) — but so is Albuquerque Airport’s over the same years (+0.31 °C/decade): recent decades warm faster, and the local station sits almost exactly on the regional mean.
+
+### This year, against every year before it
+
+![Per-year mean over the same Jan-to-cutoff window, as a departure from the long-term normal, with 2026 the largest bar](outputs/albuquerque/figures/temperature_ytd.png)
+
+<sub>Each bar is a year’s mean over the <em>same window</em> — <strong>Jan 1 – Aug 11</strong> —
+shown as its departure from the long-term normal (14.6 °C): red above, blue
+below. Comparing each year over the identical part-of-year is the only fair way to place
+any one year against every other. The bars swing from blue to red over
+the decades — the warming — and 2026 is the tallest of all.</sub>
+
+Measured like-for-like, **2026 is the warmest Jan 1 – Aug 11 in 96 years** at Albuquerque Airport: **17.9 °C** — +0.3 °C above the previous record (1931, 17.6 °C) and **+3.3 °C above the long-term normal** (14.6 °C). This is exactly the point of the chart: a year still in progress can already stand out against the whole record.
+
+> [!NOTE]
+> A partial year cannot be compared to other years' full-year means — it is still missing the rest of the year. That is why 2026 appears on the long-view chart above only as a marked, hollow "to date" point (seasonally incomplete, so lower than its eventual annual figure), while its real, like-for-like standing is the chart here.
+
+### Every year, day by day
+
+![Daily temperature climatology, every year January to December, hot years red and cold years blue](outputs/albuquerque/figures/temperature_climatology.png)
+
+<sub>Each thin line is a single year’s daily mean temperature from January to December
+(1931–2025, 95 years), smoothed with a centred
+<strong>3-day rolling mean</strong> (each day = the average of itself
+±1 day) to tame day-to-day jitter while keeping the shape. The dark line
+is the long-term daily normal; the bold red line is <strong>2026 so far</strong>.
+Years whose smoothed daily mean ever rose above <strong>+30 °C</strong> are
+highlighted in red and labelled; years that ever fell below
+<strong>-5 °C</strong> in blue.</sub>
+
+> [!NOTE]
+> **Hottest and coldest years.** Measured on the smoothed daily-mean curve,
+> **20** years pushed above +30 °C (1951, 1953, 1958, 1963, 1971, 1974, 1979, 1980, 1989, 1990, 1994, 1995, 2003, 2010, 2012, 2017, 2020, 2021, 2022, 2023)
+> while **59** years dropped below -5 °C (1931, 1932, 1933, 1936, 1937, 1939, 1943, 1944, 1945, 1946, 1947, 1948, 1949, 1950, 1951, 1952, 1954, 1955, 1956, 1958, 1959, 1960, 1961, 1962, 1963, 1964, 1965, 1966, 1967, 1968, 1969, 1970, 1971, 1972, 1974, 1975, 1976, 1977, 1978, 1979, 1982, 1983, 1985, 1986, 1987, 1989, 1990, 1992, 1997, 2006, 2007, 2010, 2011, 2013, 2014, 2018, 2019, 2021, 2022).
+> Years hitting both extremes: 1951, 1958, 1963, 1971, 1974, 1979, 1989, 1990, 2010, 2021 and 2022.  <sub>(If the threshold is applied instead to the raw, unsmoothed daily mean, 1951, 1953, 1958, 1960, 1963, 1971, 1972, 1974, 1978, 1979, 1989, 1990, 2010, 2013, 2019, 2020, 2021, 2022 and 2025 each touch both extremes.)</sub>
+
+### The record days
+
+The single most extreme days in each station’s record. “Hottest” is the highest daily
+maximum (TX), “coldest” the lowest daily minimum (TN).
+
+| Station (record span) | Extreme | Date | Min (TN) | Max (TX) |
+|---|---|---|---:|---:|
+| Albuquerque Airport <sub>1931–2026</sub> | Hottest 🔥 | 1994-06-26 | 20.6 | **41.7** |
+| Albuquerque Airport <sub>1931–2026</sub> | Coldest ❄️ | 1971-01-07 | **-27.2** | -12.2 |
+| Albuquerque Foothills NE <sub>1991–2026</sub> | Hottest 🔥 | 2023-07-19 | 22.2 | **40.0** |
+| Albuquerque Foothills NE <sub>1991–2026</sub> | Coldest ❄️ | 2011-02-03 | **-24.4** | -7.8 |
+
+At Albuquerque Airport, the all-time heat (1994-06-26) is far more recent than the all-time cold (1971-01-07) — the same warming signature seen throughout this report.
+
+> [!NOTE]
+> **Why Albuquerque Foothills NE?** Albuquerque Foothills NE (station USC00290225), in the northeast of the city, is a genuinely different microclimate from the valley-floor airport and provides the local comparison — though its own temperature reporting has a real gap from late June 2026 onward (rainfall continues, TMAX/TMIN go blank), confirmed against the raw feed rather than a fetch issue here. Albuquerque Airport (station USW00023050) provides the temperature trend: one continuous record back to 1931, no splice needed, and flagged by NOAA as a GSN station — one of the global network's long-term reference stations.
+
+### The last decade (Albuquerque Airport)
+
+| Year | Min (TN) | Max (TX) | Mean |
+|---|---:|---:|---:|
+| 2016 | 8.1 | 22.1 | **15.1** |
+| 2017 | 8.6 | 22.7 | **15.6** |
+| 2018 | 8.1 | 22.1 | **15.1** |
+| 2019 | 7.4 | 21.0 | **14.2** |
+| 2020 | 7.8 | 22.4 | **15.1** |
+| 2021 | 8.0 | 22.0 | **15.0** |
+| 2022 | 7.6 | 21.5 | **14.6** |
+| 2023 | 8.3 | 21.9 | **15.1** |
+| 2024 | 8.5 | 22.7 | **15.6** |
+| 2025 | 9.0 | 23.0 | **16.0** |
+| 2026 *(to date)* | 10.4 | 25.3 | **17.9** |
+
+### Frost days down, hot days up
+
+A degree of warming is abstract; the count of extreme days is not. Comparing
+Albuquerque Airport’s first complete decade (1932–1941) with its last (2016–2025),
+the everyday texture of the year has changed sharply:
+
+| Threshold days per year | 1932–1941 | 2016–2025 |
+|---|---:|---:|
+| Frost days (min < 0 °C) | 120 | **79** |
+| Hot days (max ≥ 30 °C) | 92 | **106** |
+| Very hot days (max ≥ 35 °C) | 18 | **30** |
+| Tropical nights (min ≥ 20 °C) | 4 | **34** |
+
+<sub>Counts of days per year crossing each threshold, averaged over the first and last
+complete decades. Frost is retreating just as heat advances — the same warming, read off the calendar instead of the thermometer.</sub>
+
+### What about the rain?
+
+Temperature is only half of a climate. Rainfall tells a very different — and much
+quieter — story: over the same 94 years, annual precipitation at
+Albuquerque Airport shows **no statistically significant trend**.
+
+![Annual rainfall totals around Albuquerque](outputs/albuquerque/figures/rain_series.png)
+
+<sub>Annual total precipitation. The dashed line is Albuquerque Airport’s long-term mean
+(217 mm/yr); the thick curves are LOESS smoothings. The year-to-year swings are
+large — from 103 mm (1956) to 404 mm (1941) —
+but the long-run slope (-0 mm/decade) is flat and not significant (p = 0.98).</sub>
+
+That contrast is the point. The very same daily records that show an unmistakable, statistically strong warming signal show *no* comparable signal in how much it rains. A dataset that manufactured trends would have produced one here too; this one does not.
+
+![Monthly rainfall through the year at Albuquerque Airport, one line per year](outputs/albuquerque/figures/rain_climatology.png)
+
+<sub>Rain through the year: each grey line is one year’s monthly totals, the dark line the
+long-term monthly normal, the bold blue line 2026 so far. August is the
+wettest month on average (36 mm), January the driest
+(10 mm) — but the spread between years dwarfs the seasonal cycle, which is exactly why no annual trend emerges.</sub>
+
+### Methodology
+
+- **Source.** NOAA (National Centers for Environmental Information) — GHCN-Daily — Global Historical Climatology Network, daily summaries, New Mexico, USA. Full citation
+  below.
+- **Variables.** Minimum = `TN`, maximum = `TX`, mean = `(TN+TX)/2`, in °C;
+  rainfall = `RR` (daily precipitation, in mm).
+- **Annual aggregation.** Arithmetic mean of daily values over each calendar year. The
+  long-term trend uses only complete years (≥ 330 valid days). Where the current
+  year is still in progress, it is shown separately — as a hollow “to date” marker on the
+  trend chart, and (for a fair record comparison) against the same calendar window
+  (Jan 1 → cutoff) of every prior year, keeping only years with ≥ 150 valid
+  days in that window.
+- **Daily climatology.** Each year’s daily mean is smoothed with a centred
+  3-day rolling mean (unweighted moving average, computed per year so
+  December never bleeds into January; the first/last 1 day keep their raw
+  value) for legibility; leap days are aligned across years. The normal is the per-day
+  average over all prior years.
+- **Threshold days.** Frost = `TN < 0`, hot day = `TX ≥ 30`, very hot =
+  `TX ≥ 35`, tropical night = `TN ≥ 20`, counted per complete year and
+  averaged over the first/last complete decade.
+- **Rainfall.** Annual total of daily `RR` over complete years; the trend is a
+  least-squares slope with its two-sided p-value. Monthly climatology keeps only months
+  with ≥ 27 valid days.
+- **Trend.** Slope estimated by linear regression (least squares); the line-chart curves
+  use LOESS smoothing (span = 0.7).
+- **Reproducibility.** A 4-stage R pipeline (`R/00_prepare_data.R` → `R/01_plot.R` →
+  `R/02_report.R` → `R/03_readme.R`), driven by `SITE=albuquerque make all`. The figures
+  above and the numbers in this section are regenerated from the source data on every
+  run — see [Data source](#data-source--citation) below for the full citation.
+
+<sub>Figures and numbers above are generated — edit `R/03_readme.R`, not this block.</sub>
+
+<!-- END REPORT:albuquerque -->
+
 ## Data sources
 
 Each site pulls from its own national weather service, all open data, all
@@ -1600,6 +1772,7 @@ attribution-only:
 | Moscow | Roshydromet / RIHMI-WDC — AISORI-M | Сутки → TTTR (temp. + precip.), WMO 27612, manually exported (login-gated, no stable URL) | Not openly licensed — Rospatent 2019621537; personal, non-commercial use only |
 | Voronezh | Roshydromet / RIHMI-WDC — AISORI-M | Сутки → TTTR (temp. + precip.), WMO 34123, manually exported (login-gated, no stable URL) | Not openly licensed — Rospatent 2019621537; personal, non-commercial use only |
 | Irvine | NOAA — GHCN-Daily, Access Data Service v1 | `daily-summaries` (TMAX/TMIN/PRCP), stations USC00049087/044303 (spliced) + USW00093184 | U.S. Government work — no copyright restriction |
+| Albuquerque | NOAA — GHCN-Daily, Access Data Service v1 | `daily-summaries` (TMAX/TMIN/PRCP), stations USW00023050 (GSN) + USC00290225 | U.S. Government work — no copyright restriction |
 
 Full dataset URLs and citation text are in each site's report above and in
 `R/sites/<site>.R`. Météo-France field definitions land in
@@ -1625,6 +1798,8 @@ Full dataset URLs and citation text are in each site's report above and in
 | Voronezh | `34123` | Voronezh | 1940→2026 | Single station — no local pairing; this export has no second WMO index |
 | Irvine | `USW00093184` | John Wayne Airport | 1999→ | Local station, on Irvine's border — no splice needed, but the shortest record of the pair |
 | Irvine | `USC00044303` | Irvine | 1915→ | Long reference — spliced with predecessor 049087 (Tustin Irvine Ranch, 1915→2003) at its 2003 handoff to 044303, a few miles away |
+| Albuquerque | `USC00290225` | Albuquerque Foothills NE | 1991→ | Local station, a different microclimate in the city's northeast foothills — its own temperature reporting has a real gap from June 2026 |
+| Albuquerque | `USW00023050` | Albuquerque Airport | 1931→ | Long reference — one continuous record, no splice needed; flagged by NOAA as a GSN station |
 
 > The "Record" column is each station's raw first→last year; the trend prose and
 > "last decade" tables instead start from each station's first *complete* year
@@ -1644,7 +1819,10 @@ Full dataset URLs and citation text are in each site's report above and in
 > is rainfall-only too; Nouméa-Magenta is the one exception — a genuinely
 > complete, gap-free local record. John Wayne Airport, Irvine's local station,
 > is gap-free too, but only from 1999 — much shorter than the spliced 1915→
-> reference. Moscow and Voronezh are a different case
+> reference. Albuquerque Foothills NE, Albuquerque's local station, is a
+> genuinely different microclimate (foothills vs. the valley-floor airport)
+> but its own temperature reporting has a real gap from June 2026 onward.
+> Moscow and Voronezh are a different case
 > entirely: manually exported from Roshydromet's AISORI-M with a single WMO
 > index each, so there is no local pairing at all. Each report's own
 > "Why...?" note has the full explanation.
@@ -1668,7 +1846,8 @@ climatudes/
 │   │   ├── noumea.R           Nouméa: same, for Météo-France dept. 988
 │   │   ├── moscow.R           Moscow: same, for Roshydromet/AISORI-M (manual export)
 │   │   ├── voronezh.R         Voronezh: same, for Roshydromet/AISORI-M (manual export)
-│   │   └── irvine.R           Irvine: same, for NOAA GHCN-Daily
+│   │   ├── irvine.R           Irvine: same, for NOAA GHCN-Daily
+│   │   └── albuquerque.R      Albuquerque: same, for NOAA GHCN-Daily
 │   ├── sources/
 │   │   ├── meteofrance.R      fetch + normalize Météo-France's format (Castanet-Tolosan, Nouméa)
 │   │   ├── meteoswiss.R       fetch + normalize MeteoSwiss's format
