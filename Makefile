@@ -58,7 +58,7 @@ SITE_CONFIG := R/sites/$(SITE).R
 # its own inputs.
 README_STAMP := $(PROCESSED)/readme.stamp
 
-.PHONY: all all-sites compare prepare refresh plots report readme open clean
+.PHONY: all all-sites compare prepare refresh refresh-rolling refresh-rolling-all-sites plots report readme open clean
 
 all: report readme
 
@@ -85,6 +85,22 @@ $(EXTRACT): $(RAW_FILES) R/00_prepare_data.R R/lib/common.R $(SITE_CONFIG)
 refresh:
 	rm -rf $(RAWDIR) $(EXTRACT)
 	$(MAKE) SITE=$(SITE) all
+
+# ---- surgical refresh: re-download ONLY the rolling files, keep historical ---
+# Deletes just the raw files that actually change between refreshes (the newest
+# meteofrance era, DWD _akt, MeteoSwiss _recent, NOAA open-ended stations) plus
+# the extract, then rebuilds — leaving the stable multi-MB historical archives
+# on disk. Contrast `refresh`, which nukes RAWDIR and re-downloads everything.
+# "Which files roll" is defined per source in R/sources/<source>.R::rolling_files().
+# Manual sources (meteoru: Moscow, Voronezh) report no rolling files, so the
+# driver leaves their hand-placed exports and extract untouched.
+refresh-rolling:
+	SITE=$(SITE) $(RSCRIPT) R/00_refresh_rolling.R
+	$(MAKE) SITE=$(SITE) all
+
+refresh-rolling-all-sites:
+	@for s in $(SITES); do $(MAKE) SITE=$$s refresh-rolling; done
+	$(MAKE) compare
 
 # ---- stage 01: figures + annual table + stats -------------------------------
 plots: $(FIGURES) $(ANNUAL) $(STATS)

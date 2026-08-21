@@ -77,6 +77,12 @@ meteoru_read <- function(zip_path, wmo_id) {
   out[!(is.na(TN) & is.na(TX) & is.na(RR))]
 }
 
+# Rolling files — none. This source is hand-fed (AISORI-M is login-gated, no
+# stable URL to script), so there is nothing to auto-re-download; the export .zip
+# and its extract must never be deleted by a refresh. Returning character(0)
+# makes refresh-rolling skip Moscow/Voronezh entirely.
+rolling_files <- function(site) character(0)
+
 prepare_data <- function(site) {
   suppressPackageStartupMessages(library(data.table))
   dir.create(site$paths$processed, recursive = TRUE, showWarnings = FALSE)

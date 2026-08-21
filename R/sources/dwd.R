@@ -124,6 +124,18 @@ dwd_normalize <- function(d, product, num_poste) {
   }
 }
 
+# Rolling files — the only raw files that change between refreshes. Each active
+# station's "recent" (akt) zip rolls (fixed name, last ~18 months); the
+# date-stamped "historical" zips and any predecessor (closed station,
+# historical-only) are stable, so refresh-rolling leaves them alone.
+rolling_files <- function(site) {
+  dwd <- site$dwd
+  vapply(names(dwd$stations), function(sid) {
+    code <- DWD_PRODUCT_CODE[[dwd$stations[[sid]]$product]]
+    file.path(site$paths$raw, sprintf("tageswerte_%s_%s_akt.zip", code, sid))
+  }, character(1), USE.NAMES = FALSE)
+}
+
 prepare_data <- function(site) {
   suppressPackageStartupMessages(library(data.table))
   dir.create(site$paths$processed, recursive = TRUE, showWarnings = FALSE)

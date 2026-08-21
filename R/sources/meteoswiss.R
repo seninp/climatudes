@@ -16,6 +16,28 @@
 # writes that via write_extract() to site$paths$processed/<STATION_EXTRACT>.
 # =============================================================================
 
+# Rolling files — the only raw files that change between refreshes. For every
+# distinct (dataset, station) pair the site needs, the "recent" file rolls
+# (current calendar year to date); the "historical" file is closed at the
+# previous year-end and stable, so refresh-rolling leaves it alone. This mirrors
+# the pair-collection in prepare_data() so the two never drift.
+rolling_files <- function(site) {
+  ms <- site$meteoswiss
+  paths <- character(0)
+  seen  <- character(0)
+  for (abbr in names(ms$stations)) {
+    st <- ms$stations[[abbr]]
+    for (dataset in unique(c(st$temp_dataset, st$rain_dataset))) {
+      combo <- paste(dataset, abbr)
+      if (combo %in% seen) next
+      seen <- c(seen, combo)
+      paths <- c(paths, file.path(site$paths$raw,
+                                  sprintf("ogd-%s_%s_d_recent.csv", dataset, tolower(abbr))))
+    }
+  }
+  paths
+}
+
 prepare_data <- function(site) {
   suppressPackageStartupMessages(library(data.table))
   dir.create(site$paths$processed, recursive = TRUE, showWarnings = FALSE)

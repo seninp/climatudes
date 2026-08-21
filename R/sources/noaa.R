@@ -72,6 +72,18 @@ noaa_read <- function(path, num_poste) {
   )
 }
 
+# Rolling files — the only raw files that change between refreshes. Each main
+# station's request runs to the future sentinel `end` (so its file keeps gaining
+# rows as NOAA publishes); a `predecessor` is a closed station whose request
+# ends at a real past date and never changes, so refresh-rolling leaves it alone.
+rolling_files <- function(site) {
+  noaa <- site$noaa
+  vapply(names(noaa$stations), function(sid) {
+    cfg <- noaa$stations[[sid]]
+    file.path(site$paths$raw, sprintf("%s_%s_%s.csv", sid, cfg$start, cfg$end))
+  }, character(1), USE.NAMES = FALSE)
+}
+
 prepare_data <- function(site) {
   suppressPackageStartupMessages(library(data.table))
   dir.create(site$paths$processed, recursive = TRUE, showWarnings = FALSE)

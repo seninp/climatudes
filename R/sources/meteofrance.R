@@ -11,6 +11,16 @@
 # writes that via write_extract() to site$paths$processed/<STATION_EXTRACT>.
 # =============================================================================
 
+# Rolling files — the only raw files that change between refreshes. The three
+# eras are ordered oldest -> newest; only the newest (`latest-*`) gains rows and
+# rotates its name each January (see R/sites/castanet.R). `avant-1949` and the
+# closed `previous-*` era are stable, so refresh-rolling leaves them alone.
+rolling_files <- function(site) {
+  mf <- site$meteofrance
+  rolling_era <- mf$eras[length(mf$eras)]
+  file.path(site$paths$raw, sprintf("Q_%s_%s_RR-T-Vent.csv.gz", mf$dept, rolling_era))
+}
+
 prepare_data <- function(site) {
   suppressPackageStartupMessages(library(data.table))
   dir.create(site$paths$processed, recursive = TRUE, showWarnings = FALSE)
