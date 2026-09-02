@@ -404,11 +404,23 @@ build_common_fills <- function(stats, site) {
   # hardcoded to "no statistically significant trend" everywhere, which is
   # wrong wherever it isn't true (e.g. Karlsruhe/Rheinstetten: -11 mm/decade,
   # p = 0.00 — actually significant).
-  rain_sig_clause <- if (isTRUE(rn$significant))
+  # A record shorter than MIN_RAIN_TREND_YEARS (R/lib/common.R) supports no
+  # long-run statement at all, so each rain clause below takes a third arm that
+  # gives the numbers and stops. Without it, Lalitpur's 6 GHCN rain-years were
+  # described as "flat over the long run" and "a flat long-run mean" — there is no
+  # long run in 6 years to be flat over. The slope and p-value are still printed,
+  # flagged not significant; only the long-run claim is withheld.
+  rain_short <- isTRUE(rn$short)
+
+  rain_sig_clause <- if (rain_short)
+    bold(sprintf("too short a record to test for a trend (%d complete years)", rn$n_years)) else
+    if (isTRUE(rn$significant))
     bold(sprintf("a statistically significant trend (%+.0f mm/decade, p = %s)", rn$slope_dec, fmt(rn$p, 2))) else
     bold("no statistically significant trend")
 
-  rain_flat_clause <- if (isTRUE(rn$significant))
+  rain_flat_clause <- if (rain_short)
+    sprintf("cannot be assessed from only %d complete years", rn$n_years) else
+    if (isTRUE(rn$significant))
     sprintf("is measurable and statistically significant (p = %s)", fmt(rn$p, 2)) else
     sprintf("is flat and not significant (p = %s)", fmt(rn$p, 2))
 
@@ -422,7 +434,14 @@ build_common_fills <- function(stats, site) {
   # time), and the flat arm closed on "A dataset that manufactured trends would
   # have produced one here too; this one does not" — a rebuttal to an unstated
   # skeptic, and the kind of epigram the house style rules out. State the finding.
-  rain_closing_paragraph <- if (isTRUE(rn$significant))
+  rain_closing_paragraph <- if (rain_short)
+    sprintf(paste0("The rainfall record here is far shorter than the temperature record: %d complete ",
+                   "years (%d–%d), all recent. That is enough to show the scale of the monsoon and how ",
+                   "much it varies between years, and not enough to say whether annual totals are ",
+                   "rising or falling. The %+.0f mm/decade slope above is reported for completeness ",
+                   "only; over %d years it carries no weight."),
+            rn$n_years, rn$yr0, rn$yr1, rn$slope_dec, rn$n_years) else
+    if (isTRUE(rn$significant))
     sprintf(paste0("Rainfall here is not flat: the long run tilts %s. The tilt is small against the ",
                    "year-to-year spread above, which is why it is easy to miss in any single decade."),
             if (rn$slope_dec < 0) "drier" else "wetter") else
@@ -435,7 +454,9 @@ build_common_fills <- function(stats, site) {
   # annual trend emerges" unconditionally — wrong for the 5 sites whose annual
   # trend (above, RAIN_SIG_CLAUSE) IS significant; this is about a different
   # chart (monthly shape, not the annual series) so it needs its own branch.
-  rain_monthly_closing <- if (isTRUE(rn$significant))
+  rain_monthly_closing <- if (rain_short)
+    "and with only a handful of years on the chart, the spread between them is the clearest thing it shows." else
+    if (isTRUE(rn$significant))
     "but the spread between years is why that slow trend is easy to miss from the monthly shape alone." else
     "but the spread between years dwarfs the seasonal cycle, which is exactly why no annual trend emerges."
 

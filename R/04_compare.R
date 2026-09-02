@@ -17,6 +17,10 @@
 # the chart re-ranks itself on every data refresh while the chapter order is
 # hand-maintained, so the two would drift apart silently.
 #
+# Lalitpur (Nepal) is the one site outside those three regions, and it sits last
+# rather than forcing an Asia group into the middle of the sequence. If a second
+# Asian site is ever added, give Asia its own block instead of extending the tail.
+#
 #   Rscript R/04_compare.R
 # =============================================================================
 
@@ -31,7 +35,8 @@ source("R/lib/common.R")
 source("R/lib/narrative.R")   # shares ytd_standing_text() with every per-site chapter
 
 SITE_ORDER <- c("castanet", "paris", "lyon", "karlsruhe", "zurich", "moscow", "voronezh",
-                "irvine", "albuquerque", "santafe", "honolulu", "noumea")
+                "irvine", "albuquerque", "santafe", "honolulu", "noumea",
+                "lalitpur")
 
 load_site <- function(key) {
   env <- new.env()
@@ -100,8 +105,17 @@ N_SITES     <- nrow(cmp)
 N_AUTOMATED <- sum(!cmp$manual_source)
 # Spelled out, since these appear in prose. Hardcoding "ten" meant every new
 # city silently made the page lie.
-num_word <- function(n) c("one","two","three","four","five","six","seven","eight",
-                          "nine","ten","eleven","twelve")[n]
+# The list ran out at "twelve" and silently returned NA for a 13th site, so the
+# chart title rendered as "NANA cities, all warming" (title_case() on NA). An
+# out-of-range count is a missing word, not a number to paper over — stop instead.
+num_word <- function(n) {
+  words <- c("one","two","three","four","five","six","seven","eight","nine","ten",
+             "eleven","twelve","thirteen","fourteen","fifteen","sixteen","seventeen",
+             "eighteen","nineteen","twenty")
+  if (n < 1 || n > length(words))
+    stop("num_word(): no word for ", n, " — extend the list in R/04_compare.R.")
+  words[n]
+}
 title_case <- function(s) paste0(toupper(substring(s, 1, 1)), substring(s, 2))
 
 # GitHub slug for a chapter heading, so the comparison table can link to each
@@ -126,19 +140,22 @@ cmp[, city_f := factor(city, levels = rev(plot_ord$city))]
 
 # The second mark is the point of the chart. Ranking cities by a rate computed
 # over each one's OWN record invites reading it as a speed ranking, when much of
-# the middle of the order is really record length: on the shared 1951-> window
-# Zurich and Karlsruhe each gain three places and Honolulu and Nouméa each lose
-# three. A hollow diamond per city carries the like-for-like rate beside the raw
+# the middle of the order is really record length: on the shared COMMON_YR0->
+# window several cities move several places (Zurich and Karlsruhe up, Honolulu and
+# Nouméa down). A hollow diamond per city carries the like-for-like rate beside the raw
 # bar, so the caveat is a number the reader can check rather than a sentence
 # asking to be believed. One muted fill for every bar — position plus the bold
 # city label already identify each row, so a hue per city would add nothing.
+# Legend label had 1951 hardcoded, so bumping COMMON_YR0 to 1971 left the legend
+# contradicting the subtitle on the same chart. Derive it from the constant.
+SHARED_LABEL <- sprintf("Shared window, %d onward", COMMON_YR0)
 BAR_FILL   <- "#5B7FA6"
 POINT_COL  <- "#B9770E"
 x_max <- max(c(cmp$slope_dec, cmp$slope_dec_common), na.rm = TRUE)
 
 p <- ggplot(cmp, aes(y = city_f)) +
   geom_col(aes(x = slope_dec, fill = "Own full record"), width = 0.62) +
-  geom_point(aes(x = slope_dec_common, colour = "Shared window, 1951 onward"),
+  geom_point(aes(x = slope_dec_common, colour = SHARED_LABEL),
              shape = 18, size = 3.4) +
   # Value labels sit in a fixed column to the right of every mark, not at each
   # bar's end: at the top of the order the bar end and the diamond nearly
@@ -146,7 +163,7 @@ p <- ggplot(cmp, aes(y = city_f)) +
   geom_text(aes(x = x_max * 1.08, label = sprintf("+%.2f", slope_dec)),
             hjust = 0, size = 3.5, colour = "#3D4A54") +
   scale_fill_manual(values = c("Own full record" = BAR_FILL), name = NULL) +
-  scale_colour_manual(values = c("Shared window, 1951 onward" = POINT_COL), name = NULL) +
+  scale_colour_manual(values = setNames(POINT_COL, SHARED_LABEL), name = NULL) +
   scale_x_continuous(limits = c(0, x_max * 1.20), expand = expansion(mult = c(0, 0)),
                      labels = function(x) sprintf("+%.1f", x)) +
   guides(fill = guide_legend(order = 1), colour = guide_legend(order = 2)) +

@@ -23,13 +23,33 @@ MIN_YTD_DAYS  <- 150L   # a year needs >= this many valid days in the YTD window
 # +1.6 degC to +0.3. A part-of-window mean must not enter a same-window ranking.
 MIN_YTD_MONTH_FRAC <- 1/3
 
+# A rainfall record shorter than this many complete years cannot support any
+# claim about the "long run" — neither a trend nor its absence. Below the bar,
+# the rain chart and the report say the record is too short instead of calling it
+# flat. Lalitpur is the case that forced this: GHCN gives the Kathmandu Valley
+# only 6 complete rain-years (2015-2022), and a non-significant slope across 6
+# recent years was being rendered as "highly variable year to year, but flat over
+# the long run" — an overclaim, since 6 years contain no long run to be flat
+# over. Every other site has 75-162 rain-years, so this branch fires for
+# Lalitpur alone. It deliberately does NOT suppress the slope or the p-value:
+# they stay on the chart, correctly flagged not significant.
+MIN_RAIN_TREND_YEARS <- 30L
+
 # The longest window EVERY site shares — the latest first-complete-year across
-# all sites (Nouméa, 1951). Used for the cross-site comparison's like-for-like
+# all sites (Lalitpur, 1971). Used for the cross-site comparison's like-for-like
 # rate column, so a raw-rate ranking cannot be mistaken for a speed ranking when
-# the records run 74 to 151 years. R/04_compare.R asserts no site starts later
+# the records run 54 to 162 years. R/04_compare.R asserts no site starts later
 # than this; if one ever does, bump this constant rather than silently comparing
 # a site against a window it does not cover.
-COMMON_YR0 <- 1951L
+#
+# Was 1951 (Nouméa's start) until Lalitpur was added: GHCN's Kathmandu record
+# begins in 1971, so every site now shares 1971 onward and 20 years came off the
+# common window. That is the cost of the assertion working as intended — the
+# alternative was crediting Lalitpur with a 1951-onward rate over two decades it
+# has no data for. Every site's own raw rate still spans its full record; only
+# this like-for-like column shortened. Bumping it means re-running stage 01 for
+# EVERY site (slope_dec_ref_common is computed there), i.e. `make all-sites`.
+COMMON_YR0 <- 1971L
 
 # ---- temperature-extremes day-count thresholds -------------------------------
 FROST_TX  <- 0    # frost day:      daily minimum TN <  0 °C

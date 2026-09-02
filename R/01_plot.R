@@ -719,6 +719,10 @@ rain_sig       <- rain_p < 0.05
 rain_mean_ref  <- mean(rain_ref$total)
 rain_wettest   <- rain_ref[which.max(total)]
 rain_driest    <- rain_ref[which.min(total)]
+# Too few complete rain-years to say anything about the long run either way
+# (see MIN_RAIN_TREND_YEARS in R/lib/common.R). Titles and prose branch on this
+# instead of asserting flatness.
+rain_short     <- nrow(rain_ref) < MIN_RAIN_TREND_YEARS
 
 rain_levels <- if (HAS_LOCAL) c(SITE$reference_station, SITE$local_station) else SITE$reference_station
 rain_pal <- if (HAS_LOCAL) c(COL$rain_blag, COL$rain_auz) else c(COL$rain_blag)
@@ -765,12 +769,18 @@ p4 <- ggplot(rain_plot, aes(year, total, colour = station, shape = station)) +
                      expand = expansion(mult = c(0, 0.02))) +
   guides(colour = guide_legend(override.aes = list(alpha = 1, linewidth = 1.4))) +
   labs(
-    title = sprintf(if (rain_sig) "Rainfall around %s — a slow long-run trend" else "Rainfall around %s — no clear trend",
+    title = sprintf(if (rain_short) "Rainfall around %s — too short a record to judge"
+                    else if (rain_sig) "Rainfall around %s — a slow long-run trend"
+                    else "Rainfall around %s — no clear trend",
                     SITE$city),
-    subtitle = sprintf(if (rain_sig)
-                    "Annual total precipitation, %d → %d  ·  highly variable year to year, with a measurable long-run trend"
-                  else "Annual total precipitation, %d → %d  ·  highly variable year to year, but flat over the long run",
-                       yr0_rain, yr1_rain),
+    subtitle = if (rain_short)
+                 sprintf("Annual total precipitation, %d → %d  ·  only %d complete years — no long-run claim possible",
+                         yr0_rain, yr1_rain, nrow(rain_ref))
+               else
+                 sprintf(if (rain_sig)
+                     "Annual total precipitation, %d → %d  ·  highly variable year to year, with a measurable long-run trend"
+                   else "Annual total precipitation, %d → %d  ·  highly variable year to year, but flat over the long run",
+                         yr0_rain, yr1_rain),
     x = NULL, y = NULL,
     caption = paste0(
       caption_source_line(SITE$citation), "\n",
@@ -925,6 +935,9 @@ stats <- list(
     slope_dec = round(rain_slope_dec, 1),
     p = round(rain_p, 2),
     significant = rain_sig,
+    # Fewer than MIN_RAIN_TREND_YEARS complete years: the prose must not claim
+    # the long run is flat (or tilting) — see R/lib/common.R and narrative.R.
+    short = rain_short,
     wettest_year = rain_wettest$year, wettest_mm = round(rain_wettest$total),
     driest_year  = rain_driest$year,  driest_mm  = round(rain_driest$total),
     wet_month = month.name[rain_wet_mon$month], wet_month_mm = round(rain_wet_mon$mm),

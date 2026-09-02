@@ -60,6 +60,11 @@ outputs/noumea/*
 !outputs/noumea/figures/
 outputs/noumea/figures/*
 !outputs/noumea/figures/*.png
+!outputs/lalitpur/
+outputs/lalitpur/*
+!outputs/lalitpur/figures/
+outputs/lalitpur/figures/*
+!outputs/lalitpur/figures/*.png
 
 !outputs/moscow/
 outputs/moscow/*
