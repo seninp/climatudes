@@ -11,15 +11,15 @@
 # extra row.
 #
 # SITE_ORDER is presentational only: both the chart and the table re-sort by
-# warming rate. It mirrors the chapter order in README.md — Europe, then North
-# America, then the Pacific, west to east within each — so the registry reads
-# the same way the page does. Do NOT sort the chapters by warming rate instead:
-# the chart re-ranks itself on every data refresh while the chapter order is
-# hand-maintained, so the two would drift apart silently.
+# warming rate. It mirrors the chapter order in README.md — Europe, then Asia,
+# then North America, then the Pacific, west to east within each — so the
+# registry reads the same way the page does. Do NOT sort the chapters by warming
+# rate instead: the chart re-ranks itself on every data refresh while the
+# chapter order is hand-maintained, so the two would drift apart silently.
 #
-# Lalitpur (Nepal) is the one site outside those three regions, and it sits last
-# rather than forcing an Asia group into the middle of the sequence. If a second
-# Asian site is ever added, give Asia its own block instead of extending the tail.
+# (Lalitpur sat alone at the tail until Hyderabad made it two Asian sites, at
+# which point Asia got its own block after Europe, as the old note here said
+# it should.)
 #
 #   Rscript R/04_compare.R
 # =============================================================================
@@ -35,8 +35,8 @@ source("R/lib/common.R")
 source("R/lib/narrative.R")   # shares ytd_standing_text() with every per-site chapter
 
 SITE_ORDER <- c("castanet", "paris", "lyon", "karlsruhe", "zurich", "moscow", "voronezh",
-                "irvine", "albuquerque", "santafe", "honolulu", "noumea",
-                "lalitpur")
+                "hyderabad", "lalitpur",
+                "irvine", "albuquerque", "santafe", "boston", "honolulu", "noumea")
 
 load_site <- function(key) {
   env <- new.env()

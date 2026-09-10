@@ -837,9 +837,13 @@ p5 <- ggplot() +
             colour = COL$wet, linewidth = 1.6) +
   geom_point(data = rmon_cur, aes(month, mm),
              colour = COL$wet, size = 1.9) +
-  annotate("text", x = max(rmon_cur$month) + 0.15, y = tail(rmon_cur$mm, 1),
-           label = as.character(cur_year), hjust = 0, vjust = 0.5,
-           colour = COL$wet, fontface = "bold", size = 4) +
+  # The current year can have NO near-complete rain month at all — Hyderabad's
+  # recent GHCN rain runs ~100-130 valid days/yr, so no month reaches 27 —
+  # and then there is no line to label (and the subtitle must not promise one).
+  (if (nrow(rmon_cur) > 0)
+    annotate("text", x = max(rmon_cur$month) + 0.15, y = tail(rmon_cur$mm, 1),
+             label = as.character(cur_year), hjust = 0, vjust = 0.5,
+             colour = COL$wet, fontface = "bold", size = 4)) +
   scale_x_continuous(breaks = 1:12, labels = month.abb,
                      expand = expansion(mult = c(0.02, 0.06))) +
   scale_y_continuous(labels = mm_label, limits = c(0, NA),
@@ -847,8 +851,9 @@ p5 <- ggplot() +
   labs(
     title = sprintf("Rain through the year — %s", CLIMATOLOGY_STATION),
     subtitle = sprintf(
-      "Monthly rainfall total, one grey line per year (%d–%d, %d years).  Dark line = long-term monthly normal; bold blue = %d so far.\n%s is the wettest month on average (%.0f mm), %s the driest (%.0f mm) — but any month can swing widely from year to year.",
-      min(rmon_prev$year), max(rmon_prev$year), rain_nyears, cur_year,
+      "Monthly rainfall total, one grey line per year (%d–%d, %d years).  Dark line = long-term monthly normal%s.\n%s is the wettest month on average (%.0f mm), %s the driest (%.0f mm) — but any month can swing widely from year to year.",
+      min(rmon_prev$year), max(rmon_prev$year), rain_nyears,
+      if (nrow(rmon_cur) > 0) sprintf("; bold blue = %d so far", cur_year) else "",
       month.name[rain_wet_mon$month], rain_wet_mon$mm,
       month.name[rain_dry_mon$month], rain_dry_mon$mm),
     x = NULL, y = NULL,
@@ -938,6 +943,11 @@ stats <- list(
     # Fewer than MIN_RAIN_TREND_YEARS complete years: the prose must not claim
     # the long run is flat (or tilting) — see R/lib/common.R and narrative.R.
     short = rain_short,
+    # The current year can lack ANY near-complete rain month (Hyderabad's
+    # recent GHCN rain runs ~100-130 valid days/yr): then the rain-climatology
+    # chart draws no bold current-year line, and the captions must not
+    # describe one — see rainc_cur_clause in narrative.R.
+    has_cur_months = nrow(rmon_cur) > 0,
     wettest_year = rain_wettest$year, wettest_mm = round(rain_wettest$total),
     driest_year  = rain_driest$year,  driest_mm  = round(rain_driest$total),
     wet_month = month.name[rain_wet_mon$month], wet_month_mm = round(rain_wet_mon$mm),

@@ -1,6 +1,6 @@
 # Climatudes — local warming, city by city
 
-**Thirteen cities, five national weather services, one method. Every city is warming.
+**Fifteen cities, five national weather services, one method. Every city is warming.
 Rainfall, taken from the same records through the same pipeline, shows nothing
 comparable: about half these cities show no trend at all, and where there is one
 it runs wetter in some places and drier in others.**
@@ -22,7 +22,7 @@ non-commercial use only (see [Licence](#licence)).
 
 <!-- BEGIN COMPARE -->
 
-## All thirteen cities, side by side
+## All fifteen cities, side by side
 
 Every chapter below uses the same variables, the same completeness rule (≥ 330 valid
 days/year) and the same trend method (least-squares on annual means). The numbers here are those
@@ -30,7 +30,7 @@ same headline figures gathered in one place, not recomputed. Two rates are given
 one over its own record, and one over 1971–2025, the longest window every
 city shares. Where they disagree, the raw ranking is partly reporting record length.
 
-![Warming rate compared across all thirteen cities, ranked fastest to slowest, with a shared-window rate alongside](outputs/compare/figures/warming_rate.png?v=e5b89297)
+![Warming rate compared across all fifteen cities, ranked fastest to slowest, with a shared-window rate alongside](outputs/compare/figures/warming_rate.png?v=e5f52630)
 
 <sub>Ranked by the raw rate. Paris’s record runs 98 years longer than Lalitpur’s, so two similar-looking rates can rest on very different
 amounts of evidence — the record span and the count of complete years are in the table below.</sub>
@@ -48,11 +48,13 @@ amounts of evidence — the record span and the count of complete years are in t
 | [Paris](#a-warming-climate-seen-from-paris) | France | 1873→2025 (153 yr, 153 complete) | **+0.18** | +0.43 | #1 of 154 — record | 2026, Jan 1 – Sep 8 · 251 d | Sep 8, 2026 |
 | [Albuquerque](#a-warming-climate-seen-from-albuquerque) | USA | 1932→2025 (94 yr, 94 complete) | **+0.18** | +0.38 | #1 of 95 — record | 2026, Jan 1 – Sep 7 · 250 d | Sep 7, 2026 |
 | [Zurich](#a-warming-climate-seen-from-zurich) | Switzerland | 1882→2025 (144 yr, 143 complete) | **+0.18** | +0.47 | #1 of 144 — record | 2026, Jan 1 – Sep 8 · 251 d | Sep 8, 2026 |
+| [Hyderabad](#a-warming-climate-seen-from-hyderabad) | India | 1958→2025 (68 yr, 50 complete) | **+0.17** | +0.16 | #17 of 56 | 2026, Jan 1 – Sep 10 · 253 d | Sep 10, 2026 |
+| [Boston](#a-warming-climate-seen-from-boston) | USA | 1885→2025 (141 yr, 139 complete) | **+0.14** | +0.33 | #18 of 141 | 2026, Jan 1 – Sep 8 · 251 d | Sep 8, 2026 |
 | [Karlsruhe](#a-warming-climate-seen-from-karlsruhe) | Germany | 1876→2025 (150 yr, 148 complete) | **+0.14** | +0.29 | #1 of 150 — record | 2026, Jan 1 – Sep 8 · 251 d | Sep 8, 2026 |
 | [Santa Fe](#a-warming-climate-seen-from-santa-fe) | USA | 1874→2025 (152 yr, 138 complete) | **+0.08** | +0.09 | #1 of 147 — record | 2026, Jan 1 – Jun 30 · 181 d | Jun 30, 2026 |
 
 † Moscow and Voronezh are manually exported from Roshydromet’s AISORI-M (login-gated, no automated
-refresh), so their "current through" date lags the other eleven sites’ automated feeds by
+refresh), so their "current through" date lags the other thirteen sites’ automated feeds by
 however long it has been since the last hand export. See each city’s own "Why only one station?"
 note below.
 
@@ -81,11 +83,13 @@ or on a high desert plateau. North to south:
 | [Zurich](#a-warming-climate-seen-from-zurich) | Switzerland | 47.4°N | 604 m | **Cfb** — temperate oceanic |
 | [Lyon](#a-warming-climate-seen-from-lyon) | France | 45.7°N | 202 m | **Cfa** — humid subtropical |
 | [Castanet-Tolosan](#a-warming-climate-seen-from-castanet-tolosan) | France | 43.6°N | 151 m | **Cfa** — humid subtropical |
+| [Boston](#a-warming-climate-seen-from-boston) | USA | 42.2°N | 190 m | **Dfa** — humid continental, hot summer |
 | [Santa Fe](#a-warming-climate-seen-from-santa-fe) | USA | 35.6°N | 2,059 m | **BSk** — cold semi-arid |
 | [Albuquerque](#a-warming-climate-seen-from-albuquerque) | USA | 35.0°N | 1,619 m | **BWk** — cold desert ‡ |
 | [Irvine](#a-warming-climate-seen-from-irvine) | USA | 33.7°N | 165 m | **BSh** — hot semi-arid |
 | [Lalitpur](#a-warming-climate-seen-from-lalitpur) | Nepal | 27.7°N | 1,337 m | **Cwa** — humid subtropical, dry winter |
 | [Honolulu](#a-warming-climate-seen-from-honolulu) | USA | 21.3°N | 2 m | **BSh** — hot semi-arid |
+| [Hyderabad](#a-warming-climate-seen-from-hyderabad) | India | 17.4°N | 527 m | **BSh** — hot semi-arid ‡ |
 | [Nouméa](#a-warming-climate-seen-from-nouméa) | France | 22.3°S | 69 m | **As** — tropical savanna, dry summer |
 
 Latitude and elevation are the **reference station's**, not the city centre's: they are where the
@@ -98,12 +102,12 @@ has two consequences worth stating. It describes **the station**, not the city: 
 on the dry leeward side of Oʻahu, classifies drier than windward Honolulu would. And the 30 years are each station's most recent 30 *complete* ones, so the
 exact span differs by a few years where a record has gaps.
 
-‡ Within one baseline period of a class boundary, so reference works using a different 30-year normal may place these differently: Voronezh (hot/warm summer); Albuquerque (steppe/desert). Köppen classes are hard thresholds, not gradients.
+‡ Within one baseline period of a class boundary, so reference works using a different 30-year normal may place these differently: Voronezh (hot/warm summer); Hyderabad (arid/humid); Albuquerque (steppe/desert). Köppen classes are hard thresholds, not gradients.
 
 ## How every chapter is built
 
 The comparison above is only meaningful because every city is measured the same way. That
-method is stated here once, rather than repeated in all thirteen chapters; each chapter adds only
+method is stated here once, rather than repeated in all fifteen chapters; each chapter adds only
 its own source, stations and rebuild command.
 
 - **Variables.** Minimum = `TN`, maximum = `TX`, mean = `(TN+TX)/2`, in °C;
@@ -1191,6 +1195,304 @@ comparison at the top of this page legitimate.
 
 <!-- END REPORT:voronezh -->
 
+<!-- BEGIN REPORT:hyderabad -->
+
+## A warming climate, seen from Hyderabad
+
+*NOAA GHCN-Daily and the Iowa Environmental Mesonet daily temperature records, 1958 to 2025 — plus 2026 so far.*
+
+NOAA GHCN-Daily and the Iowa Environmental Mesonet’s daily records for the Hyderabad area are unambiguous: since
+the mid-20th century, daily minimum, maximum and mean temperatures have all risen.
+
+| Headline number | Value |
+|---|---:|
+| Warming rate, mean temperature (Hyderabad-Begumpet) | **+0.17 °C / decade** |
+| Total rise over 67 years (1958 → 2025) | **+1.1 °C** |
+| Mean of the last decade (vs 26.0 °C in 1958–1967) | **27.2 °C** |
+| Frost days per year, 1958–1967 → 2016–2025 | **0 → 0** |
+| Hot days (≥ 30 °C) per year, 1958–1967 → 2016–2025 | **230 → 305** |
+| Complete station-years analysed | **50** |
+| 2026 year-to-date (Jan 1 – Sep 10), against 55 prior years | **#17 of 56** |
+
+### The long view: annual means
+
+![Annual mean temperatures around Hyderabad, 1958 to 2025](outputs/hyderabad/figures/temperature_series.png)
+
+<sub>Annual means of daily temperatures. The thick curves are LOESS smoothings that
+highlight the climate trend; the points are annual means.</sub>
+
+At Hyderabad-Begumpet — the station with the longest record (1958→2025) — the annual
+mean temperature rises by **+0.17 °C per decade**, about **+1.1 °C** over the
+whole period. This site has no second station — Hyderabad-Begumpet alone provides the temperature trend and the daily climatology.
+
+One caveat specific to this station: its daily minima have *fallen* (-0.02 °C/decade) while its maxima rose (+0.36 °C/decade), widening the average gap between day and night by 1.3 °C over the record. Greenhouse warming narrows that gap, minima rising fastest; a widening gap usually means something about the station changed — a move, or a shift in reading time — and these are raw observations, not a homogenised series. Treat this city's headline rate with more caution than the others here, and see the note below on which station this series is.
+
+### This year, against every year before it
+
+![Per-year mean over the same Jan-to-cutoff window, as a departure from the 1958–2025 mean, with 2026 highlighted](outputs/hyderabad/figures/temperature_ytd.png)
+
+<sub>Each bar is a year’s mean over the <em>same window</em> — <strong>Jan 1 – Sep 10</strong> —
+shown as its departure from the 1958–2025 mean (27.9 °C): red above, blue
+below. Holding the part-of-year identical is what makes one year comparable with another. The bars swing from blue to red over
+the decades.</sub>
+
+Measured like-for-like over Jan 1 – Sep 10, 2026 ranks **#17 of 56** at Hyderabad-Begumpet (28.1 °C). The warmest such window on record remains 2019 (29.3 °C).
+
+> [!NOTE]
+> A part-year mean cannot be compared with other years' full-year means. That is why 2026 appears on the long-view chart above only as a marked, hollow "to date" point — a part-year mean on an axis of full-year means — while its like-for-like standing is the chart here.
+
+### Every year, day by day
+
+![Daily temperature climatology, every year January to December, hot years red and cold years blue](outputs/hyderabad/figures/temperature_climatology.png)
+
+<sub>Each thin line is a single year’s daily mean temperature from January to December
+(1957–2025, 57 years), smoothed with a centred
+<strong>3-day rolling mean</strong> (each day = the average of itself
+±1 day) to tame day-to-day jitter while keeping the shape. The dark line
+is the long-term daily normal; the bold red line is <strong>2026 so far</strong>.
+Years whose smoothed daily mean ever rose above <strong>+30 °C</strong> are
+highlighted in red and labelled; years that ever fell below
+<strong>-5 °C</strong> in blue.</sub>
+
+> [!NOTE]
+> **Hottest and coldest years.** Measured on the smoothed daily-mean curve,
+> **56** years pushed above +30 °C (first in 1958, most recently 2024 and 2025)
+> while **0** years dropped below -5 °C.
+>   <sub>(On the raw, unsmoothed daily mean, no year touches both extremes.)</sub>
+
+### The record days
+
+The single most extreme days in each station’s record. “Hottest” is the highest daily
+maximum (TX), “coldest” the lowest daily minimum (TN).
+
+| Station (record span) | Extreme | Date | Min (TN) | Max (TX) |
+|---|---|---|---:|---:|
+| Hyderabad-Begumpet <sub>1957–2026</sub> | Hottest 🔥 | 2013-05-22 | 30.3 | **47.4** |
+| Hyderabad-Begumpet <sub>1957–2026</sub> | Coldest ❄️ | 2011-01-12 | **6.7** | 31.4 |
+
+At Hyderabad-Begumpet, the all-time heat (2013-05-22) postdates the all-time cold (2011-01-12) by 2 years.
+
+> [!NOTE]
+> **Why only one station?** Hyderabad's one long, openly published record is the Begumpet observatory, on the grounds of the old city airport (WMO 43128) — today well inside the city. India's weather service does not publish its daily archives openly, so this station's open record is split across two feeds: NOAA GHCN-Daily carries complete daily rainfall for 1901–1970 and daily temperature from 1973 that never fills a year, and the Iowa Environmental Mesonet's archive of the airport's hourly METAR reports supplies near-complete daily temperature from 1973 to about yesterday. The two feeds are the same instrument through different processing and sit on slightly different scales, so — because they overlap on tens of thousands of days — the offset is measured month by month from same-day pairs and the METAR feed is shifted onto the long record's scale before use. GHCN also holds a complete 1957–58, so the temperature series opens with a lone complete 1958, then an honest 14-year gap to 1973. Rainfall comes from GHCN alone — METAR carries no usable precipitation — so the rain record here is deep but mostly old: seventy complete years, 1901–1970, and too few valid days in most years since. Every value is still a real observation from this one station, adjusted only by a measured scale offset, not a model or a reanalysis.
+
+### The last decade (Hyderabad-Begumpet)
+
+| Year | Min (TN) | Max (TX) | Mean |
+|---|---:|---:|---:|
+| 2016 | 19.8 | 34.9 | **27.3** |
+| 2017 | 20.2 | 34.7 | **27.5** |
+| 2018 | 20.9 | 34.2 | **27.6** |
+| 2019 | 22.0 | 34.4 | **28.2** |
+| 2020 | 21.0 | 33.3 | **27.1** |
+| 2021 | 20.2 | 32.6 | **26.4** |
+| 2022 | 19.9 | 33.0 | **26.4** |
+| 2023 | 20.9 | 33.0 | **26.9** |
+| 2024 | 22.0 | 33.5 | **27.8** |
+| 2025 | 20.3 | 32.6 | **26.5** |
+| 2026 *(to date)* | 22.2 | 34.0 | **28.1** |
+
+### Frost days at zero, hot days up
+
+A degree of warming is abstract; a count of days is not. Hyderabad-Begumpet’s first
+complete decade (1958–1967) against its last (2016–2025):
+
+| Threshold days per year | 1958–1967 | 2016–2025 |
+|---|---:|---:|
+| Frost days (min < 0 °C) | 0 | **0** |
+| Hot days (max ≥ 30 °C) | 230 | **305** |
+| Very hot days (max ≥ 35 °C) | 93 | **111** |
+| Tropical nights (min ≥ 20 °C) | 237 | **239** |
+
+<sub>Counts of days per year crossing each threshold, averaged over the first and last
+complete decades of the record. There was never a frost season here to retreat; the change shows up entirely on the hot side of the ledger. Read the hot-day jump with care here: 20% of recent days come within 1 °C of the 30 °C line, so the count amplifies what is really a +1.9 °C shift in the average daily maximum.</sub>
+
+### What about the rain?
+
+Temperature is only half of a climate. Over 1901–2004 (72 years),
+annual precipitation at Hyderabad-Begumpet shows **no statistically significant trend**.
+
+![Annual rainfall totals around Hyderabad](outputs/hyderabad/figures/rain_series.png)
+
+<sub>Annual total precipitation. The dashed line is Hyderabad-Begumpet’s long-term mean
+(784 mm/yr); the thick curves are LOESS smoothings. The year-to-year swings are
+large — from 458 mm (1941) to 1431 mm (1915) —
+but the long-run slope (+1 mm/decade) is flat and not significant (p = 0.94).</sub>
+
+The same daily records that carry a strong warming signal carry *no* comparable signal in how much it rains: annual totals swing widely from year to year around a flat long-run mean.
+
+![Monthly rainfall through the year at Hyderabad-Begumpet, one line per year](outputs/hyderabad/figures/rain_climatology.png)
+
+<sub>Rain through the year: each grey line is one year’s monthly totals, the dark line the
+long-term monthly normal. July is the
+wettest month on average (178 mm), December the driest
+(7 mm) — but the spread between years dwarfs the seasonal cycle, which is exactly why no annual trend emerges.</sub>
+
+### Methodology
+
+Only what is specific to this city is listed here. The variables, completeness rule,
+smoothing, thresholds and trend method are the same for every city and are stated once, in
+[How every chapter is built](#how-every-chapter-is-built) — which is also what makes the
+comparison at the top of this page legitimate.
+
+- **Source.** NOAA GHCN-Daily and the Iowa Environmental Mesonet — Hyderabad-Begumpet (WMO 43128): daily temperature from two open feeds of the one station, METAR homogenized to the GHCN scale by a measured per-month offset; rainfall from GHCN (complete 1901–1970, thin after), Telangana, India. Full citation
+  in [Data sources](#data-sources) below.
+- **Stations.** Hyderabad-Begumpet (43128).
+- **Rebuild this chapter.** `SITE=hyderabad make all` — every figure and number above is
+  regenerated from the source data on each run.
+
+<sub>Figures and numbers above are generated — edit `R/03_readme.R`, not this block.</sub>
+
+<!-- END REPORT:hyderabad -->
+
+<!-- BEGIN REPORT:lalitpur -->
+
+## A warming climate, seen from Lalitpur
+
+*NOAA GHCN-Daily and the Iowa Environmental Mesonet daily temperature records, 1971 to 2025 — plus 2026 so far.*
+
+NOAA GHCN-Daily and the Iowa Environmental Mesonet’s daily records for the Lalitpur area are unambiguous: since
+the late 20th century, daily minimum, maximum and mean temperatures have all risen.
+
+| Headline number | Value |
+|---|---:|
+| Warming rate, mean temperature (Kathmandu Airport) | **+0.41 °C / decade** |
+| Total rise over 54 years (1971 → 2025) | **+2.2 °C** |
+| Mean of the last decade (vs 17.8 °C in 1971–1980) | **19.7 °C** |
+| Frost days per year, 1971–1980 → 2016–2025 | **11 → 0** |
+| Hot days (≥ 30 °C) per year, 1971–1980 → 2016–2025 | **13 → 76** |
+| Complete station-years analysed | **44** |
+| 2026 year-to-date (Jan 1 – Sep 10), against 44 prior years | **#3 of 45** |
+
+### The long view: annual means
+
+![Annual mean temperatures around Lalitpur, 1971 to 2025](outputs/lalitpur/figures/temperature_series.png)
+
+<sub>Annual means of daily temperatures. The thick curves are LOESS smoothings that
+highlight the climate trend; the points are annual means.</sub>
+
+At Kathmandu Airport — the station with the longest record (1971→2025) — the annual
+mean temperature rises by **+0.41 °C per decade**, about **+2.2 °C** over the
+whole period. This site has no second station — Kathmandu Airport alone provides the temperature trend and the daily climatology.
+
+
+
+### This year, against every year before it
+
+![Per-year mean over the same Jan-to-cutoff window, as a departure from the 1971–2025 mean, with 2026 highlighted](outputs/lalitpur/figures/temperature_ytd.png)
+
+<sub>Each bar is a year’s mean over the <em>same window</em> — <strong>Jan 1 – Sep 10</strong> —
+shown as its departure from the 1971–2025 mean (19.5 °C): red above, blue
+below. Holding the part-of-year identical is what makes one year comparable with another. The bars swing from blue to red over
+the decades.</sub>
+
+Measured like-for-like over Jan 1 – Sep 10, 2026 ranks **#3 of 45** at Kathmandu Airport (20.7 °C). The warmest such window on record remains 2024 (21.0 °C).
+
+> [!NOTE]
+> A part-year mean cannot be compared with other years' full-year means. That is why 2026 appears on the long-view chart above only as a marked, hollow "to date" point — a part-year mean on an axis of full-year means — while its like-for-like standing is the chart here.
+
+### Every year, day by day
+
+![Daily temperature climatology, every year January to December, hot years red and cold years blue](outputs/lalitpur/figures/temperature_climatology.png)
+
+<sub>Each thin line is a single year’s daily mean temperature from January to December
+(1971–2025, 54 years), smoothed with a centred
+<strong>3-day rolling mean</strong> (each day = the average of itself
+±1 day) to tame day-to-day jitter while keeping the shape. The dark line
+is the long-term daily normal; the bold red line is <strong>2026 so far</strong>.
+Years whose smoothed daily mean ever rose above <strong>+30 °C</strong> are
+highlighted in red and labelled; years that ever fell below
+<strong>-5 °C</strong> in blue.</sub>
+
+> [!NOTE]
+> **Hottest and coldest years.** Measured on the smoothed daily-mean curve,
+> **0** years pushed above +30 °C
+> while **0** years dropped below -5 °C.
+>   <sub>(On the raw, unsmoothed daily mean, no year touches both extremes.)</sub>
+
+### The record days
+
+The single most extreme days in each station’s record. “Hottest” is the highest daily
+maximum (TX), “coldest” the lowest daily minimum (TN).
+
+| Station (record span) | Extreme | Date | Min (TN) | Max (TX) |
+|---|---|---|---:|---:|
+| Kathmandu Airport <sub>1971–2026</sub> | Hottest 🔥 | 1989-05-07 | 11.4 | **36.6** |
+| Kathmandu Airport <sub>1971–2026</sub> | Coldest ❄️ | 2013-01-10 | **-4.7** | 15.2 |
+
+At Kathmandu Airport the all-time cold (2013-01-10) postdates the all-time heat (1989-05-07) by 24 years: a single record day is noisy, and the mean trend above is the more reliable measure.
+
+> [!NOTE]
+> **Why only one station?** Lalitpur (Patan) sits in the Kathmandu Valley; the valley's only long record is Tribhuvan International Airport, about 5 km north. To make that a current, real-station series takes two open feeds of the same airport, because its internationally-shared climate feed thinned while its live aviation feed did not: NOAA GHCN-Daily supplies clean daily temperature for 1971–2000 (and substantial data again from about 2015), and the Iowa Environmental Mesonet's archive of the airport's hourly METAR reports fills the rest, near-complete from 2012. The two feeds are the same instrument through different processing and sit on slightly different scales, so — because they overlap on thousands of recent days — the offset is measured month by month from same-day pairs and the METAR feed is shifted onto the long record's scale before use; the sparse 2001–2011 years still show as a gap rather than invented data. Rainfall comes from GHCN alone — METAR carries no usable precipitation — so the rain record here is thin and recent. This is the only site drawing on two feeds; every value is still a real observation from this one airport, adjusted only by a measured scale offset, not a model or a reanalysis.
+
+### The last decade (Kathmandu Airport)
+
+| Year | Min (TN) | Max (TX) | Mean |
+|---|---:|---:|---:|
+| 2016 | 13.2 | 26.4 | **19.8** |
+| 2017 | 13.1 | 26.3 | **19.7** |
+| 2018 | 12.7 | 25.8 | **19.2** |
+| 2019 | 13.0 | 25.8 | **19.4** |
+| 2020 | 13.1 | 25.5 | **19.3** |
+| 2021 | 13.3 | 25.8 | **19.6** |
+| 2022 | 13.9 | 25.8 | **19.9** |
+| 2023 | 13.5 | 26.3 | **19.9** |
+| 2024 | 13.9 | 26.5 | **20.2** |
+| 2025 | 14.1 | 26.1 | **20.1** |
+| 2026 *(to date)* | 14.8 | 26.7 | **20.7** |
+
+### Frost days down, hot days up
+
+A degree of warming is abstract; a count of days is not. Kathmandu Airport’s first
+complete decade (1971–1980) against its last (2016–2025):
+
+| Threshold days per year | 1971–1980 | 2016–2025 |
+|---|---:|---:|
+| Frost days (min < 0 °C) | 11 | **0** |
+| Hot days (max ≥ 30 °C) | 13 | **76** |
+| Very hot days (max ≥ 35 °C) | 0 | **0** |
+| Tropical nights (min ≥ 20 °C) | 40 | **78** |
+
+<sub>Counts of days per year crossing each threshold, averaged over the first and last
+complete decades of the record. Read the hot-day jump with care here: 25% of recent days come within 1 °C of the 30 °C line, so the count amplifies what is really a +2.1 °C shift in the average daily maximum.</sub>
+
+### What about the rain?
+
+Temperature is only half of a climate. Over 2015–2022 (6 years),
+annual precipitation at Kathmandu Airport shows **too short a record to test for a trend (6 complete years)**.
+
+![Annual rainfall totals around Lalitpur](outputs/lalitpur/figures/rain_series.png)
+
+<sub>Annual total precipitation. The dashed line is Kathmandu Airport’s long-term mean
+(1525 mm/yr); the thick curves are LOESS smoothings. The year-to-year swings are
+large — from 1146 mm (2017) to 1756 mm (2022) —
+but the long-run slope (+558 mm/decade) cannot be assessed from only 6 complete years.</sub>
+
+The rainfall record here is far shorter than the temperature record: 6 complete years (2015–2022), all recent. That is enough to show the scale of the monsoon and how much it varies between years, and not enough to say whether annual totals are rising or falling. The +558 mm/decade slope above is reported for completeness only; over 6 years it carries no weight.
+
+![Monthly rainfall through the year at Kathmandu Airport, one line per year](outputs/lalitpur/figures/rain_climatology.png)
+
+<sub>Rain through the year: each grey line is one year’s monthly totals, the dark line the
+long-term monthly normal. July is the
+wettest month on average (404 mm), November the driest
+(0 mm) — and with only a handful of years on the chart, the spread between them is the clearest thing it shows.</sub>
+
+### Methodology
+
+Only what is specific to this city is listed here. The variables, completeness rule,
+smoothing, thresholds and trend method are the same for every city and are stated once, in
+[How every chapter is built](#how-every-chapter-is-built) — which is also what makes the
+comparison at the top of this page legitimate.
+
+- **Source.** NOAA GHCN-Daily and the Iowa Environmental Mesonet — Kathmandu Airport (WMO 44454): daily temperature from two open feeds of the one station, METAR homogenized to the GHCN scale by a measured per-month offset; rainfall from GHCN, Bagmati Province, Nepal. Full citation
+  in [Data sources](#data-sources) below.
+- **Stations.** Kathmandu Airport (44454).
+- **Rebuild this chapter.** `SITE=lalitpur make all` — every figure and number above is
+  regenerated from the source data on each run.
+
+<sub>Figures and numbers above are generated — edit `R/03_readme.R`, not this block.</sub>
+
+<!-- END REPORT:lalitpur -->
+
 <!-- BEGIN REPORT:irvine -->
 
 ## A warming climate, seen from Irvine
@@ -1644,6 +1946,157 @@ comparison at the top of this page legitimate.
 
 <!-- END REPORT:santafe -->
 
+<!-- BEGIN REPORT:boston -->
+
+## A warming climate, seen from Boston
+
+*NOAA (National Centers for Environmental Information) daily temperature records, 1885 to 2025 — plus 2026 so far.*
+
+NOAA (National Centers for Environmental Information)’s daily records for the Boston area are unambiguous: since
+the late 19th century, daily minimum, maximum and mean temperatures have all risen.
+
+| Headline number | Value |
+|---|---:|
+| Warming rate, mean temperature (Blue Hill Observatory) | **+0.14 °C / decade** |
+| Total rise over 140 years (1885 → 2025) | **+2.0 °C** |
+| Mean of the last decade (vs 8.2 °C in 1885–1894) | **10.6 °C** |
+| Frost days per year, 1885–1894 → 2016–2025 | **131 → 110** |
+| Hot days (≥ 30 °C) per year, 1885–1894 → 2016–2025 | **10 → 29** |
+| Complete station-years analysed | **229** |
+| 2026 year-to-date (Jan 1 – Sep 8), against 140 prior years | **#18 of 141** |
+
+### The long view: annual means
+
+![Annual mean temperatures around Boston, 1885 to 2025](outputs/boston/figures/temperature_series.png)
+
+<sub>Annual means of daily temperatures. The thick curves are LOESS smoothings that
+highlight the climate trend; the points are annual means. The green series (Logan Airport) is Boston's own first-order station, on the harbor two miles east of downtown. It tracks the long Blue Hill Observatory reference mean closely.</sub>
+
+At Blue Hill Observatory — the station with the longest record (1885→2025) — the annual
+mean temperature rises by **+0.14 °C per decade**, about **+2.0 °C** over the
+whole period. The local Logan Airport station only covers 1936→2025. Its slope over that shorter, more recent window is steeper (+0.14 °C/decade), and so is Blue Hill Observatory’s over the same years (+0.15 °C/decade): recent decades warm faster, and over these years the two stations agree to within 0.02 °C/decade.
+
+
+
+### This year, against every year before it
+
+![Per-year mean over the same Jan-to-cutoff window, as a departure from the 1886–2025 mean, with 2026 highlighted](outputs/boston/figures/temperature_ytd.png)
+
+<sub>Each bar is a year’s mean over the <em>same window</em> — <strong>Jan 1 – Sep 8</strong> —
+shown as its departure from the 1886–2025 mean (10.1 °C): red above, blue
+below. Holding the part-of-year identical is what makes one year comparable with another. The bars swing from blue to red over
+the decades.</sub>
+
+Measured like-for-like over Jan 1 – Sep 8, 2026 ranks **#18 of 141** at Blue Hill Observatory (11.3 °C). The warmest such window on record remains 2010 (13.4 °C).
+
+> [!NOTE]
+> A part-year mean cannot be compared with other years' full-year means. That is why 2026 appears on the long-view chart above only as a marked, hollow "to date" point — a part-year mean on an axis of full-year means — while its like-for-like standing is the chart here.
+
+### Every year, day by day
+
+![Daily temperature climatology, every year January to December, hot years red and cold years blue](outputs/boston/figures/temperature_climatology.png)
+
+<sub>Each thin line is a single year’s daily mean temperature from January to December
+(1885–2025, 141 years), smoothed with a centred
+<strong>3-day rolling mean</strong> (each day = the average of itself
+±1 day) to tame day-to-day jitter while keeping the shape. The dark line
+is the long-term daily normal; the bold red line is <strong>2026 so far</strong>.
+Years whose smoothed daily mean ever rose above <strong>+30 °C</strong> are
+highlighted in red and labelled; years that ever fell below
+<strong>-5 °C</strong> in blue.</sub>
+
+> [!NOTE]
+> **Hottest and coldest years.** Measured on the smoothed daily-mean curve,
+> **1** year pushed above +30 °C (1948)
+> while **141** years dropped below -5 °C — every year in the record.
+> Years hitting both extremes: 1948.  <sub>(If the threshold is applied instead to the raw, unsmoothed daily mean, 1911, 1917, 1919, 1925, 1926, 1948, 1949, 1975, 1991, 1995, 2011, 2022 and 2025 each touch both extremes.)</sub>
+
+### The record days
+
+The single most extreme days in each station’s record. “Hottest” is the highest daily
+maximum (TX), “coldest” the lowest daily minimum (TN).
+
+| Station (record span) | Extreme | Date | Min (TN) | Max (TX) |
+|---|---|---|---:|---:|
+| Blue Hill Observatory <sub>1885–2026</sub> | Hottest 🔥 | 1949-08-10 | 22.2 | **38.3** |
+| Blue Hill Observatory <sub>1885–2026</sub> | Coldest ❄️ | 1934-02-09 | **-29.4** | -17.8 |
+| Logan Airport <sub>1936–2026</sub> | Hottest 🔥 | 2011-07-22 | 27.2 | **39.4** |
+| Logan Airport <sub>1936–2026</sub> | Coldest ❄️ | 1943-02-15 | **-25.6** | -14.4 |
+
+At Blue Hill Observatory, the all-time heat (1949-08-10) postdates the all-time cold (1934-02-09) by 15 years.
+
+> [!NOTE]
+> **Why Logan Airport?** Unusually for this project, the reference station is not the one inside the city. Blue Hill Observatory (station USC00190736), on the summit of Great Blue Hill in Milton, ten miles south of downtown, is the oldest continuously operating weather observatory in the United States: the same hilltop has been measured since 1885, with no site move and no interior gap in the raw daily record; GHCN's own quality flags thin 2009 and 2010 below the completeness bar, leaving 139 complete years. Logan International Airport (USW00014739), across the harbor two miles east of downtown, is Boston's official station and provides the local comparison; its record starts in 1936 and is likewise gap-free. The observatory sits at 190 m, so its absolute temperatures run cooler than sea-level Boston — the trends, not the levels, are what the two series share.
+
+### The last decade (Blue Hill Observatory)
+
+| Year | Min (TN) | Max (TX) | Mean |
+|---|---:|---:|---:|
+| 2016 | 5.9 | 15.9 | **10.9** |
+| 2017 | 5.7 | 15.1 | **10.4** |
+| 2018 | 5.6 | 14.7 | **10.1** |
+| 2019 | 4.8 | 14.5 | **9.6** |
+| 2020 | 6.2 | 15.8 | **11.0** |
+| 2021 | 6.2 | 15.4 | **10.8** |
+| 2022 | 5.7 | 16.1 | **10.9** |
+| 2023 | 6.6 | 15.8 | **11.2** |
+| 2024 | 6.3 | 15.9 | **11.1** |
+| 2025 | 5.4 | 15.1 | **10.3** |
+| 2026 *(to date)* | 6.2 | 16.4 | **11.3** |
+
+### Frost days down, hot days up
+
+A degree of warming is abstract; a count of days is not. Blue Hill Observatory’s first
+complete decade (1885–1894) against its last (2016–2025):
+
+| Threshold days per year | 1885–1894 | 2016–2025 |
+|---|---:|---:|
+| Frost days (min < 0 °C) | 131 | **110** |
+| Hot days (max ≥ 30 °C) | 10 | **29** |
+| Very hot days (max ≥ 35 °C) | 0 | **2** |
+| Tropical nights (min ≥ 20 °C) | 4 | **22** |
+
+<sub>Counts of days per year crossing each threshold, averaged over the first and last
+complete decades of the record.</sub>
+
+### What about the rain?
+
+Temperature is only half of a climate. Over 1886–2025 (138 years),
+annual precipitation at Blue Hill Observatory shows **a statistically significant trend (+17 mm/decade, p = 0.00)**.
+
+![Annual rainfall totals around Boston](outputs/boston/figures/rain_series.png)
+
+<sub>Annual total precipitation. The dashed line is Blue Hill Observatory’s long-term mean
+(1247 mm/yr); the thick curves are LOESS smoothings. The year-to-year swings are
+large — from 686 mm (1965) to 1804 mm (1998) —
+but the long-run slope (+17 mm/decade) is measurable and statistically significant (p = 0.00).</sub>
+
+Rainfall here is not flat: the long run tilts wetter. The tilt is small against the year-to-year spread above, which is why it is easy to miss in any single decade.
+
+![Monthly rainfall through the year at Blue Hill Observatory, one line per year](outputs/boston/figures/rain_climatology.png)
+
+<sub>Rain through the year: each grey line is one year’s monthly totals, the dark line the
+long-term monthly normal, the bold blue line 2026 so far. March is the
+wettest month on average (116 mm), June the driest
+(94 mm) — but the spread between years is why that slow trend is easy to miss from the monthly shape alone.</sub>
+
+### Methodology
+
+Only what is specific to this city is listed here. The variables, completeness rule,
+smoothing, thresholds and trend method are the same for every city and are stated once, in
+[How every chapter is built](#how-every-chapter-is-built) — which is also what makes the
+comparison at the top of this page legitimate.
+
+- **Source.** NOAA (National Centers for Environmental Information) — GHCN-Daily — Global Historical Climatology Network, daily summaries, Massachusetts, USA. Full citation
+  in [Data sources](#data-sources) below.
+- **Stations.** Logan Airport (USW00014739) and Blue Hill Observatory (USC00190736).
+- **Rebuild this chapter.** `SITE=boston make all` — every figure and number above is
+  regenerated from the source data on each run.
+
+<sub>Figures and numbers above are generated — edit `R/03_readme.R`, not this block.</sub>
+
+<!-- END REPORT:boston -->
+
 <!-- BEGIN REPORT:honolulu -->
 
 ## A warming climate, seen from Honolulu
@@ -1944,158 +2397,9 @@ comparison at the top of this page legitimate.
 
 <!-- END REPORT:noumea -->
 
-<!-- BEGIN REPORT:lalitpur -->
-
-## A warming climate, seen from Lalitpur
-
-*NOAA GHCN-Daily and the Iowa Environmental Mesonet daily temperature records, 1971 to 2025 — plus 2026 so far.*
-
-NOAA GHCN-Daily and the Iowa Environmental Mesonet’s daily records for the Lalitpur area are unambiguous: since
-the late 20th century, daily minimum, maximum and mean temperatures have all risen.
-
-| Headline number | Value |
-|---|---:|
-| Warming rate, mean temperature (Kathmandu Airport) | **+0.41 °C / decade** |
-| Total rise over 54 years (1971 → 2025) | **+2.2 °C** |
-| Mean of the last decade (vs 17.8 °C in 1971–1980) | **19.7 °C** |
-| Frost days per year, 1971–1980 → 2016–2025 | **11 → 0** |
-| Hot days (≥ 30 °C) per year, 1971–1980 → 2016–2025 | **13 → 77** |
-| Complete station-years analysed | **44** |
-| 2026 year-to-date (Jan 1 – Sep 10), against 44 prior years | **#3 of 45** |
-
-### The long view: annual means
-
-![Annual mean temperatures around Lalitpur, 1971 to 2025](outputs/lalitpur/figures/temperature_series.png)
-
-<sub>Annual means of daily temperatures. The thick curves are LOESS smoothings that
-highlight the climate trend; the points are annual means.</sub>
-
-At Kathmandu Airport — the station with the longest record (1971→2025) — the annual
-mean temperature rises by **+0.41 °C per decade**, about **+2.2 °C** over the
-whole period. This site has no second station — Kathmandu Airport alone provides the temperature trend and the daily climatology.
-
-
-
-### This year, against every year before it
-
-![Per-year mean over the same Jan-to-cutoff window, as a departure from the 1971–2025 mean, with 2026 highlighted](outputs/lalitpur/figures/temperature_ytd.png)
-
-<sub>Each bar is a year’s mean over the <em>same window</em> — <strong>Jan 1 – Sep 10</strong> —
-shown as its departure from the 1971–2025 mean (19.5 °C): red above, blue
-below. Holding the part-of-year identical is what makes one year comparable with another. The bars swing from blue to red over
-the decades.</sub>
-
-Measured like-for-like over Jan 1 – Sep 10, 2026 ranks **#3 of 45** at Kathmandu Airport (20.7 °C). The warmest such window on record remains 2024 (21.0 °C).
-
-> [!NOTE]
-> A part-year mean cannot be compared with other years' full-year means. That is why 2026 appears on the long-view chart above only as a marked, hollow "to date" point — a part-year mean on an axis of full-year means — while its like-for-like standing is the chart here.
-
-### Every year, day by day
-
-![Daily temperature climatology, every year January to December, hot years red and cold years blue](outputs/lalitpur/figures/temperature_climatology.png)
-
-<sub>Each thin line is a single year’s daily mean temperature from January to December
-(1971–2025, 55 years), smoothed with a centred
-<strong>3-day rolling mean</strong> (each day = the average of itself
-±1 day) to tame day-to-day jitter while keeping the shape. The dark line
-is the long-term daily normal; the bold red line is <strong>2026 so far</strong>.
-Years whose smoothed daily mean ever rose above <strong>+30 °C</strong> are
-highlighted in red and labelled; years that ever fell below
-<strong>-5 °C</strong> in blue.</sub>
-
-> [!NOTE]
-> **Hottest and coldest years.** Measured on the smoothed daily-mean curve,
-> **0** years pushed above +30 °C
-> while **0** years dropped below -5 °C.
->   <sub>(On the raw, unsmoothed daily mean, no year touches both extremes.)</sub>
-
-### The record days
-
-The single most extreme days in each station’s record. “Hottest” is the highest daily
-maximum (TX), “coldest” the lowest daily minimum (TN).
-
-| Station (record span) | Extreme | Date | Min (TN) | Max (TX) |
-|---|---|---|---:|---:|
-| Kathmandu Airport <sub>1971–2026</sub> | Hottest 🔥 | 1989-05-07 | 11.4 | **36.6** |
-| Kathmandu Airport <sub>1971–2026</sub> | Coldest ❄️ | 2013-01-10 | **-4.7** | 15.2 |
-
-At Kathmandu Airport the all-time cold (2013-01-10) postdates the all-time heat (1989-05-07) by 24 years: a single record day is noisy, and the mean trend above is the more reliable measure.
-
-> [!NOTE]
-> **Why only one station?** Lalitpur (Patan) sits in the Kathmandu Valley; the valley's only long record is Tribhuvan International Airport, about 5 km north. To make that a current, real-station series takes two open feeds of the same airport, because its internationally-shared climate feed thinned while its live aviation feed did not: NOAA GHCN-Daily supplies clean daily temperature for 1971–2000 (and substantial data again from about 2015), and the Iowa Environmental Mesonet's archive of the airport's hourly METAR reports fills the rest, near-complete from 2012. The two feeds are the same instrument through different processing and sit on slightly different scales, so — because they overlap on thousands of recent days — the offset is measured month by month from same-day pairs and the METAR feed is shifted onto the long record's scale before use; the sparse 2001–2011 years still show as a gap rather than invented data. Rainfall comes from GHCN alone — METAR carries no usable precipitation — so the rain record here is thin and recent. This is the only site drawing on two feeds; every value is still a real observation from this one airport, adjusted only by a measured scale offset, not a model or a reanalysis.
-
-### The last decade (Kathmandu Airport)
-
-| Year | Min (TN) | Max (TX) | Mean |
-|---|---:|---:|---:|
-| 2016 | 13.2 | 26.4 | **19.8** |
-| 2017 | 13.1 | 26.3 | **19.7** |
-| 2018 | 12.7 | 25.8 | **19.2** |
-| 2019 | 13.0 | 25.8 | **19.4** |
-| 2020 | 13.1 | 25.5 | **19.3** |
-| 2021 | 13.3 | 25.8 | **19.6** |
-| 2022 | 13.9 | 25.9 | **19.9** |
-| 2023 | 13.5 | 26.3 | **19.9** |
-| 2024 | 13.9 | 26.5 | **20.2** |
-| 2025 | 14.1 | 26.1 | **20.1** |
-| 2026 *(to date)* | 14.8 | 26.7 | **20.7** |
-
-### Frost days down, hot days up
-
-A degree of warming is abstract; a count of days is not. Kathmandu Airport’s first
-complete decade (1971–1980) against its last (2016–2025):
-
-| Threshold days per year | 1971–1980 | 2016–2025 |
-|---|---:|---:|
-| Frost days (min < 0 °C) | 11 | **0** |
-| Hot days (max ≥ 30 °C) | 13 | **77** |
-| Very hot days (max ≥ 35 °C) | 0 | **0** |
-| Tropical nights (min ≥ 20 °C) | 40 | **78** |
-
-<sub>Counts of days per year crossing each threshold, averaged over the first and last
-complete decades of the record. Read the hot-day jump with care here: 25% of recent days come within 1 °C of the 30 °C line, so the count amplifies what is really a +2.1 °C shift in the average daily maximum.</sub>
-
-### What about the rain?
-
-Temperature is only half of a climate. Over 2015–2022 (6 years),
-annual precipitation at Kathmandu Airport shows **too short a record to test for a trend (6 complete years)**.
-
-![Annual rainfall totals around Lalitpur](outputs/lalitpur/figures/rain_series.png)
-
-<sub>Annual total precipitation. The dashed line is Kathmandu Airport’s long-term mean
-(1525 mm/yr); the thick curves are LOESS smoothings. The year-to-year swings are
-large — from 1146 mm (2017) to 1756 mm (2022) —
-but the long-run slope (+558 mm/decade) cannot be assessed from only 6 complete years.</sub>
-
-The rainfall record here is far shorter than the temperature record: 6 complete years (2015–2022), all recent. That is enough to show the scale of the monsoon and how much it varies between years, and not enough to say whether annual totals are rising or falling. The +558 mm/decade slope above is reported for completeness only; over 6 years it carries no weight.
-
-![Monthly rainfall through the year at Kathmandu Airport, one line per year](outputs/lalitpur/figures/rain_climatology.png)
-
-<sub>Rain through the year: each grey line is one year’s monthly totals, the dark line the
-long-term monthly normal, the bold blue line 2026 so far. July is the
-wettest month on average (404 mm), November the driest
-(0 mm) — and with only a handful of years on the chart, the spread between them is the clearest thing it shows.</sub>
-
-### Methodology
-
-Only what is specific to this city is listed here. The variables, completeness rule,
-smoothing, thresholds and trend method are the same for every city and are stated once, in
-[How every chapter is built](#how-every-chapter-is-built) — which is also what makes the
-comparison at the top of this page legitimate.
-
-- **Source.** NOAA GHCN-Daily and the Iowa Environmental Mesonet — Kathmandu Airport (WMO 44454): daily temperature from two open feeds of the one station, METAR homogenized to the GHCN scale by a measured per-month offset; rainfall from GHCN, Bagmati Province, Nepal. Full citation
-  in [Data sources](#data-sources) below.
-- **Stations.** Kathmandu Airport (44454).
-- **Rebuild this chapter.** `SITE=lalitpur make all` — every figure and number above is
-  regenerated from the source data on each run.
-
-<sub>Figures and numbers above are generated — edit `R/03_readme.R`, not this block.</sub>
-
-<!-- END REPORT:lalitpur -->
-
 ## Data sources
 
-Each site pulls from its own national weather service. Eleven are open data under
+Each site pulls from its own national weather service. Thirteen are open data under
 attribution-only licences. Moscow and Voronezh are **not** — Roshydromet's
 AISORI-M is a registered reference publication, personal and non-commercial use
 only, which is why their raw exports are never committed to this repository:
@@ -2109,12 +2413,14 @@ only, which is why their raw exports are never committed to this repository:
 | Zurich | MeteoSwiss — Open Government Data | `ogd-nbcn` (homogeneous climate stations) + `ogd-smn` (automatic weather stations) | MeteoSwiss Open Data (attribution: "Source: MeteoSwiss") |
 | Moscow | Roshydromet / RIHMI-WDC — AISORI-M | Сутки → TTTR (temp. + precip.), WMO 27612, manually exported (login-gated, no stable URL) | Not openly licensed — Rospatent 2019621537; personal, non-commercial use only |
 | Voronezh | Roshydromet / RIHMI-WDC — AISORI-M | Сутки → TTTR (temp. + precip.), WMO 34123, manually exported (login-gated, no stable URL) | Not openly licensed — Rospatent 2019621537; personal, non-commercial use only |
+| Hyderabad | NOAA — GHCN-Daily + Iowa Environmental Mesonet (ASOS/METAR) | `daily-summaries` (TMAX/TMIN/PRCP) station IN001080500 + IEM `IN__ASOS` station VOHY — two open feeds of the one observatory, METAR homogenized to the GHCN scale | U.S. Government work (NOAA), no copyright restriction; IEM open data (Iowa State University) |
+| Lalitpur | NOAA — GHCN-Daily + Iowa Environmental Mesonet (ASOS/METAR) | `daily-summaries` (TMAX/TMIN/PRCP) station NP000444540 + IEM `NP__ASOS` station VNKT — two open feeds of the one airport, METAR homogenized to the GHCN scale | U.S. Government work (NOAA), no copyright restriction; IEM open data (Iowa State University) |
 | Irvine | NOAA — GHCN-Daily, Access Data Service v1 | `daily-summaries` (TMAX/TMIN/PRCP), stations USC00049087/044303 (spliced) + USW00093184 | U.S. Government work — no copyright restriction |
 | Albuquerque | NOAA — GHCN-Daily, Access Data Service v1 | `daily-summaries` (TMAX/TMIN/PRCP), stations USW00023050 (GSN) + USC00290225 | U.S. Government work — no copyright restriction |
 | Santa Fe | NOAA — GHCN-Daily, Access Data Service v1 | `daily-summaries` (TMAX/TMIN/PRCP), stations USC00298072/298085 (spliced) + USW00023049 | U.S. Government work — no copyright restriction |
+| Boston | NOAA — GHCN-Daily, Access Data Service v1 | `daily-summaries` (TMAX/TMIN/PRCP), stations USC00190736 + USW00014739 | U.S. Government work — no copyright restriction |
 | Honolulu | NOAA — GHCN-Daily, Access Data Service v1 | `daily-summaries` (TMAX/TMIN/PRCP), stations USW00022521 + USC00516395 | U.S. Government work — no copyright restriction |
 | Nouméa | Météo-France — *Données climatologiques de base – quotidiennes* | dept. 988 (Nouvelle-Calédonie), `RR-T-Vent` daily files, same three eras | Licence Ouverte / Open Licence (Etalab 2.0) |
-| Lalitpur | NOAA — GHCN-Daily + Iowa Environmental Mesonet (ASOS/METAR) | `daily-summaries` (TMAX/TMIN/PRCP) station NP000444540 + IEM `NP__ASOS` station VNKT — two open feeds of the one airport, METAR homogenized to the GHCN scale | U.S. Government work (NOAA), no copyright restriction; IEM open data (Iowa State University) |
 
 Full dataset URLs and citation text are in each site's report above and in
 `R/sites/<site>.R`. Météo-France field definitions land in
@@ -2136,12 +2442,16 @@ Full dataset URLs and citation text are in each site's report above and in
 | Zurich | `SMA` | Zürich-Fluntern | 1864→ (TN/TX 1881→) | Long regional reference; MeteoSwiss's homogeneous series for the trend and climatology |
 | Moscow | `27612` | Moscow | 1948→2025 | Single station — no local pairing; this export has no second WMO index |
 | Voronezh | `34123` | Voronezh | 1940→2026 | Single station — no local pairing; this export has no second WMO index |
+| Hyderabad | `43128` | Hyderabad-Begumpet | 1901→ (temp. 1957→) | Single station — the IMD observatory at the old city airport; two open feeds of it homogenized (GHCN + METAR) |
+| Lalitpur | `44454` | Kathmandu Airport | 1971→ | Single station — the Kathmandu Valley's one long record; two open feeds of it homogenized (GHCN + METAR) |
 | Irvine | `USW00093184` | John Wayne Airport | 1999→ | Local station, on Irvine's border — no splice needed, but the shortest record of the pair |
 | Irvine | `USC00044303` | Irvine | 1915→ | Long reference — spliced with predecessor 049087 (Tustin Irvine Ranch, 1915→2003) at its 2003 handoff to 044303, a few miles away |
 | Albuquerque | `USC00290225` | Albuquerque Foothills NE | 1991→ | Local station, a different microclimate in the city's northeast foothills — its own temperature reporting has a real gap from June 2026 |
 | Albuquerque | `USW00023050` | Albuquerque Airport | 1931→ | Long reference — one continuous record, no splice needed; flagged by NOAA as a GSN station |
 | Santa Fe | `USW00023049` | Santa Fe Airport | 1941→ | Local station — NOAA's own GHCN-Daily archive has no digitized daily temperature for it between 1959 and 1996 |
 | Santa Fe | `USC00298085` | Santa Fe | 1874→ | Long reference — spliced with predecessor 298072 (in-town, 1874→1972) at its 1972-04-01 handoff to 298085, a few miles south |
+| Boston | `USW00014739` | Logan Airport | 1936→ | Local station, Boston's own first-order station on the harbor two miles east of downtown; gap-free |
+| Boston | `USC00190736` | Blue Hill Observatory | 1885→ | Long reference — the oldest continuously operating US weather observatory, same hilltop in Milton since 1885; no splice, and only 2009–2010 fall short of the completeness rule (GHCN QC flags) |
 | Honolulu | `USC00516395` | Honolulu-Moanalua | 1906→ | Local station — **rainfall only**; a valley neighbourhood between the airport and downtown, 80 complete years of the 81 it reports |
 | Honolulu | `USW00022521` | Honolulu Airport | 1940→ | Long regional reference; no splice needed, but the 1940s years fall short of the completeness rule, so the trend starts at 1950 |
 | Nouméa | `98818002` | Nouméa-Magenta | 1964→ | Local station, the in-town domestic airfield; complete, no gaps |
@@ -2165,22 +2475,23 @@ target town, so every pairing is a compromise. The compromises:
 | Karlsruhe | Karlsruhe-Wolfartsweier | Rainfall only. The nearest station that also measured temperature (Augustenberg, under 1 km from Grötzingen) closed in 1985. |
 | Zurich | Zürich-Affoltern | Affoltern is outside MeteoSwiss's homogeneous long-term network, so this is the closest full station. |
 | Moscow, Voronezh | *none* | Exported from AISORI-M with one WMO index each; there is no second station to pair. |
+| Hyderabad | *none* | One observatory holds the city's whole open record; there is no second gauge to pair. |
+| Lalitpur | *none* | One airport station serves the whole Kathmandu Valley; there is no second gauge to pair. |
 | Irvine | John Wayne Airport | Gap-free, but only from 1999, against the reference series' 1915. |
 | Albuquerque | Albuquerque Foothills NE | A genuinely different microclimate, but its temperature reporting stops in June 2026. |
 | Santa Fe | Santa Fe Airport | NOAA's archive holds no digitized daily temperature for it between 1959 and 1996. |
+| Boston | Logan Airport | None — gap-free since 1936. The usual roles invert here: the in-city station is the local one, and the reference is Blue Hill Observatory, ten miles south in Milton at 190 m. |
 | Honolulu | Honolulu-Moanalua | Rainfall only. No in-town station measures temperature independently of the airport. |
 | Nouméa | Nouméa-Magenta | None — a complete, gap-free local record. |
-| Lalitpur | *none* | One airport station serves the whole Kathmandu Valley; there is no second gauge to pair. |
 
 Each chapter's own "Why…?" note gives the detail.
 
 ## Project layout
 
 Sites appear in the same order everywhere on this page — chapters, the tables
-above, the tree below, and `SITE_ORDER` in `R/04_compare.R`: **Europe, then North
-America, then the Pacific, west to east within each**, with Lalitpur last as the
-only site outside those three regions. Adding a city means inserting it
-geographically in all of them, not appending. (The comparison chart and table are
+above, the tree below, and `SITE_ORDER` in `R/04_compare.R`: **Europe, then Asia,
+then North America, then the Pacific, west to east within each**. Adding a city
+means inserting it geographically in all of them, not appending. (The comparison chart and table are
 the exception: they sort themselves by warming rate.)
 
 ```
@@ -2199,17 +2510,20 @@ climatudes/
 │   │   ├── karlsruhe.R        Karlsruhe: same, for DWD
 │   │   ├── moscow.R           Moscow: same, for Roshydromet/AISORI-M (manual export)
 │   │   ├── voronezh.R         Voronezh: same, for Roshydromet/AISORI-M (manual export)
+│   │   ├── hyderabad.R        Hyderabad: same, for NOAA GHCN-Daily + IEM METAR (two feeds, one station)
+│   │   ├── lalitpur.R         Lalitpur: same, for NOAA GHCN-Daily + IEM METAR (two feeds, one station)
 │   │   ├── irvine.R           Irvine: same, for NOAA GHCN-Daily
 │   │   ├── albuquerque.R      Albuquerque: same, for NOAA GHCN-Daily
 │   │   ├── santafe.R          Santa Fe: same, for NOAA GHCN-Daily
+│   │   ├── boston.R           Boston: same, for NOAA GHCN-Daily
 │   │   ├── honolulu.R         Honolulu: same, for NOAA GHCN-Daily
-│   │   ├── noumea.R           Nouméa: same, for Météo-France dept. 988
-│   │   └── lalitpur.R         Lalitpur: same, for NOAA GHCN-Daily + IEM METAR (two feeds, one station)
+│   │   └── noumea.R           Nouméa: same, for Météo-France dept. 988
 │   ├── sources/
 │   │   ├── meteofrance.R      fetch + normalize Météo-France's format (Castanet-Tolosan, Nouméa)
 │   │   ├── meteoswiss.R       fetch + normalize MeteoSwiss's format
 │   │   ├── dwd.R              fetch + normalize DWD's format
 │   │   ├── noaa.R             fetch + normalize NOAA GHCN-Daily's format (Santa Fe, Honolulu)
+│   │   ├── ghcn_iem.R         homogenize two open feeds of one station (Hyderabad, Lalitpur)
 │   │   └── meteoru.R          read (not fetch) a manual AISORI-M export (Moscow, Voronezh)
 │   ├── 00_prepare_data.R      generic: dispatches to R/sources/<site's source>.R
 │   ├── 01_plot.R              generic: build the five figures + annual tables + stats
@@ -2268,6 +2582,12 @@ where the fetch logic lives (`R/sources/<source>.R`) rather than repeated here:
   v1 (`ncei.noaa.gov/access/services/data/v1`), one CSV request per station
   covering its whole history; no historical/recent split needed, since a
   station's full record is a few hundred KB either way.
+- **NOAA GHCN-Daily + IEM** (Hyderabad, Lalitpur) — the same NOAA service plus
+  the Iowa Environmental Mesonet's METAR-derived daily summaries
+  (`mesonet.agron.iastate.edu`): two open feeds of one physical station,
+  homogenized by a per-month offset measured from their same-day overlap.
+  `R/sources/ghcn_iem.R` also QCs the flag-less METAR feed (despike, GHCN
+  monthly envelope) and drops days the two feeds cannot agree on.
 - **Météo-France** (Nouméa) — same module and file layout as Castanet-Tolosan,
   just a different `dept` (`988`, New Caledonia's pseudo-département code in
   this dataset — it has no mainland département number of its own).
@@ -2342,11 +2662,11 @@ Grouped by provider, since the licence follows the source rather than the city:
   Licence (Etalab 2.0)*.
 - Zurich © MeteoSwiss Open Data — attribution required: "Source: MeteoSwiss".
 - Karlsruhe © DWD (Deutscher Wetterdienst), *Creative Commons BY 4.0*.
-- Irvine, Albuquerque, Santa Fe and Honolulu — NOAA / NCEI GHCN-Daily, U.S.
-  Government work, no copyright restriction.
-- Lalitpur — NOAA / NCEI GHCN-Daily (U.S. Government work, no copyright
-  restriction) combined with the Iowa Environmental Mesonet ASOS archive
-  (Iowa State University, open data, attribution requested).
+- Irvine, Albuquerque, Santa Fe, Boston and Honolulu — NOAA / NCEI GHCN-Daily,
+  U.S. Government work, no copyright restriction.
+- Hyderabad and Lalitpur — NOAA / NCEI GHCN-Daily (U.S. Government work, no
+  copyright restriction) combined with the Iowa Environmental Mesonet ASOS
+  archive (Iowa State University, open data, attribution requested).
 - Moscow and Voronezh © Roshydromet / RIHMI-WDC (AISORI-M) — **not openly
   licensed** (registered as an official reference publication, Rospatent
   2019621537); used here for personal, non-commercial analysis only, which is

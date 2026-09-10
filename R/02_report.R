@@ -317,8 +317,8 @@ template <- '<!DOCTYPE html>
     <img src="data:image/png;base64,{{IMG_RAINC}}" alt="Monthly rainfall through the year at {{REF_STATION}}, one line per year, with the long-term normal and the current year">
     <figcaption>
       Rain through the year: each grey line is one year&rsquo;s monthly totals,
-      the dark line the long-term monthly normal, the bold blue line
-      {{CUR_YEAR}}{{SO_FAR_SUFFIX}}. {{WET_MONTH}} is the wettest month on average
+      the dark line the long-term monthly
+      normal{{RAINC_CUR_CLAUSE}}. {{WET_MONTH}} is the wettest month on average
       ({{WET_MONTH_MM}}&nbsp;mm), {{DRY_MONTH}} the driest
       ({{DRY_MONTH_MM}}&nbsp;mm) — {{RAIN_MONTHLY_CLOSING}}
     </figcaption>

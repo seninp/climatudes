@@ -188,6 +188,13 @@ build_common_fills <- function(stats, site) {
   # it would be describing a chart element that R/01_plot.R never draws.
   cur_year_clause <- if (YEAR_COMPLETE) "" else sprintf(" — plus %d so far", stats$cur_year)
   so_far_suffix   <- if (YEAR_COMPLETE) "" else " so far"
+  # The rain-climatology captions describe "the bold blue line <year> so far",
+  # but when the current year has no near-complete rain month R/01_plot.R draws
+  # no such line (see rmon_cur there) — the clause must disappear with it.
+  # A missing field (stats built before it existed) means the line is drawn.
+  rainc_cur_clause <- if (is.null(stats$rain$has_cur_months) ||
+                          isTRUE(stats$rain$has_cur_months))
+    sprintf(", the bold blue line %d%s", stats$cur_year, so_far_suffix) else ""
   ytd_section_year <- if (YEAR_COMPLETE) as.character(stats$cur_year) else "This year"
   smooth_half <- (stats$smooth_window - 1) %/% 2
   smooth_half_word <- if (smooth_half == 1) "day" else "days"
@@ -500,6 +507,7 @@ build_common_fills <- function(stats, site) {
     RAIN_SLOPE = sprintf("%+.0f", rn$slope_dec),
     RAIN_SIG_CLAUSE = rain_sig_clause, RAIN_FLAT_CLAUSE = rain_flat_clause,
     RAIN_CLOSING_PARAGRAPH = rain_closing_paragraph, RAIN_MONTHLY_CLOSING = rain_monthly_closing,
+    RAINC_CUR_CLAUSE = rainc_cur_clause,
     WETTEST_YEAR = rn$wettest_year, WETTEST_MM = rn$wettest_mm,
     DRIEST_YEAR = rn$driest_year, DRIEST_MM = rn$driest_mm,
     WET_MONTH = rn$wet_month, WET_MONTH_MM = rn$wet_month_mm,

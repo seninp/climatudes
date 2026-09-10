@@ -3,8 +3,10 @@
 # into a single daily series, for a station whose internationally-shared
 # climatological feed thinned but whose live METAR stream did not.
 #
-# The worked (and only) case is Kathmandu's Tribhuvan International Airport, the
-# sole long record for the Kathmandu Valley (see R/sites/lalitpur.R):
+# The first worked case is Kathmandu's Tribhuvan International Airport, the
+# sole long record for the Kathmandu Valley (see R/sites/lalitpur.R); Hyderabad's
+# Begumpet observatory (R/sites/hyderabad.R) follows the same recipe with a far
+# richer overlap. For Kathmandu:
 #   * NOAA GHCN-Daily (station NP000444540, WMO 44454) — clean daily TMAX/TMIN
 #     1971-2000, thin and intermittent 2001-2011, then substantial again from
 #     ~2015 (200-260 days/yr, below the completeness bar alone but a rich
@@ -38,6 +40,12 @@
 #                run time and logged. Requires >= MIN_OVERLAP_DAYS pairs per
 #                month or the run stops — no silent fallback to an uncorrected
 #                splice.
+#   QC           corrected IEM is despiked against its own 15-day rolling
+#                median and bounded by GHCN's per-month all-record envelope
+#                (IEM has no QC flags of its own), and a day where the two
+#                feeds contradict each other beyond any plausible processing
+#                difference is dropped rather than guessed. See the threshold
+#                constants below for the measurements behind all three.
 #
 # Contract every R/sources/<source>.R module must satisfy: define
 # prepare_data(site), which fetches whatever is missing under site$paths$raw,
@@ -49,6 +57,33 @@
 # All 12 months clear this comfortably (160-320 pairs as of 2026); the guard is
 # a tripwire against a future data change that quietly erodes the overlap.
 GHCN_IEM_MIN_OVERLAP_DAYS <- 60L
+
+# ---- QC thresholds, from measuring both sites' feeds (2026-09-10) ------------
+# IEM's daily summaries carry no QC flags at all (unlike GHCN's QFLAG), and the
+# raw METAR archive contains outright garbage: a -22 F September minimum and a
+# 59 C January maximum at Hyderabad, 2-3 C monsoon nights at Kathmandu. Real
+# weather deviates from a station's 15-day rolling median by at most ~12 C in
+# these climates (Kathmandu's winter-fog days, Hyderabad's cyclone days reach
+# -11 to -12); the glitches sit at 15-54. Null corrected-IEM values beyond this:
+GHCN_IEM_IEM_SPIKE <- 12
+# Where BOTH feeds observe the same day, they agree to sd ~1.0-1.4 C after the
+# offset correction. A disagreement beyond this (~6 sigma) means one of them is
+# wrong, and cheaply deciding which is unreliable — measured cases go both ways
+# (GHCN's un-QC'd 49.0 C at Hyderabad 1979-04-27 vs IEM's 38.9 matching the
+# neighbouring days; elsewhere IEM is the bad one). Drop the day for that
+# element instead of guessing:
+GHCN_IEM_MAX_DISAGREE <- 8
+# The rolling-median despike misses garbage that is only modestly above the
+# surrounding days: a lone corrupt METAR gave Hyderabad 116.6 F (47.0 C) on
+# 2019-04-27 among 104-107.6 F neighbours — +5.5 C off the local median, inside
+# the real-weather band, yet 4 C above anything the station's 50-year GHCN
+# record ever measured in April. So corrected-IEM values are also bounded by
+# GHCN's own per-calendar-month all-record envelope, widened by this margin.
+# The margin keeps genuine new records: real all-time extremes advance on this
+# envelope by tenths of a degree, not by four. GHCN values are not bounded
+# (the envelope is circular for them); a bogus GHCN extreme is caught by the
+# disagreement rule instead, and excluded from the envelope it would inflate.
+GHCN_IEM_ENVELOPE_MARGIN <- 3
 
 # ---- NOAA GHCN-Daily (Access Data Service v1) --------------------------------
 # Same endpoint/units as R/sources/noaa.R; replicated (not shared) so this module
@@ -196,13 +231,57 @@ prepare_data <- function(site) {
   iem <- merge(iem, offs[, .(m, offTN, offTX)], by = "m")
   iem[, `:=`(TN = TN - offTN, TX = TX - offTX, m = NULL, offTN = NULL, offTX = NULL)]
 
-  # 2. Temperature: real GHCN value wherever it exists, else corrected IEM.
+  # 2. QC pass one — despike the corrected IEM feed against its own 15-day
+  #    rolling median (see GHCN_IEM_IEM_SPIKE above). GHCN is NOT despiked:
+  #    it has its own QC (QFLAG, applied at read time), and a symmetric filter
+  #    here would delete real weather — Hyderabad's 2010 cyclone days and
+  #    Kathmandu's winter-fog days sit just under the garbage band.
+  setorder(iem, AAAAMMJJ)
+  n_spike <- integer(0)
+  for (v in c("TN", "TX")) {
+    ok <- !is.na(iem[[v]])
+    dev <- iem[[v]][ok] - runmed(iem[[v]][ok], 15)
+    bad <- which(ok)[abs(dev) > GHCN_IEM_IEM_SPIKE]
+    n_spike[v] <- length(bad)
+    if (length(bad)) set(iem, i = bad, j = v, value = NA_real_)
+  }
+
+  # 3. Temperature: real GHCN value wherever it exists, else corrected IEM —
+  #    except where the two feeds contradict each other beyond
+  #    GHCN_IEM_MAX_DISAGREE, where the day is dropped for that element: two
+  #    irreconcilable measurements of the same instrument are an unknown, not
+  #    a choice.
   temp <- merge(ghcn[, .(AAAAMMJJ, gTN = TN, gTX = TX)],
                 iem [, .(AAAAMMJJ, iTN = TN, iTX = TX)],
                 by = "AAAAMMJJ", all = TRUE)
-  temp[, TN := fifelse(!is.na(gTN), gTN, iTN)]
-  temp[, TX := fifelse(!is.na(gTX), gTX, iTX)]
-  temp <- temp[, .(AAAAMMJJ, TN, TX)]
+  temp[, disTN := !is.na(gTN) & !is.na(iTN) & abs(gTN - iTN) > GHCN_IEM_MAX_DISAGREE]
+  temp[, disTX := !is.na(gTX) & !is.na(iTX) & abs(gTX - iTX) > GHCN_IEM_MAX_DISAGREE]
+
+  # 3b. QC pass two, IEM only — bound corrected IEM by GHCN's per-calendar-month
+  #     all-record envelope (see GHCN_IEM_ENVELOPE_MARGIN above), computed with
+  #     the disagreement-flagged GHCN values left out so a bogus GHCN extreme
+  #     cannot inflate the envelope that exists to catch its IEM twin.
+  temp[, m := (AAAAMMJJ %/% 100L) %% 100L]
+  env <- temp[, .(loTN = min(gTN[!disTN], na.rm = TRUE), hiTN = max(gTN[!disTN], na.rm = TRUE),
+                  loTX = min(gTX[!disTX], na.rm = TRUE), hiTX = max(gTX[!disTX], na.rm = TRUE)),
+              by = m]
+  temp <- merge(temp, env, by = "m")
+  n_env <- c(TN = temp[, sum(!is.na(iTN) &
+               (iTN < loTN - GHCN_IEM_ENVELOPE_MARGIN | iTN > hiTN + GHCN_IEM_ENVELOPE_MARGIN))],
+             TX = temp[, sum(!is.na(iTX) &
+               (iTX < loTX - GHCN_IEM_ENVELOPE_MARGIN | iTX > hiTX + GHCN_IEM_ENVELOPE_MARGIN))])
+  temp[!is.na(iTN) & (iTN < loTN - GHCN_IEM_ENVELOPE_MARGIN | iTN > hiTN + GHCN_IEM_ENVELOPE_MARGIN),
+       iTN := NA_real_]
+  temp[!is.na(iTX) & (iTX < loTX - GHCN_IEM_ENVELOPE_MARGIN | iTX > hiTX + GHCN_IEM_ENVELOPE_MARGIN),
+       iTX := NA_real_]
+
+  temp[, TN := fifelse(disTN, NA_real_, fifelse(!is.na(gTN), gTN, iTN))]
+  temp[, TX := fifelse(disTX, NA_real_, fifelse(!is.na(gTX), gTX, iTX))]
+  message(sprintf("  QC: nulled %d IEM spikes (TN %d, TX %d); dropped %d contradictory days (TN %d, TX %d); %d IEM values outside the GHCN monthly envelope (TN %d, TX %d)",
+                  sum(n_spike), n_spike["TN"], n_spike["TX"],
+                  sum(temp$disTN) + sum(temp$disTX), sum(temp$disTN), sum(temp$disTX),
+                  sum(n_env), n_env["TN"], n_env["TX"]))
+  temp <- temp[order(AAAAMMJJ), .(AAAAMMJJ, TN, TX)]
 
   # 3. Rainfall: GHCN for every date it has one.
   rain <- ghcn[, .(AAAAMMJJ, RR)]
