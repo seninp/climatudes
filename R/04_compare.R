@@ -3,6 +3,7 @@
 # Stage 04 — cross-site comparison (run after every site's stage 01)
 # Reads every site's trend_stats.rds and SITE list, and produces:
 #   * outputs/compare/figures/warming_rate.png   — ranked bar chart
+#   * outputs/compare/figures/world_map.png      — locator map of every site
 #   * README.md, spliced between <!-- BEGIN COMPARE --> / <!-- END COMPARE -->
 #
 # Unlike stages 00-03 this is NOT parameterized by SITE — it always covers
@@ -29,6 +30,8 @@ suppressPackageStartupMessages({
   library(ggplot2)
   library(scales)
   library(ragg)
+  library(ggrepel)
+  library(maps)      # world polygons for the locator map (via ggplot2::map_data)
 })
 
 source("R/lib/common.R")
@@ -69,7 +72,8 @@ load_site <- function(key) {
     has_ytd = isTRUE(y$has_ytd),
     manual_source = identical(site$source, "meteoru"),
     ref_station = site$reference_station,
-    latitude = stats$latitude, elevation_m = stats$elevation_m,
+    latitude = stats$latitude, longitude = stats$longitude,
+    elevation_m = stats$elevation_m,
     koppen = stats$koppen, koppen_label = stats$koppen_label,
     koppen_near = stats$koppen_borderline,
     koppen_yr0 = stats$koppen_yr0, koppen_yr1 = stats$koppen_yr1
@@ -210,13 +214,67 @@ message("Wrote ", FIG_PATH)
 # short content hash so the URL changes exactly when the image does, which gives
 # the proxy a new key to fetch.
 #
-# Applied only to this figure, deliberately. The per-site climatology PNGs are
-# NOT byte-stable across runs (ggrepel places 100+ year labels without a stable
-# tie-break), so hashing those would make README.md churn on every rebuild and
-# destroy its idempotency. This chart has no repelled labels and re-renders
-# identically, verified by building it twice and comparing checksums.
-FIG_REF <- sprintf("%s?v=%s", FIG_PATH,
-                   substr(unname(tools::md5sum(FIG_PATH)), 1, 8))
+# Applied only to the two compare figures (this chart and the world map below),
+# deliberately. The per-site climatology PNGs are NOT byte-stable across runs
+# (ggrepel places 100+ year labels without a stable tie-break), so hashing those
+# would make README.md churn on every rebuild and destroy its idempotency. This
+# chart has no repelled labels and the map's one geom_text_repel call is seeded;
+# both re-render identically, verified by building twice and comparing checksums.
+hashed_ref <- function(path)
+  sprintf("%s?v=%s", path, substr(unname(tools::md5sum(path)), 1, 8))
+FIG_REF <- hashed_ref(FIG_PATH)
+
+# ---- FIGURE — locator map -----------------------------------------------------
+# Where the cities actually are, marked at each REFERENCE STATION's coordinates
+# (the same ones the context table below prints) — not at city centres. One
+# marker colour: identity is carried by the labels, and the amber is already the
+# page's accent (the shared-window diamonds above). Antarctica is dropped and the
+# frame clipped to the inhabited latitudes so the cities, not empty ocean, fill
+# the canvas.
+world <- as.data.table(map_data("world"))[region != "Antarctica"]
+
+northmost <- cmp[which.max(latitude)]$city
+southmost <- cmp[which.min(latitude)]$city
+
+m <- ggplot() +
+  geom_polygon(data = world, aes(long, lat, group = group),
+               fill = "#E4E9EE", colour = "white", linewidth = 0.15) +
+  geom_point(data = cmp, aes(longitude, latitude),
+             shape = 21, size = 3.2, stroke = 0.9,
+             fill = POINT_COL, colour = "white") +
+  # seed => byte-stable placement, which the ?v= content hash above relies on
+  geom_text_repel(data = cmp, aes(longitude, latitude, label = city),
+                  size = 3.4, colour = "#1A2530", fontface = "bold",
+                  seed = 42, box.padding = 0.35, point.padding = 0.25,
+                  min.segment.length = 0.2,
+                  segment.colour = "#7F8C8D", segment.size = 0.3) +
+  coord_quickmap(ylim = c(-56, 78), expand = FALSE) +
+  labs(
+    title = paste0(title_case(num_word(N_SITES)), " cities, from ",
+                   northmost, " to ", southmost),
+    subtitle = "Each marker is the reference station whose daily record the city's chapter analyses.",
+    caption = paste0("Marker positions are the reference stations' coordinates, from each provider's ",
+                     "station metadata (Moscow and Voronezh: the WMO station registry)."),
+    x = NULL, y = NULL
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(
+    plot.title    = element_text(face = "bold", size = 17, colour = "#1A2530"),
+    plot.subtitle = element_text(size = 11, colour = "#566573", margin = margin(b = 10)),
+    plot.caption  = element_text(size = 8, colour = "#7F8C8D", hjust = 0,
+                                 margin = margin(t = 12), lineheight = 1.15),
+    plot.caption.position = "plot", plot.title.position = "plot",
+    panel.grid = element_blank(),
+    axis.text = element_blank(),
+    plot.margin = margin(18, 26, 12, 18),
+    plot.background = element_rect(fill = "white", colour = NA)
+  )
+
+MAP_PATH <- "outputs/compare/figures/world_map.png"
+agg_png(MAP_PATH, width = 2400, height = 1200, res = 200, background = "white")
+print(m); invisible(dev.off())
+message("Wrote ", MAP_PATH)
+MAP_REF <- hashed_ref(MAP_PATH)
 
 # ---- TABLE -------------------------------------------------------------------
 # A standing is NOT the same claim from row to row, and the windows are further
@@ -328,7 +386,11 @@ months of winter is not the same kind of statement as an eight-month "#5 of 76".
 ### What kind of places these are
 
 Warming rates read differently once you know whether a city sits at sea level in the tropics
-or on a high desert plateau. North to south:
+or on a high desert plateau.
+
+![The ', num_word(N_SITES), ' cities on a world map, each marked at its reference station](', MAP_REF, ')
+
+North to south:
 
 | City | Country | Latitude | Elevation | Climate (Köppen, last ', KOPPEN_YEARS, ' complete years) |
 |---|---|---:|---:|---|
