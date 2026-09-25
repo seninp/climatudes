@@ -40,17 +40,17 @@ amounts of evidence — the record span and the count of complete years are in t
 | [Voronezh](#a-warming-climate-seen-from-voronezh) | Russia | 1940→2025 (86 yr, 82 complete) | **+0.46** | +0.60 | #55 of 84 | 2026, Jan 1 – Feb 28 · 59 d | Feb 28, 2026 † |
 | [Lalitpur](#a-warming-climate-seen-from-lalitpur) | Nepal | 1971→2025 (55 yr, 44 complete) | **+0.41** | +0.41 | #3 of 45 | 2026, Jan 1 – Sep 16 · 259 d | Sep 16, 2026 |
 | [Moscow](#a-warming-climate-seen-from-moscow) | Russia | 1949→2025 (77 yr, 77 complete) | **+0.39** | +0.49 | #1 of 77 — record | 2025, full year | Dec 31, 2025 † |
-| [Castanet-Tolosan](#a-warming-climate-seen-from-castanet-tolosan) | France | 1947→2025 (79 yr, 79 complete) | **+0.34** | +0.50 | #1 of 80 — record | 2026, Jan 1 – Sep 14 · 257 d | Sep 14, 2026 |
-| [Irvine](#a-warming-climate-seen-from-irvine) | USA | 1915→2025 (111 yr, 95 complete) | **+0.27** | +0.56 | #4 of 99 | 2026, Jan 1 – Jul 31 · 212 d | Jul 31, 2026 |
-| [Lyon](#a-warming-climate-seen-from-lyon) | France | 1921→2025 (105 yr, 105 complete) | **+0.26** | +0.58 | #1 of 106 — record | 2026, Jan 1 – Sep 14 · 257 d | Sep 14, 2026 |
-| [Honolulu](#a-warming-climate-seen-from-honolulu) | USA | 1950→2025 (76 yr, 76 complete) | **+0.20** | +0.17 | #15 of 84 | 2026, Jan 1 – Sep 13 · 256 d | Sep 13, 2026 |
-| [Nouméa](#a-warming-climate-seen-from-nouméa) | France | 1951→2025 (75 yr, 75 complete) | **+0.19** | +0.22 | #7 of 76 | 2026, Jan 1 – Sep 15 · 258 d | Sep 15, 2026 |
-| [Paris](#a-warming-climate-seen-from-paris) | France | 1873→2025 (153 yr, 153 complete) | **+0.18** | +0.43 | #1 of 154 — record | 2026, Jan 1 – Sep 14 · 257 d | Sep 14, 2026 |
-| [Albuquerque](#a-warming-climate-seen-from-albuquerque) | USA | 1932→2025 (94 yr, 94 complete) | **+0.18** | +0.38 | #1 of 95 — record | 2026, Jan 1 – Sep 13 · 256 d | Sep 13, 2026 |
-| [Zurich](#a-warming-climate-seen-from-zurich) | Switzerland | 1882→2025 (144 yr, 143 complete) | **+0.18** | +0.47 | #1 of 144 — record | 2026, Jan 1 – Sep 15 · 258 d | Sep 15, 2026 |
+| [Castanet-Tolosan](#a-warming-climate-seen-from-castanet-tolosan) | France | 1947→2025 (79 yr, 79 complete) | **+0.34** | +0.50 | #1 of 80 — record | 2026, Jan 1 – Sep 23 · 266 d | Sep 23, 2026 |
+| [Irvine](#a-warming-climate-seen-from-irvine) | USA | 1915→2025 (111 yr, 95 complete) | **+0.27** | +0.56 | #4 of 101 | 2026, Jan 1 – Aug 31 · 243 d | Aug 31, 2026 |
+| [Lyon](#a-warming-climate-seen-from-lyon) | France | 1921→2025 (105 yr, 105 complete) | **+0.26** | +0.58 | #1 of 106 — record | 2026, Jan 1 – Sep 23 · 266 d | Sep 23, 2026 |
+| [Honolulu](#a-warming-climate-seen-from-honolulu) | USA | 1950→2025 (76 yr, 76 complete) | **+0.20** | +0.17 | #15 of 84 | 2026, Jan 1 – Sep 22 · 265 d | Sep 22, 2026 |
+| [Nouméa](#a-warming-climate-seen-from-nouméa) | France | 1951→2025 (75 yr, 75 complete) | **+0.19** | +0.22 | #8 of 76 | 2026, Jan 1 – Sep 24 · 267 d | Sep 24, 2026 |
+| [Paris](#a-warming-climate-seen-from-paris) | France | 1873→2025 (153 yr, 153 complete) | **+0.18** | +0.43 | #1 of 154 — record | 2026, Jan 1 – Sep 23 · 266 d | Sep 23, 2026 |
+| [Albuquerque](#a-warming-climate-seen-from-albuquerque) | USA | 1932→2025 (94 yr, 94 complete) | **+0.18** | +0.38 | #1 of 95 — record | 2026, Jan 1 – Sep 22 · 265 d | Sep 22, 2026 |
+| [Zurich](#a-warming-climate-seen-from-zurich) | Switzerland | 1882→2025 (144 yr, 143 complete) | **+0.18** | +0.47 | #1 of 144 — record | 2026, Jan 1 – Sep 23 · 266 d | Sep 23, 2026 |
 | [Hyderabad](#a-warming-climate-seen-from-hyderabad) | India | 1958→2025 (68 yr, 50 complete) | **+0.17** | +0.16 | #17 of 56 | 2026, Jan 1 – Sep 16 · 259 d | Sep 16, 2026 |
-| [Boston](#a-warming-climate-seen-from-boston) | USA | 1885→2025 (141 yr, 139 complete) | **+0.14** | +0.33 | #18 of 141 | 2026, Jan 1 – Sep 14 · 257 d | Sep 14, 2026 |
-| [Karlsruhe](#a-warming-climate-seen-from-karlsruhe) | Germany | 1876→2025 (150 yr, 148 complete) | **+0.14** | +0.29 | #1 of 150 — record | 2026, Jan 1 – Sep 15 · 258 d | Sep 15, 2026 |
+| [Boston](#a-warming-climate-seen-from-boston) | USA | 1885→2025 (141 yr, 139 complete) | **+0.14** | +0.33 | #18 of 141 | 2026, Jan 1 – Sep 23 · 266 d | Sep 23, 2026 |
+| [Karlsruhe](#a-warming-climate-seen-from-karlsruhe) | Germany | 1876→2025 (150 yr, 148 complete) | **+0.14** | +0.29 | #1 of 150 — record | 2026, Jan 1 – Sep 23 · 266 d | Sep 23, 2026 |
 | [Santa Fe](#a-warming-climate-seen-from-santa-fe) | USA | 1874→2025 (152 yr, 138 complete) | **+0.08** | +0.09 | #1 of 146 — record | 2026, Jan 1 – Jul 31 · 212 d | Jul 31, 2026 |
 
 † Moscow and Voronezh are manually exported from Roshydromet’s AISORI-M (login-gated, no automated
@@ -166,7 +166,7 @@ the mid-20th century, daily minimum, maximum and mean temperatures have all rise
 | Frost days per year, 1947–1956 → 2016–2025 | **46 → 18** |
 | Hot days (≥ 30 °C) per year, 1947–1956 → 2016–2025 | **24 → 47** |
 | Complete station-years analysed | **101** |
-| 2026 year-to-date (Jan 1 – Sep 14), against 79 prior years | **#1 of 80 — record** |
+| 2026 year-to-date (Jan 1 – Sep 23), against 79 prior years | **#1 of 80 — record** |
 
 ### The long view: annual means
 
@@ -185,12 +185,12 @@ whole period. The local Auzeville-Tolosane-INRAE station only covers 2004→2025
 
 ![Per-year mean over the same Jan-to-cutoff window, as a departure from the 1947–2025 mean, with 2026 the largest bar](outputs/figures/temperature_ytd.png)
 
-<sub>Each bar is a year’s mean over the <em>same window</em> — <strong>Jan 1 – Sep 14</strong> —
-shown as its departure from the 1947–2025 mean (14.5 °C): red above, blue
+<sub>Each bar is a year’s mean over the <em>same window</em> — <strong>Jan 1 – Sep 23</strong> —
+shown as its departure from the 1947–2025 mean (14.6 °C): red above, blue
 below. Holding the part-of-year identical is what makes one year comparable with another. The bars swing from blue to red over
 the decades — and 2026 is the tallest of all.</sub>
 
-Measured like-for-like, **2026 is the warmest Jan 1 – Sep 14 in 80 years** at Toulouse-Blagnac: **17.8 °C** — +0.7 °C above the previous record (2022, 17.1 °C) and **+3.3 °C above the 1947–2025 mean** (14.5 °C).
+Measured like-for-like, **2026 is the warmest Jan 1 – Sep 23 in 80 years** at Toulouse-Blagnac: **18.0 °C** — +0.8 °C above the previous record (2022, 17.2 °C) and **+3.3 °C above the 1947–2025 mean** (14.6 °C).
 
 > [!NOTE]
 > A part-year mean cannot be compared with other years' full-year means. That is why 2026 appears on the long-view chart above only as a marked, hollow "to date" point — a part-year mean on an axis of full-year means — while its like-for-like standing is the chart here.
@@ -245,7 +245,7 @@ At Toulouse-Blagnac, the all-time heat (2023-08-23) postdates the all-time cold 
 | 2023 | 10.7 | 20.8 | **15.7** |
 | 2024 | 10.5 | 19.6 | **15.1** |
 | 2025 | 10.7 | 20.6 | **15.6** |
-| 2026 *(to date)* | 12.3 | 23.3 | **17.8** |
+| 2026 *(to date)* | 12.4 | 23.5 | **18.0** |
 
 ### Frost days down, hot days up
 
@@ -317,7 +317,7 @@ the late 19th century, daily minimum, maximum and mean temperatures have all ris
 | Frost days per year, 1873–1882 → 2016–2025 | **55 → 15** |
 | Hot days (≥ 30 °C) per year, 1873–1882 → 2016–2025 | **8 → 20** |
 | Complete station-years analysed | **198** |
-| 2026 year-to-date (Jan 1 – Sep 14), against 153 prior years | **#1 of 154 — record** |
+| 2026 year-to-date (Jan 1 – Sep 23), against 153 prior years | **#1 of 154 — record** |
 
 ### The long view: annual means
 
@@ -336,12 +336,12 @@ whole period. The local Paris-Luxembourg station only covers 1978→2025. Its sl
 
 ![Per-year mean over the same Jan-to-cutoff window, as a departure from the 1873–2025 mean, with 2026 the largest bar](outputs/paris/figures/temperature_ytd.png)
 
-<sub>Each bar is a year’s mean over the <em>same window</em> — <strong>Jan 1 – Sep 14</strong> —
-shown as its departure from the 1873–2025 mean (12.7 °C): red above, blue
+<sub>Each bar is a year’s mean over the <em>same window</em> — <strong>Jan 1 – Sep 23</strong> —
+shown as its departure from the 1873–2025 mean (12.8 °C): red above, blue
 below. Holding the part-of-year identical is what makes one year comparable with another. The bars swing from blue to red over
 the decades — and 2026 is the tallest of all.</sub>
 
-Measured like-for-like, **2026 is the warmest Jan 1 – Sep 14 in 154 years** at Paris-Montsouris: **16.7 °C** — +1.1 °C above the previous record (2022, 15.6 °C) and **+3.9 °C above the 1873–2025 mean** (12.7 °C).
+Measured like-for-like, **2026 is the warmest Jan 1 – Sep 23 in 154 years** at Paris-Montsouris: **16.7 °C** — +1.0 °C above the previous record (2020, 15.7 °C) and **+3.9 °C above the 1873–2025 mean** (12.8 °C).
 
 > [!NOTE]
 > A part-year mean cannot be compared with other years' full-year means. That is why 2026 appears on the long-view chart above only as a marked, hollow "to date" point — a part-year mean on an axis of full-year means — while its like-for-like standing is the chart here.
@@ -396,7 +396,7 @@ At Paris-Montsouris, the all-time heat (2019-07-25) postdates the all-time cold 
 | 2023 | 10.5 | 18.0 | **14.3** |
 | 2024 | 10.1 | 17.0 | **13.6** |
 | 2025 | 9.9 | 17.8 | **13.8** |
-| 2026 *(to date)* | 11.9 | 21.4 | **16.7** |
+| 2026 *(to date)* | 12.0 | 21.5 | **16.7** |
 
 ### Frost days down, hot days up
 
@@ -468,7 +468,7 @@ the early 20th century, daily minimum, maximum and mean temperatures have all ri
 | Frost days per year, 1921–1930 → 2016–2025 | **64 → 33** |
 | Hot days (≥ 30 °C) per year, 1921–1930 → 2016–2025 | **19 → 48** |
 | Complete station-years analysed | **155** |
-| 2026 year-to-date (Jan 1 – Sep 14), against 105 prior years | **#1 of 106 — record** |
+| 2026 year-to-date (Jan 1 – Sep 23), against 105 prior years | **#1 of 106 — record** |
 
 ### The long view: annual means
 
@@ -487,12 +487,12 @@ whole period. The local Lyon-Saint-Exupéry station only covers 1976→2025. Its
 
 ![Per-year mean over the same Jan-to-cutoff window, as a departure from the 1921–2025 mean, with 2026 the largest bar](outputs/lyon/figures/temperature_ytd.png)
 
-<sub>Each bar is a year’s mean over the <em>same window</em> — <strong>Jan 1 – Sep 14</strong> —
-shown as its departure from the 1921–2025 mean (13.3 °C): red above, blue
+<sub>Each bar is a year’s mean over the <em>same window</em> — <strong>Jan 1 – Sep 23</strong> —
+shown as its departure from the 1921–2025 mean (13.4 °C): red above, blue
 below. Holding the part-of-year identical is what makes one year comparable with another. The bars swing from blue to red over
 the decades — and 2026 is the tallest of all.</sub>
 
-Measured like-for-like, **2026 is the warmest Jan 1 – Sep 14 in 106 years** at Lyon-Bron: **16.7 °C** — +0.6 °C above the previous record (2020, 16.1 °C) and **+3.4 °C above the 1921–2025 mean** (13.3 °C).
+Measured like-for-like, **2026 is the warmest Jan 1 – Sep 23 in 106 years** at Lyon-Bron: **16.8 °C** — +0.5 °C above the previous record (2020, 16.3 °C) and **+3.4 °C above the 1921–2025 mean** (13.4 °C).
 
 > [!NOTE]
 > A part-year mean cannot be compared with other years' full-year means. That is why 2026 appears on the long-view chart above only as a marked, hollow "to date" point — a part-year mean on an axis of full-year means — while its like-for-like standing is the chart here.
@@ -547,7 +547,7 @@ At Lyon-Bron, the all-time heat (2023-08-24) postdates the all-time cold (1938-1
 | 2023 | 9.3 | 19.7 | **14.5** |
 | 2024 | 9.4 | 18.5 | **14.0** |
 | 2025 | 9.0 | 18.8 | **13.9** |
-| 2026 *(to date)* | 10.5 | 22.8 | **16.7** |
+| 2026 *(to date)* | 10.6 | 22.9 | **16.8** |
 
 ### Frost days down, hot days up
 
@@ -619,7 +619,7 @@ the late 19th century, daily minimum, maximum and mean temperatures have all ris
 | Frost days per year, 1876–1885 → 2016–2025 | **67 → 59** |
 | Hot days (≥ 30 °C) per year, 1876–1885 → 2016–2025 | **7 → 26** |
 | Complete station-years analysed | **148** |
-| 2026 year-to-date (Jan 1 – Sep 15), against 149 prior years | **#1 of 150 — record** |
+| 2026 year-to-date (Jan 1 – Sep 23), against 149 prior years | **#1 of 150 — record** |
 
 ### The long view: annual means
 
@@ -638,12 +638,12 @@ whole period. Karlsruhe-Wolfartsweier carries no temperature record; Rheinstette
 
 ![Per-year mean over the same Jan-to-cutoff window, as a departure from the 1876–2025 mean, with 2026 the largest bar](outputs/karlsruhe/figures/temperature_ytd.png)
 
-<sub>Each bar is a year’s mean over the <em>same window</em> — <strong>Jan 1 – Sep 15</strong> —
-shown as its departure from the 1876–2025 mean (11.8 °C): red above, blue
+<sub>Each bar is a year’s mean over the <em>same window</em> — <strong>Jan 1 – Sep 23</strong> —
+shown as its departure from the 1876–2025 mean (11.9 °C): red above, blue
 below. Holding the part-of-year identical is what makes one year comparable with another. The bars swing from blue to red over
 the decades — and 2026 is the tallest of all.</sub>
 
-Measured like-for-like, **2026 is the warmest Jan 1 – Sep 15 in 150 years** at Rheinstetten: **14.2 °C** — +0.1 °C above the previous record (2007, 14.1 °C) and **+2.4 °C above the 1876–2025 mean** (11.8 °C).
+Measured like-for-like, **2026 is the warmest Jan 1 – Sep 23 in 150 years** at Rheinstetten: **14.3 °C** — +0.2 °C above the previous record (2007, 14.1 °C) and **+2.4 °C above the 1876–2025 mean** (11.9 °C).
 
 > [!NOTE]
 > A part-year mean cannot be compared with other years' full-year means. That is why 2026 appears on the long-view chart above only as a marked, hollow "to date" point — a part-year mean on an axis of full-year means — while its like-for-like standing is the chart here.
@@ -696,7 +696,7 @@ At Rheinstetten, the all-time heat (2026-06-27) postdates the all-time cold (194
 | 2023 | 7.9 | 17.6 | **12.8** |
 | 2024 | 7.7 | 16.9 | **12.3** |
 | 2025 | 6.3 | 17.0 | **11.6** |
-| 2026 *(to date)* | 7.9 | 20.6 | **14.2** |
+| 2026 *(to date)* | 7.9 | 20.7 | **14.3** |
 
 ### Frost days down, hot days up
 
@@ -768,7 +768,7 @@ the late 19th century, daily minimum, maximum and mean temperatures have all ris
 | Frost days per year, 1882–1891 → 2016–2025 | **111 → 61** |
 | Hot days (≥ 30 °C) per year, 1882–1891 → 2016–2025 | **4 → 12** |
 | Complete station-years analysed | **190** |
-| 2026 year-to-date (Jan 1 – Sep 15), against 143 prior years | **#1 of 144 — record** |
+| 2026 year-to-date (Jan 1 – Sep 23), against 143 prior years | **#1 of 144 — record** |
 
 ### The long view: annual means
 
@@ -787,12 +787,12 @@ whole period. The local Zürich-Affoltern station only covers 1979→2025. Its s
 
 ![Per-year mean over the same Jan-to-cutoff window, as a departure from the 1882–2025 mean, with 2026 the largest bar](outputs/zurich/figures/temperature_ytd.png)
 
-<sub>Each bar is a year’s mean over the <em>same window</em> — <strong>Jan 1 – Sep 15</strong> —
-shown as its departure from the 1882–2025 mean (10.3 °C): red above, blue
+<sub>Each bar is a year’s mean over the <em>same window</em> — <strong>Jan 1 – Sep 23</strong> —
+shown as its departure from the 1882–2025 mean (10.4 °C): red above, blue
 below. Holding the part-of-year identical is what makes one year comparable with another. The bars swing from blue to red over
 the decades — and 2026 is the tallest of all.</sub>
 
-Measured like-for-like, **2026 is the warmest Jan 1 – Sep 15 in 144 years** at Zürich-Fluntern: **13.8 °C** — +0.6 °C above the previous record (2022, 13.2 °C) and **+3.5 °C above the 1882–2025 mean** (10.3 °C).
+Measured like-for-like, **2026 is the warmest Jan 1 – Sep 23 in 144 years** at Zürich-Fluntern: **13.8 °C** — +0.7 °C above the previous record (2022, 13.1 °C) and **+3.5 °C above the 1882–2025 mean** (10.4 °C).
 
 > [!NOTE]
 > A part-year mean cannot be compared with other years' full-year means. That is why 2026 appears on the long-view chart above only as a marked, hollow "to date" point — a part-year mean on an axis of full-year means — while its like-for-like standing is the chart here.
@@ -847,7 +847,7 @@ At Zürich-Fluntern, the all-time heat (2026-06-27) postdates the all-time cold 
 | 2023 | 7.8 | 15.8 | **11.8** |
 | 2024 | 7.7 | 15.0 | **11.4** |
 | 2025 | 7.0 | 14.9 | **11.0** |
-| 2026 *(to date)* | 8.7 | 18.8 | **13.8** |
+| 2026 *(to date)* | 8.8 | 18.9 | **13.8** |
 
 ### Frost days down, hot days up
 
@@ -1514,7 +1514,7 @@ the early 20th century, daily minimum, maximum and mean temperatures have all ri
 | Frost days per year, 1915–1924 → 2016–2025 | **12 → 0** |
 | Hot days (≥ 30 °C) per year, 1915–1924 → 2016–2025 | **40 → 92** |
 | Complete station-years analysed | **121** |
-| 2026 year-to-date (Jan 1 – Jul 31), against 98 prior years | **#4 of 99** |
+| 2026 year-to-date (Jan 1 – Aug 31), against 100 prior years | **#4 of 101** |
 
 ### The long view: annual means
 
@@ -1533,12 +1533,12 @@ whole period. The local John Wayne Airport station only covers 2000→2025. Its 
 
 ![Per-year mean over the same Jan-to-cutoff window, as a departure from the 1915–2025 mean, with 2026 highlighted](outputs/irvine/figures/temperature_ytd.png)
 
-<sub>Each bar is a year’s mean over the <em>same window</em> — <strong>Jan 1 – Jul 31</strong> —
-shown as its departure from the 1915–2025 mean (16.6 °C): red above, blue
+<sub>Each bar is a year’s mean over the <em>same window</em> — <strong>Jan 1 – Aug 31</strong> —
+shown as its departure from the 1915–2025 mean (17.3 °C): red above, blue
 below. Holding the part-of-year identical is what makes one year comparable with another. The bars swing from blue to red over
 the decades.</sub>
 
-Measured like-for-like over Jan 1 – Jul 31, 2026 ranks **#4 of 99** at Irvine (19.4 °C). The warmest such window on record remains 2014 (20.2 °C).
+Measured like-for-like over Jan 1 – Aug 31, 2026 ranks **#4 of 101** at Irvine (20.2 °C). The warmest such window on record remains 2014 (20.9 °C).
 
 > [!NOTE]
 > A part-year mean cannot be compared with other years' full-year means. That is why 2026 appears on the long-view chart above only as a marked, hollow "to date" point — a part-year mean on an axis of full-year means — while its like-for-like standing is the chart here.
@@ -1593,7 +1593,7 @@ At Irvine, the all-time heat (2018-07-06) postdates the all-time cold (1937-01-2
 | 2023 | 11.4 | 23.1 | **17.3** |
 | 2024 | 12.9 | 24.9 | **18.9** |
 | 2025 | 12.9 | 24.7 | **18.8** |
-| 2026 *(to date)* | 13.4 | 25.4 | **19.4** |
+| 2026 *(to date)* | 14.2 | 26.3 | **20.2** |
 
 ### Frost days down, hot days up
 
@@ -1665,7 +1665,7 @@ the mid-20th century, daily minimum, maximum and mean temperatures have all rise
 | Frost days per year, 1932–1941 → 2016–2025 | **120 → 79** |
 | Hot days (≥ 30 °C) per year, 1932–1941 → 2016–2025 | **92 → 106** |
 | Complete station-years analysed | **124** |
-| 2026 year-to-date (Jan 1 – Sep 13), against 94 prior years | **#1 of 95 — record** |
+| 2026 year-to-date (Jan 1 – Sep 22), against 94 prior years | **#1 of 95 — record** |
 
 ### The long view: annual means
 
@@ -1684,12 +1684,12 @@ whole period. The local Albuquerque Foothills NE station only covers 1992→2025
 
 ![Per-year mean over the same Jan-to-cutoff window, as a departure from the 1932–2025 mean, with 2026 the largest bar](outputs/albuquerque/figures/temperature_ytd.png)
 
-<sub>Each bar is a year’s mean over the <em>same window</em> — <strong>Jan 1 – Sep 13</strong> —
-shown as its departure from the 1932–2025 mean (15.7 °C): red above, blue
+<sub>Each bar is a year’s mean over the <em>same window</em> — <strong>Jan 1 – Sep 22</strong> —
+shown as its departure from the 1932–2025 mean (15.9 °C): red above, blue
 below. Holding the part-of-year identical is what makes one year comparable with another. The bars swing from blue to red over
 the decades — and 2026 is the tallest of all.</sub>
 
-Measured like-for-like, **2026 is the warmest Jan 1 – Sep 13 in 95 years** at Albuquerque Airport: **19.0 °C** — +1.6 °C above the previous record (2012, 17.4 °C) and **+3.3 °C above the 1932–2025 mean** (15.7 °C).
+Measured like-for-like, **2026 is the warmest Jan 1 – Sep 22 in 95 years** at Albuquerque Airport: **19.1 °C** — +1.6 °C above the previous record (2018, 17.5 °C) and **+3.2 °C above the 1932–2025 mean** (15.9 °C).
 
 > [!NOTE]
 > A part-year mean cannot be compared with other years' full-year means. That is why 2026 appears on the long-view chart above only as a marked, hollow "to date" point — a part-year mean on an axis of full-year means — while its like-for-like standing is the chart here.
@@ -1744,7 +1744,7 @@ At Albuquerque Airport, the all-time heat (1994-06-26) postdates the all-time co
 | 2023 | 8.3 | 21.9 | **15.1** |
 | 2024 | 8.5 | 22.7 | **15.6** |
 | 2025 | 9.0 | 23.0 | **16.0** |
-| 2026 *(to date)* | 11.7 | 26.4 | **19.0** |
+| 2026 *(to date)* | 11.8 | 26.4 | **19.1** |
 
 ### Frost days down, hot days up
 
@@ -1967,7 +1967,7 @@ the late 19th century, daily minimum, maximum and mean temperatures have all ris
 | Frost days per year, 1885–1894 → 2016–2025 | **131 → 110** |
 | Hot days (≥ 30 °C) per year, 1885–1894 → 2016–2025 | **10 → 29** |
 | Complete station-years analysed | **229** |
-| 2026 year-to-date (Jan 1 – Sep 14), against 140 prior years | **#18 of 141** |
+| 2026 year-to-date (Jan 1 – Sep 23), against 140 prior years | **#18 of 141** |
 
 ### The long view: annual means
 
@@ -1986,12 +1986,12 @@ whole period. The local Logan Airport station only covers 1936→2025. Its slope
 
 ![Per-year mean over the same Jan-to-cutoff window, as a departure from the 1886–2025 mean, with 2026 highlighted](outputs/boston/figures/temperature_ytd.png)
 
-<sub>Each bar is a year’s mean over the <em>same window</em> — <strong>Jan 1 – Sep 14</strong> —
-shown as its departure from the 1886–2025 mean (10.3 °C): red above, blue
+<sub>Each bar is a year’s mean over the <em>same window</em> — <strong>Jan 1 – Sep 23</strong> —
+shown as its departure from the 1886–2025 mean (10.5 °C): red above, blue
 below. Holding the part-of-year identical is what makes one year comparable with another. The bars swing from blue to red over
 the decades.</sub>
 
-Measured like-for-like over Jan 1 – Sep 14, 2026 ranks **#18 of 141** at Blue Hill Observatory (11.5 °C). The warmest such window on record remains 2010 (13.5 °C).
+Measured like-for-like over Jan 1 – Sep 23, 2026 ranks **#18 of 141** at Blue Hill Observatory (11.6 °C). The warmest such window on record remains 2010 (13.5 °C).
 
 > [!NOTE]
 > A part-year mean cannot be compared with other years' full-year means. That is why 2026 appears on the long-view chart above only as a marked, hollow "to date" point — a part-year mean on an axis of full-year means — while its like-for-like standing is the chart here.
@@ -2046,7 +2046,7 @@ At Blue Hill Observatory, the all-time heat (1949-08-10) postdates the all-time 
 | 2023 | 6.6 | 15.8 | **11.2** |
 | 2024 | 6.3 | 15.9 | **11.1** |
 | 2025 | 5.4 | 15.1 | **10.3** |
-| 2026 *(to date)* | 6.4 | 16.6 | **11.5** |
+| 2026 *(to date)* | 6.5 | 16.7 | **11.6** |
 
 ### Frost days down, hot days up
 
@@ -2118,7 +2118,7 @@ the mid-20th century, daily minimum, maximum and mean temperatures have all rise
 | Frost days per year, 1950–1959 → 2016–2025 | **0 → 0** |
 | Hot days (≥ 30 °C) per year, 1950–1959 → 2016–2025 | **42 → 175** |
 | Complete station-years analysed | **76** |
-| 2026 year-to-date (Jan 1 – Sep 13), against 83 prior years | **#15 of 84** |
+| 2026 year-to-date (Jan 1 – Sep 22), against 83 prior years | **#15 of 84** |
 
 ### The long view: annual means
 
@@ -2137,12 +2137,12 @@ whole period. Honolulu-Moanalua carries no temperature record; Honolulu Airport 
 
 ![Per-year mean over the same Jan-to-cutoff window, as a departure from the 1941–2025 mean, with 2026 highlighted](outputs/honolulu/figures/temperature_ytd.png)
 
-<sub>Each bar is a year’s mean over the <em>same window</em> — <strong>Jan 1 – Sep 13</strong> —
-shown as its departure from the 1941–2025 mean (25.1 °C): red above, blue
+<sub>Each bar is a year’s mean over the <em>same window</em> — <strong>Jan 1 – Sep 22</strong> —
+shown as its departure from the 1941–2025 mean (25.2 °C): red above, blue
 below. Holding the part-of-year identical is what makes one year comparable with another. The bars swing from blue to red over
 the decades.</sub>
 
-Measured like-for-like over Jan 1 – Sep 13, 2026 ranks **#15 of 84** at Honolulu Airport (25.7 °C). The warmest such window on record remains 2025 (26.3 °C).
+Measured like-for-like over Jan 1 – Sep 22, 2026 ranks **#15 of 84** at Honolulu Airport (25.8 °C). The warmest such window on record remains 2025 (26.4 °C).
 
 > [!NOTE]
 > A part-year mean cannot be compared with other years' full-year means. That is why 2026 appears on the long-view chart above only as a marked, hollow "to date" point — a part-year mean on an axis of full-year means — while its like-for-like standing is the chart here.
@@ -2195,7 +2195,7 @@ At Honolulu Airport, the all-time heat (1994-09-19) postdates the all-time cold 
 | 2023 | 22.3 | 29.5 | **25.9** |
 | 2024 | 22.2 | 29.2 | **25.7** |
 | 2025 | 22.7 | 29.9 | **26.3** |
-| 2026 *(to date)* | 22.3 | 29.0 | **25.7** |
+| 2026 *(to date)* | 22.4 | 29.1 | **25.8** |
 
 ### Frost days at zero, hot days up
 
@@ -2267,7 +2267,7 @@ the mid-20th century, daily minimum, maximum and mean temperatures have all rise
 | Frost days per year, 1951–1960 → 2016–2025 | **0 → 0** |
 | Hot days (≥ 30 °C) per year, 1951–1960 → 2016–2025 | **32 → 74** |
 | Complete station-years analysed | **137** |
-| 2026 year-to-date (Jan 1 – Sep 15), against 75 prior years | **#7 of 76** |
+| 2026 year-to-date (Jan 1 – Sep 24), against 75 prior years | **#8 of 76** |
 
 ### The long view: annual means
 
@@ -2286,12 +2286,12 @@ whole period. The local Nouméa-Magenta station only covers 1964→2025. Its slo
 
 ![Per-year mean over the same Jan-to-cutoff window, as a departure from the 1951–2025 mean, with 2026 highlighted](outputs/noumea/figures/temperature_ytd.png)
 
-<sub>Each bar is a year’s mean over the <em>same window</em> — <strong>Jan 1 – Sep 15</strong> —
-shown as its departure from the 1951–2025 mean (23.3 °C): red above, blue
+<sub>Each bar is a year’s mean over the <em>same window</em> — <strong>Jan 1 – Sep 24</strong> —
+shown as its departure from the 1951–2025 mean (23.2 °C): red above, blue
 below. Holding the part-of-year identical is what makes one year comparable with another. The bars swing from blue to red over
 the decades.</sub>
 
-Measured like-for-like over Jan 1 – Sep 15, 2026 ranks **#7 of 76** at Nouméa (24.1 °C). The warmest such window on record remains 1998 (24.7 °C).
+Measured like-for-like over Jan 1 – Sep 24, 2026 ranks **#8 of 76** at Nouméa (24.0 °C). The warmest such window on record remains 2022 (24.7 °C).
 
 > [!NOTE]
 > A part-year mean cannot be compared with other years' full-year means. That is why 2026 appears on the long-view chart above only as a marked, hollow "to date" point — a part-year mean on an axis of full-year means — while its like-for-like standing is the chart here.
@@ -2346,7 +2346,7 @@ At Nouméa, the all-time heat (1986-01-25) postdates the all-time cold (1961-08-
 | 2023 | 20.6 | 27.1 | **23.9** |
 | 2024 | 21.3 | 27.9 | **24.6** |
 | 2025 | 21.5 | 28.1 | **24.8** |
-| 2026 *(to date)* | 20.9 | 27.3 | **24.1** |
+| 2026 *(to date)* | 20.8 | 27.3 | **24.0** |
 
 ### Frost days at zero, hot days up
 
