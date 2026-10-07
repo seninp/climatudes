@@ -288,11 +288,20 @@ month_labs   <- month.abb
 n_years <- uniqueN(prev_years$year)
 
 # ---- classify each PAST year by whether its smoothed daily-mean curve --------
-# crosses the +30 °C ("hot") or -5 °C ("cold") line that the chart actually draws
-HOT_THR  <-  30
-COLD_THR <- -5
+# crosses the site's own "hot" / "cold" line: the p90 of the years' smoothed
+# maxima and the p10 of their minima, rounded to whole degrees. The fixed
+# global pair this replaces (+30/-5, until 2026-09) only discriminated in the
+# mid-latitude French climates it was written on — Hyderabad crossed +30 °C in
+# 56 of its 57 years (an all-red chart), Boston -5 °C in all 141 (all blue),
+# Lalitpur neither (all grey). A percentile line marks each site's own
+# exceptional years by construction — the same reasoning as hot_thr_pctile in
+# the extremes section below. Note a tropical site's "cold" line is positive.
+CLIM_HOT_Q  <- 0.90
+CLIM_COLD_Q <- 0.10
 yr_ext <- prev_years[, .(ymax = max(tsmooth, na.rm = TRUE),
                          ymin = min(tsmooth, na.rm = TRUE)), by = year]
+HOT_THR  <- as.integer(round(quantile(yr_ext$ymax, CLIM_HOT_Q)))
+COLD_THR <- as.integer(round(quantile(yr_ext$ymin, CLIM_COLD_Q)))
 hot_years  <- sort(yr_ext[ymax > HOT_THR,  year])
 cold_years <- sort(yr_ext[ymin < COLD_THR, year])
 both_years <- intersect(hot_years, cold_years)
@@ -311,6 +320,10 @@ raw_both_years <- sort(intersect(raw_ext[ymax > HOT_THR, year],
 # Flags behind the two hand-written clauses, so they self-check on every run.
 hot_all_recent   <- length(hot_years)  > 0 && min(hot_years) >= 2000
 cold_all_but_one <- length(cold_years) > 1 && sum(cold_years >= 2000) <= 1
+# How many cold years actually fall in/after 2000 — narrative.R needs to say
+# "all before 2000" when it is zero, not "all but one" (which overstates one
+# site after another once the thresholds became per-site percentiles).
+cold_n_recent    <- sum(cold_years >= 2000)
 
 hot_lines  <- prev_years[year %in% hot_years]
 cold_lines <- prev_years[year %in% cold_years]
@@ -367,13 +380,16 @@ p2 <- ggplot() +
   labs(
     title = sprintf("Every year, day by day — %s", CLIMATOLOGY_STATION),
     subtitle = sprintf(
-      "Daily mean temperature, %d–%d (%d years), smoothed with a centred %d-day rolling mean.  Bold red = %d so far; dark line = long-term normal.\nYears whose smoothed daily mean ever rose above +30 °C are drawn red; those that ever fell below −5 °C, blue.  %s",
-      min(prev_years$year), max(prev_years$year), n_years, SMOOTH_WINDOW, cur_year, both_txt),
+      "Daily mean temperature, %d–%d (%d years), smoothed with a centred %d-day rolling mean.  Bold red = %d so far; dark line = long-term normal.\nYears whose smoothed daily mean ever rose above %+d °C are drawn red; those that ever fell below %+d °C, blue.  %s",
+      min(prev_years$year), max(prev_years$year), n_years, SMOOTH_WINDOW, cur_year,
+      HOT_THR, COLD_THR, both_txt),
     x = NULL, y = NULL,
     caption = paste0(
       caption_source_line(SITE$citation), "\n",
       sprintf("Station: %s (%s).  ", SITE$reference_station, station_id(SITE, SITE$reference_station)),
-      sprintf("Daily mean = (TN+TX)/2, smoothed with a centred %d-day rolling mean; thresholds apply to this smoothed daily mean.  Leap days aligned across years.", SMOOTH_WINDOW)
+      sprintf("Daily mean = (TN+TX)/2, smoothed with a centred %d-day rolling mean; thresholds apply to this smoothed daily mean.  Leap days aligned across years.\n", SMOOTH_WINDOW),
+      sprintf("The red/blue threshold lines sit at the p%.0f/p%.0f of this station's yearly smoothed extremes, rounded to whole degrees — they mark its own unusual years, whatever the climate.",
+              100 * CLIM_HOT_Q, 100 * CLIM_COLD_Q)
     )
   ) +
   theme_minimal(base_size = 13) +
@@ -908,6 +924,7 @@ stats <- list(
   hot_years = hot_years, cold_years = cold_years, both_years = both_years,
   raw_both_years = raw_both_years,
   hot_all_recent = hot_all_recent, cold_all_but_one = cold_all_but_one,
+  cold_n_recent = cold_n_recent,
   smooth_window = SMOOTH_WINDOW,
   records = records,
   ytd = list(

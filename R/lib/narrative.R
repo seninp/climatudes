@@ -133,7 +133,13 @@ build_common_fills <- function(stats, site) {
   # "78 of 78 years" invites the reader to weigh a number that cannot vary.
   cold_ubiquitous <- length(stats$cold_years) >= 0.9 * stats$clim_nyears
   cold_era_clause <- if (cold_ubiquitous) "" else
-                     if (isTRUE(stats$cold_all_but_one)) ", all but one before 2000" else ""
+                     if (isTRUE(stats$cold_all_but_one)) {
+                       # cold_all_but_one is true for both "one after 2000" and
+                       # "none after 2000" — say which (a stats file from before
+                       # cold_n_recent existed keeps the older, weaker wording).
+                       if (identical(stats$cold_n_recent, 0L))
+                         ", all before 2000" else ", all but one before 2000"
+                     } else ""
   # Parenthetical year lists — omitted entirely (not left as an empty "()")
   # when a site's climate never crosses one of the two thresholds, e.g. Zurich
   # never touches +30 °C on the smoothed daily mean; capped past
@@ -482,7 +488,10 @@ build_common_fills <- function(stats, site) {
     YTD_SECTION_YEAR = ytd_section_year, PARTIAL_YEAR_NOTE = partial_year_note,
     SMOOTH_HALF_WORD = smooth_half_word,
     YTD_ALT_SUFFIX = ytd_alt_suffix, YTD_TALLEST_CLAUSE = ytd_tallest_clause,
-    HOT_THR = stats$hot_thr, COLD_THR = stats$cold_thr,
+    # COLD_THR carries its own sign: since the thresholds became per-site
+    # percentiles a tropical site's "cold" line is positive (Hyderabad +19 °C),
+    # and the templates say "+{{HOT_THR}}" but "{{COLD_THR}}" bare.
+    HOT_THR = stats$hot_thr, COLD_THR = sprintf("%+d", stats$cold_thr),
     N_HOT = length(stats$hot_years), N_COLD = length(stats$cold_years),
     N_HOT_WORD = if (length(stats$hot_years) == 1) "year" else "years",
     N_COLD_WORD = if (length(stats$cold_years) == 1) "year" else "years",
