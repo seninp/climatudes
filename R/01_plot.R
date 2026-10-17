@@ -280,8 +280,18 @@ if (max(clim$year) != cur_year)
 prev_years <- if (YEAR_COMPLETE) clim[year <= cur_year] else clim[year < cur_year]
 this_year  <- clim[year == cur_year]
 
-normal <- prev_years[, .(tnorm = mean(tsmooth, na.rm = TRUE)), by = doy]
+normal <- prev_years[, .(tnorm = mean(tsmooth, na.rm = TRUE),
+                         tsd   = sd(tsmooth, na.rm = TRUE)), by = doy]
 setorder(normal, doy)
+# Spread of the past years around the normal, drawn as grey ±1σ/±2σ bands and a
+# dotted ±3σ edge. The raw per-day SD (one value per calendar day, ~n_years
+# samples each) gives ragged band edges, so smooth it with a 31-day mean that
+# wraps Dec -> Jan. The SD is taken around a single all-years normal, so the
+# warming trend widens it slightly.
+SD_SMOOTH <- 31L
+sd_pad <- SD_SMOOTH %/% 2L
+normal[, tsd := frollmean(c(tail(tsd, sd_pad), tsd, head(tsd, sd_pad)), SD_SMOOTH,
+                          align = "center", na.rm = TRUE)[sd_pad + seq_len(.N)]]
 
 month_starts <- c(1, 32, 61, 92, 122, 153, 183, 214, 245, 275, 306, 336)
 month_labs   <- month.abb
@@ -339,6 +349,15 @@ both_txt <- if (length(both_years) == 0) "No year did both." else
   sprintf("Year(s) doing both: %s.", paste(both_years, collapse = ", "))
 
 p2 <- ggplot() +
+  # spread of past years around the normal: ±1σ and ±2σ shaded, ±3σ dotted
+  geom_ribbon(data = normal, aes(doy, ymin = tnorm - 2 * tsd, ymax = tnorm + 2 * tsd),
+              fill = "grey40", alpha = 0.10) +
+  geom_ribbon(data = normal, aes(doy, ymin = tnorm - tsd, ymax = tnorm + tsd),
+              fill = "grey40", alpha = 0.16) +
+  geom_line(data = normal, aes(doy, tnorm - 3 * tsd),
+            colour = "grey45", linetype = "dotted", linewidth = 0.4) +
+  geom_line(data = normal, aes(doy, tnorm + 3 * tsd),
+            colour = "grey45", linetype = "dotted", linewidth = 0.4) +
   # one line per past year — pronounced enough to read the spread, still subordinate to the current year
   geom_line(data = prev_years, aes(doy, tsmooth, group = year),
             colour = COL$spaghetti, alpha = 0.22, linewidth = 0.35) +
@@ -380,7 +399,7 @@ p2 <- ggplot() +
   labs(
     title = sprintf("Every year, day by day — %s", CLIMATOLOGY_STATION),
     subtitle = sprintf(
-      "Daily mean temperature, %d–%d (%d years), smoothed with a centred %d-day rolling mean.  Bold red = %d so far; dark line = long-term normal.\nYears whose smoothed daily mean ever rose above %+d °C are drawn red; those that ever fell below %+d °C, blue.  %s",
+      "Daily mean temperature, %d–%d (%d years), smoothed with a centred %d-day rolling mean.  Bold red = %d so far; dark line = long-term normal.\nYears whose smoothed daily mean ever rose above %+d °C are drawn red; those that ever fell below %+d °C, blue.  %s\nGrey bands = ±1σ and ±2σ around the normal; dotted lines = ±3σ.",
       min(prev_years$year), max(prev_years$year), n_years, SMOOTH_WINDOW, cur_year,
       HOT_THR, COLD_THR, both_txt),
     x = NULL, y = NULL,
@@ -388,6 +407,7 @@ p2 <- ggplot() +
       caption_source_line(SITE$citation), "\n",
       sprintf("Station: %s (%s).  ", SITE$reference_station, station_id(SITE, SITE$reference_station)),
       sprintf("Daily mean = (TN+TX)/2, smoothed with a centred %d-day rolling mean; thresholds apply to this smoothed daily mean.  Leap days aligned across years.\n", SMOOTH_WINDOW),
+      sprintf("σ = standard deviation of the past years' smoothed daily mean around the normal, itself smoothed with a %d-day mean.\n", SD_SMOOTH),
       sprintf("The red/blue threshold lines sit at the p%.0f/p%.0f of this station's yearly smoothed extremes, rounded to whole degrees — they mark its own unusual years, whatever the climate.",
               100 * CLIM_HOT_Q, 100 * CLIM_COLD_Q)
     )
