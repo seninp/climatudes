@@ -18,7 +18,7 @@
 # DELIBERATE DIVERGENCE FROM STAGE 02 — do not "fix" this in a parity pass.
 # Stage 02's Methodology section is complete, because each HTML report ships as
 # a standalone file with nothing to link to. Here it is cut to the two per-site
-# facts, because all ten chapters live on ONE page: the shared method (variables,
+# facts, because every chapter lives on ONE page: the shared method (variables,
 # completeness rule, smoothing, thresholds, trend) is stated once by
 # R/04_compare.R under "How every chapter is built" and linked from each chapter.
 # Repeating it ten times added ~290 near-identical lines and ten duplicate
@@ -237,7 +237,7 @@ for (key in names(fills)) {
 
 # safety: STOP if any placeholder went unfilled. This was a warning(), but
 # Rscript exits 0 on a warning — so an unfilled {{TOKEN}} would ship verbatim
-# into the committed README, and during `make all-sites` (10 sites) the warning
+# into the committed README, and during `make all-sites` (every site) the warning
 # scrolls past unnoticed. A missing fill is a bug, not a note.
 leftover <- regmatches(block, gregexpr("\\{\\{[A-Z_0-9]+\\}\\}", block))[[1]]
 if (length(leftover) > 0)

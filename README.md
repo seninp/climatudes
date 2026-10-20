@@ -59,13 +59,11 @@ however long it has been since the last hand export. See each city’s own "Why 
 note below.
 
 Each row names the window its standing is measured over, because the rows do not all make the same
-claim. The windows run from Voronezh’s 59 midwinter days through Irvine’s five months to the eight
-months most sites reach, and Moscow’s row ranks a complete, already-finished 2025.
+claim. The windows run from Voronezh’s 59 days (Jan 1 – Feb 28) through Irvine’s 243 to the 290 or so most sites reach, and Moscow’s row ranks a complete, already-finished 2025.
 A rank is comparable **within** a city — the same calendar window against that city’s own history —
 but not across cities. Standardising every site to the shortest window they share reorders the
 standings substantially, and several cities holding a "record" badge here do not hold one there:
-a January-to-May mean and a January-to-August mean are different statistics. A "#55 of 84" over two
-months of winter is not the same kind of statement as an eight-month "#5 of 76".
+a January-to-May mean and a January-to-August mean are different statistics. A "#55 of 84" over 59 days is not the same kind of statement as a 290-day "#1 of 80".
 
 The two New Mexico rows deserve a note, because they look like a contradiction. Santa Fe and Albuquerque sit about 90 km apart in the same high-desert climate, yet Santa Fe warms at +0.08 °C/decade against Albuquerque's +0.18. Record length is not the explanation — over the shared 1971-onward window they are still +0.09 and +0.38. The difference is in the stations: Santa Fe's daily minima have *fallen* while its maxima rose, widening the gap between day and night, which is the opposite of the greenhouse signature and a known symptom of station history (a site move, a change in reading time) in a record that has not been homogenised. GHCN-Daily is raw. Read the slowest bar on this chart as a measurement result, not as evidence that Santa Fe is barely warming; its own airport station, and its neighbour here, both give roughly +0.2. See Santa Fe's chapter for the numbers.
 
@@ -137,9 +135,10 @@ its own source, stations and rebuild command.
   least-squares slope with its two-sided p-value. Monthly climatology keeps only months
   with ≥ 27 valid days.
 - **Trend.** Slope by linear regression (least squares); the curves on the line charts are
-  LOESS smoothings (span = 0.7). Rates are reported per decade.
-- **Reproducibility.** A 4-stage R pipeline (`R/00_prepare_data.R` → `R/01_plot.R` →
-  `R/02_report.R` → `R/03_readme.R`), driven by `SITE=<site> make all`. See
+  LOESS smoothings (span = 0.7 for temperature, 0.75 for rainfall). Rates are reported per decade.
+- **Reproducibility.** A per-site R pipeline (`R/00_prepare_data.R` → `R/01_plot.R` →
+  `R/02_report.R` → `R/03_readme.R`), driven by `SITE=<site> make all`, then
+  `R/04_compare.R` for this cross-city block (`make all-sites` runs both). See
   [How to run](#how-to-run).
 
 <sub>Figures and numbers above are generated — edit `R/04_compare.R`, not this block.</sub>
@@ -1308,7 +1307,7 @@ complete decade (1958–1967) against its last (2016–2025):
 | Tropical nights (min ≥ 20 °C) | 237 | **239** |
 
 <sub>Counts of days per year crossing each threshold, averaged over the first and last
-complete decades of the record. There was never a frost season here to retreat; the change shows up entirely on the hot side of the ledger. Read the hot-day jump with care here: 20% of recent days come within 1 °C of the 30 °C line, so the count amplifies what is really a +1.9 °C shift in the average daily maximum.</sub>
+complete decades of the record. There was never a frost season here to retreat; the change shows up entirely on the hot side of the ledger. Read the hot-day jump with care here: 21% of recent days come within 1 °C of the 30 °C line, so the count amplifies what is really a +1.9 °C shift in the average daily maximum.</sub>
 
 ### What about the rain?
 
@@ -1457,7 +1456,7 @@ complete decade (1971–1980) against its last (2016–2025):
 | Tropical nights (min ≥ 20 °C) | 40 | **78** |
 
 <sub>Counts of days per year crossing each threshold, averaged over the first and last
-complete decades of the record. Read the hot-day jump with care here: 25% of recent days come within 1 °C of the 30 °C line, so the count amplifies what is really a +2.1 °C shift in the average daily maximum.</sub>
+complete decades of the record. Read the hot-day jump with care here: 24% of recent days come within 1 °C of the 30 °C line, so the count amplifies what is really a +2.1 °C shift in the average daily maximum.</sub>
 
 ### What about the rain?
 
@@ -2210,7 +2209,7 @@ complete decade (1950–1959) against its last (2016–2025):
 | Tropical nights (min ≥ 20 °C) | 272 | **317** |
 
 <sub>Counts of days per year crossing each threshold, averaged over the first and last
-complete decades of the record. There was never a frost season here to retreat; the change shows up entirely on the hot side of the ledger. Read the hot-day jump with care here: 29% of recent days come within 1 °C of the 30 °C line, so the count amplifies what is really a +1.8 °C shift in the average daily maximum.</sub>
+complete decades of the record. There was never a frost season here to retreat; the change shows up entirely on the hot side of the ledger. Read the hot-day jump with care here: 30% of recent days come within 1 °C of the 30 °C line, so the count amplifies what is really a +1.8 °C shift in the average daily maximum.</sub>
 
 ### What about the rain?
 
@@ -2523,16 +2522,18 @@ climatudes/
 │   │   ├── honolulu.R         Honolulu: same, for NOAA GHCN-Daily
 │   │   └── noumea.R           Nouméa: same, for Météo-France dept. 988
 │   ├── sources/
-│   │   ├── meteofrance.R      fetch + normalize Météo-France's format (Castanet-Tolosan, Nouméa)
+│   │   ├── meteofrance.R      fetch + normalize Météo-France's format (Castanet-Tolosan, Paris, Lyon, Nouméa)
 │   │   ├── meteoswiss.R       fetch + normalize MeteoSwiss's format
 │   │   ├── dwd.R              fetch + normalize DWD's format
-│   │   ├── noaa.R             fetch + normalize NOAA GHCN-Daily's format (Santa Fe, Honolulu)
+│   │   ├── noaa.R             fetch + normalize NOAA GHCN-Daily's format (Irvine, Albuquerque, Santa Fe, Boston, Honolulu)
 │   │   ├── ghcn_iem.R         homogenize two open feeds of one station (Hyderabad, Lalitpur)
 │   │   └── meteoru.R          read (not fetch) a manual AISORI-M export (Moscow, Voronezh)
 │   ├── 00_prepare_data.R      generic: dispatches to R/sources/<site's source>.R
+│   ├── 00_refresh_rolling.R   generic: delete only the raw files that change, before a rebuild
 │   ├── 01_plot.R              generic: build the five figures + annual tables + stats
 │   ├── 02_report.R            generic: assemble the self-contained HTML report
-│   └── 03_readme.R            generic: render the same report into this site's README block
+│   ├── 03_readme.R            generic: render the same report into this site's README block
+│   └── 04_compare.R           cross-site: comparison chart, world map and table at the top of this page
 ├── data/                      (created on first run, git-ignored)
 │   ├── raw/                   Castanet-Tolosan's raw files (legacy root location)
 │   ├── raw/<site>/            every other site's raw files
@@ -2540,6 +2541,7 @@ climatudes/
 └── outputs/                   (created on first run, mostly git-ignored)
     ├── figures/               Castanet-Tolosan's five PNGs (legacy root location)  ← tracked
     ├── <site>/figures/        every other site's five PNGs                        ← tracked
+    ├── compare/figures/       the comparison chart and world map                  ← tracked
     ├── [<site>/]annual_temperatures.csv
     ├── [<site>/]annual_rainfall.csv
     └── [<site>/]temperature_report.html   ← the shareable deliverable (fully self-contained)
@@ -2552,11 +2554,12 @@ uses — they only read `R/sites/<site>.R` for names, roles, thresholds and
 citation text.
 
 **Version-controlled: the R scripts, the Makefile, this README and every
-site's PNG figures.** The figures are the one generated artifact that is
+PNG figure it shows.** The figures are the one generated artifact that is
 committed — GitHub can only render them in the README if they are in the
 repository. The base64 HTML reports (~3–4 MB each) are *not* committed.
 Everything else — including `data/raw/` — is downloaded or regenerated by
-`make all`, so a fresh clone rebuilds any site in a few seconds.
+`make all`, so a fresh clone rebuilds any site in a few seconds, except Moscow
+and Voronezh, which need their manual export first (see below).
 
 **Everything stays compressed.** Raw archives are never decompressed to disk
 — they are read directly via a streaming pipe (`gzip -dc`, or a per-call temp
@@ -2570,11 +2573,11 @@ Stage 00 downloads any raw file missing from the site's raw directory, so
 there is nothing to fetch by hand. Each source has its own quirks, documented
 where the fetch logic lives (`R/sources/<source>.R`) rather than repeated here:
 
-- **Météo-France** (Castanet-Tolosan) — three era-named files that rotate every
-  January; when 2027 opens, `latest-2025-2026` starts 404ing and `MF_ERAS`-
-  equivalent (`R/sites/castanet.R`'s `meteofrance$eras`) needs bumping. Stage
-  00's error message says so if you hit it. `make refresh` re-downloads the
-  current era.
+- **Météo-France** (Castanet-Tolosan, Paris, Lyon) — three era-named files per
+  département that rotate every January (`latest-2025-2026` stops resolving
+  when 2027 opens). Stage 00 reads the current names from the mirror's file
+  listing, so nothing needs bumping; each site's `meteofrance$eras` is only the
+  offline fallback. `make refresh-rolling` re-downloads just the current era.
 - **MeteoSwiss** (Zurich) — fixed, non-rotating URLs (a `historical` file plus a
   rolling `recent` file per station/dataset); Zürich-Fluntern needs two
   datasets merged (temperature from the homogeneous `ogd-nbcn`, rainfall from
@@ -2582,7 +2585,7 @@ where the fetch logic lives (`R/sources/<source>.R`) rather than repeated here:
 - **DWD** (Karlsruhe) — one zip per station/period; the historical zip's
   filename embeds its own date range and shifts over time, so it is discovered
   from a live directory listing rather than hardcoded.
-- **NOAA GHCN-Daily** (Santa Fe, Honolulu) — the tokenless Access Data Service
+- **NOAA GHCN-Daily** (Irvine, Albuquerque, Santa Fe, Boston, Honolulu) — the tokenless Access Data Service
   v1 (`ncei.noaa.gov/access/services/data/v1`), one CSV request per station
   covering its whole history; no historical/recent split needed, since a
   station's full record is a few hundred KB either way.
@@ -2601,10 +2604,13 @@ where the fetch logic lives (`R/sources/<source>.R`) rather than repeated here:
   it reads whichever `.zip` export already sits in `data/raw/<site>/` (most
   recently modified wins) and errors with the exact query steps if none is
   found. Re-running the export by hand and dropping the new `.zip` in is how
-  these two sites get fresher data; there is no `make refresh` for them.
+  these two sites get fresher data; `make refresh` refuses to run for them.
 
-`make refresh SITE=<site>` re-downloads that site's rolling/current data and
-rebuilds everything (except Moscow/Voronezh — see above).
+`make refresh-rolling SITE=<site>` re-downloads only the raw files that change
+between refreshes and rebuilds that site; `make refresh-rolling-all-sites` does
+every site, then the comparison. `make refresh SITE=<site>` re-downloads all of
+a site's raw data, stable archives included. Both leave Moscow and Voronezh's
+manual exports alone.
 
 ## How to run
 
@@ -2621,8 +2627,11 @@ make all SITE=honolulu    # same, for Honolulu
 make all SITE=noumea      # same, for Nouméa
 make all SITE=moscow      # same, for Moscow (reads data/raw/moscow/*.zip — see Fetching the data)
 make all SITE=voronezh    # same, for Voronezh
-make all-sites            # run every site in R/sites/
-make refresh SITE=zurich  # re-download that site's rolling/current data, then rebuild it
+make all-sites            # run every site in R/sites/, then the comparison
+make compare              # rebuild only the comparison block (every site's stats must exist)
+make refresh-rolling SITE=zurich  # re-download only the files that change, then rebuild
+make refresh-rolling-all-sites    # the routine refresh: every site, then the comparison
+make refresh SITE=zurich  # re-download ALL of that site's raw data, then rebuild it
 make open SITE=zurich     # open that site's HTML report (macOS)
 ```
 
@@ -2633,11 +2642,13 @@ SITE=zurich Rscript R/00_prepare_data.R
 SITE=zurich Rscript R/01_plot.R
 SITE=zurich Rscript R/02_report.R
 SITE=zurich Rscript R/03_readme.R
+Rscript R/04_compare.R    # cross-site; not per SITE
 ```
 
-`make clean` (optionally with `SITE=<site>`) removes everything regenerable for
-that site (processed data + outputs), leaving the downloaded raw files and the
-README in place.
+`make clean` (optionally with `SITE=<site>`) removes that site's extract, stats,
+figures, tables and report, leaving the downloaded raw files and the README in
+place. The figures are tracked, so the working tree stays dirty until
+`make plots` regenerates them.
 
 ## Two ways to read the same report
 

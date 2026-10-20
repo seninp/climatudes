@@ -98,7 +98,7 @@ prepare_data <- function(site) {
   # Without this, `make all-sites` hard-fails on Moscow and Voronezh after ANY
   # edit to a shared file: the extract goes stale against R/lib/common.R, make
   # tries to rebuild it from raw, and stage 00 aborts because there is nothing to
-  # rebuild it from. The other nine sites re-download and carry on; these two
+  # rebuild it from. The other sites re-download and carry on; these two
   # cannot. Only error when there is no extract either, which is the genuine
   # fresh-clone case the message below is for.
   if (!length(Sys.glob(file.path(site$paths$raw, "*.zip")))) {

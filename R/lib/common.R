@@ -35,6 +35,11 @@ MIN_YTD_MONTH_FRAC <- 1/3
 # they stay on the chart, correctly flagged not significant.
 MIN_RAIN_TREND_YEARS <- 30L
 
+# A year-to-date window this long is the whole year: the site's current year
+# has already ended (a manual export that stops at Dec 31), so stage 03 and the
+# comparison table describe it as a full year rather than "Jan 1 – Dec 31".
+FULL_YEAR_DAYS <- 350L
+
 # The longest window EVERY site shares — the latest first-complete-year across
 # all sites (Lalitpur, 1971). Used for the cross-site comparison's like-for-like
 # rate column, so a raw-rate ranking cannot be mistaken for a speed ranking when

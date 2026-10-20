@@ -462,7 +462,10 @@ win_lab  <- sprintf("Jan 1 – %s %d", month.abb[cutM], cutD)   # e.g. "Jan 1 �
 # would empty `ytd` entirely. Scale the floor to the window itself (never
 # ABOVE 150, so every already-shipped site is unaffected: their windows are
 # all well over 150/0.85 days long).
-cutoff_doy <- as.integer(strftime(as.Date(sprintf("2001-%02d-%02d", cutM, cutD)), "%j"))
+# Day-of-year on a 365-day calendar, counted rather than parsed: as.Date() on a
+# non-leap reference year errors for a Feb 29 cutoff, and a leap reference year
+# would shift every later cutoff by a day. Feb 29 lands on 60, as Mar 1 would.
+cutoff_doy <- c(0L, 31L, 59L, 90L, 120L, 151L, 181L, 212L, 243L, 273L, 304L, 334L)[cutM] + cutD
 YTD_MIN_DAYS <- min(MIN_YTD_DAYS, floor(0.85 * cutoff_doy))
 
 # A year also has to COVER the window, not merely have enough days somewhere
@@ -671,14 +674,16 @@ setorder(ext_ann, year)
 edec1 <- ext_ann[year <= min(year) + 9]   # first complete decade
 edec2 <- ext_ann[year >= max(year) - 9]   # last complete decade
 # Where does the hot-day threshold SIT in this city's distribution? A fixed
-# 30 degC line means very different things across ten climates. At Honolulu the
+# 30 degC line means very different things across these climates. At Honolulu the
 # recent-decade median TX is 29.4 degC, so the threshold cuts through the middle
 # of the distribution and a mean shift of +1.8 degC reads as a 4x jump in the
 # count (42 -> 175); at Castanet 30 degC sits out near the 90th percentile, where
 # the same count is a genuine tail measure. Reporting the ratio without saying
 # which case applies overstates the tropical sites. Computed here so the caveat
 # in R/lib/narrative.R fires only where the threshold really is mid-distribution.
-tx_recent <- tb[year >= max(ext_ann$year) - 9 & !is.na(TX)]$TX
+# Same years as edec2 — `year >= max - 9` also swept in the current, partial
+# year, whose missing months bias the "recent decade" TX toward the season it has.
+tx_recent <- tb[year %in% edec2$year & !is.na(TX)]$TX
 hot_thr_pctile <- mean(tx_recent < HOT_TX)              # 0.5 = dead centre
 hot_thr_near   <- mean(abs(tx_recent - HOT_TX) <= 1)    # crowding at the line
 tx_mean_early  <- mean(tb[year %in% edec1$year & !is.na(TX)]$TX)

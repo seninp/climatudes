@@ -53,9 +53,11 @@ SITE <- list(
     # Equivalent mirror if the above is unreachable:
     #   https://object.files.data.gouv.fr/meteofrance/data/synchro_ftp/BASE/QUOT
     dept = "31",   # Haute-Garonne
-    # The three eras. IMPORTANT: these names encode years and ROTATE each January —
-    # when 2027 opens, `latest-2025-2026` stops resolving (404) and its rows migrate
-    # into `previous-1950-2026`. Verified 2026-07-25.
+    # The three eras. These names encode years and ROTATE each January (when
+    # 2027 opens, `latest-2025-2026` stops resolving and its rows migrate into a
+    # new `previous-*` file). R/sources/meteofrance.R::mf_eras() reads the current
+    # names from the mirror's listing; this list is only the offline fallback.
+    # Verified 2026-10-20.
     eras = c("avant-1949", "previous-1950-2024", "latest-2025-2026"),
     field_docs = c("RR-T-Vent")
   )

@@ -225,7 +225,7 @@ build_common_fills <- function(stats, site) {
   # Moscow's window IS the whole calendar year, so calling it "the warmest
   # Jan 1 – Dec 31" (and, elsewhere, "year-to-date") describes a full year in the
   # vocabulary of a partial one.
-  FULL_WINDOW <- isTRUE(y$window_days >= 350)
+  FULL_WINDOW <- isTRUE(y$window_days >= FULL_YEAR_DAYS)
   window_noun <- if (FULL_WINDOW) "year" else y$window
   # Name the baseline span instead of saying "the long-term normal". The normal is
   # the mean of this site's whole qualifying record, so a longer record yields a
@@ -371,7 +371,7 @@ build_common_fills <- function(stats, site) {
   # Check which date is actually later rather than assert it.
   # State the gap as a number rather than trailing off into "the same warming
   # signature seen throughout this report" — that clause described the document,
-  # not the climate, and repeated verbatim in all ten chapters.
+  # not the climate, and repeated verbatim in every chapter.
   hot_is_recent <- as.Date(ref_rec$hot$date) > as.Date(ref_rec$cold$date)
   yrs_apart <- abs(as.integer(format(as.Date(ref_rec$hot$date), "%Y")) -
                    as.integer(format(as.Date(ref_rec$cold$date), "%Y")))
@@ -388,7 +388,7 @@ build_common_fills <- function(stats, site) {
   frost_dir <- extreme_direction(ex$frost_early, ex$frost_recent)
   hot_dir   <- extreme_direction(ex$hot_early, ex$hot_recent)
   extremes_header <- sprintf("Frost days %s, hot days %s", frost_dir, hot_dir)
-  # A fixed 30 °C line means different things in ten climates. Where the
+  # A fixed 30 °C line means different things in different climates. Where the
   # threshold sits out in the tail (Castanet p86, Santa Fe p84, Albuquerque p70,
   # ~6-7% of recent days within 1 °C of it) the count is a real tail measure.
   # Where it cuts through the bulk it is not: at Honolulu 29% of recent days fall

@@ -69,8 +69,8 @@ SITE <- list(
   meteofrance = list(
     base_url = "https://meteofrance.s3.sbg.io.cloud.ovh.net/data/synchro_ftp/BASE/QUOT",
     dept = "75",   # Paris
-    # These era names encode years and ROTATE each January — see
-    # R/sites/castanet.R for the same caveat. Verified 2026-08-15.
+    # Offline fallback only — the current era names are read from the mirror's
+    # listing (see R/sites/castanet.R and R/sources/meteofrance.R::mf_eras()).
     eras = c("avant-1949", "previous-1950-2024", "latest-2025-2026"),
     field_docs = c("RR-T-Vent")
   )

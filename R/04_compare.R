@@ -278,16 +278,18 @@ MAP_REF <- hashed_ref(MAP_PATH)
 
 # ---- TABLE -------------------------------------------------------------------
 # A standing is NOT the same claim from row to row, and the windows are further
-# apart than "all the automated sites rank the same year" once suggested: they
-# run from Voronezh's 59 midwinter days through Irvine's five months to Nouméa's
-# eight. A Jan-May mean and a Jan-Aug mean are different statistics, and
-# standardising them flips three of the four "record" badges among the automated
-# sites. So the window gets its own column rather than a parenthesis, and the
-# prose below says plainly that a rank is comparable within a city, not across.
+# apart than "all the automated sites rank the same year" once suggested: a
+# hand-exported winter-only window sits beside lagging COOP feeds and the
+# near-current European ones. A Jan-May mean and a Jan-Aug mean are different
+# statistics. So the window gets its own column rather than a parenthesis, and
+# the prose below says plainly that a rank is comparable within a city, not
+# across. That prose names its examples from `cmp`: it used to hardcode them
+# ("Irvine's five months", "#55 of 84"), and every refresh made it a little
+# more wrong.
 row_md <- function(r) {
   y <- list(has_ytd = r$has_ytd, is_record = r$is_record, rank = r$ytd_rank, n_years = r$ytd_n)
   standing <- if (!r$has_ytd) "too early to rank" else ytd_standing_text(y)
-  win <- if (r$window_days >= 350) sprintf("%d, full year", r$cur_year) else
+  win <- if (r$window_days >= FULL_YEAR_DAYS) sprintf("%d, full year", r$cur_year) else
            sprintf("%d, %s · %d d", r$cur_year, r$window, r$window_days)
   freshness <- if (r$manual_source) sprintf("%s †", r$current_through) else r$current_through
   common <- if (is.na(r$slope_dec_common)) "—" else sprintf("%+.2f", r$slope_dec_common)
@@ -332,6 +334,34 @@ shortest <- plot_ord[order(nyears)][1]
 # not explain it (Santa Fe over the shared window is still far below), so the
 # page says what does. Guarded so the paragraph simply disappears if either city
 # leaves SITE_ORDER.
+and_join <- function(x) if (length(x) < 2) x else
+  paste(paste(x[-length(x)], collapse = ", "), "and", x[length(x)])
+
+# Examples for the "windows differ" paragraph, drawn from the table itself.
+# (`win_` prefix: `shortest`/`longest` already name the record-length extremes.)
+part         <- cmp[has_ytd & window_days < FULL_YEAR_DAYS]
+auto         <- part[manual_source == FALSE]
+win_short    <- part[which.min(window_days)]
+win_short_au <- auto[which.min(window_days)]
+typ_days     <- round(median(auto$window_days))
+win_typical  <- auto[which.min(abs(window_days - typ_days))]
+full_yr      <- cmp[window_days >= FULL_YEAR_DAYS]
+window_span <- paste0(
+  "The windows run from ", win_short$city, "’s ", win_short$window_days, " days (",
+  win_short$window, ")",
+  if (win_short_au$site_key != win_short$site_key)
+    paste0(" through ", win_short_au$city, "’s ", win_short_au$window_days) else "",
+  " to the ", typ_days, " or so most sites reach",
+  if (nrow(full_yr)) paste0(", and ", and_join(as.character(full_yr$city)),
+                            if (nrow(full_yr) == 1) "’s row ranks" else "’s rows rank",
+                            " a complete, already-finished ", full_yr$cur_year[1]) else "",
+  ".")
+window_contrast <- sprintf(
+  "A \"#%d of %d\" over %d days is not the same kind of statement as a %d-day \"#%d of %d\".",
+  win_short$ytd_rank, win_short$ytd_n, win_short$window_days,
+  win_typical$window_days, win_typical$ytd_rank, win_typical$ytd_n)
+MANUAL_CITIES <- and_join(as.character(cmp[manual_source == TRUE]$city))
+
 nm_note <- if (all(c("santafe", "albuquerque") %in% cmp$site_key)) {
   sf <- cmp[site_key == "santafe"]; ab <- cmp[site_key == "albuquerque"]
   sprintf(paste0(
@@ -369,19 +399,17 @@ amounts of evidence — the record span and the count of complete years are in t
 |---|---|---:|---:|---:|---|---|---|
 ', paste(table_rows, collapse = "\n"), '
 
-† Moscow and Voronezh are manually exported from Roshydromet’s AISORI-M (login-gated, no automated
+† ', MANUAL_CITIES, ' are manually exported from Roshydromet’s AISORI-M (login-gated, no automated
 refresh), so their "current through" date lags the other ', num_word(N_AUTOMATED), ' sites’ automated feeds by
 however long it has been since the last hand export. See each city’s own "Why only one station?"
 note below.
 
 Each row names the window its standing is measured over, because the rows do not all make the same
-claim. The windows run from Voronezh’s 59 midwinter days through Irvine’s five months to the eight
-months most sites reach, and Moscow’s row ranks a complete, already-finished ', cmp[site_key == "moscow"]$cur_year, '.
+claim. ', window_span, '
 A rank is comparable **within** a city — the same calendar window against that city’s own history —
 but not across cities. Standardising every site to the shortest window they share reorders the
 standings substantially, and several cities holding a "record" badge here do not hold one there:
-a January-to-May mean and a January-to-August mean are different statistics. A "#55 of 84" over two
-months of winter is not the same kind of statement as an eight-month "#5 of 76".
+a January-to-May mean and a January-to-August mean are different statistics. ', window_contrast, '
 ', nm_note, '
 ### What kind of places these are
 
@@ -436,9 +464,10 @@ its own source, stations and rebuild command.
   least-squares slope with its two-sided p-value. Monthly climatology keeps only months
   with ≥ 27 valid days.
 - **Trend.** Slope by linear regression (least squares); the curves on the line charts are
-  LOESS smoothings (span = 0.7). Rates are reported per decade.
-- **Reproducibility.** A 4-stage R pipeline (`R/00_prepare_data.R` → `R/01_plot.R` →
-  `R/02_report.R` → `R/03_readme.R`), driven by `SITE=<site> make all`. See
+  LOESS smoothings (span = 0.7 for temperature, 0.75 for rainfall). Rates are reported per decade.
+- **Reproducibility.** A per-site R pipeline (`R/00_prepare_data.R` → `R/01_plot.R` →
+  `R/02_report.R` → `R/03_readme.R`), driven by `SITE=<site> make all`, then
+  `R/04_compare.R` for this cross-city block (`make all-sites` runs both). See
   [How to run](#how-to-run).
 
 <sub>Figures and numbers above are generated — edit `R/04_compare.R`, not this block.</sub>
@@ -448,15 +477,14 @@ its own source, stations and rebuild command.
 
 readme <- "README.md"
 lines <- readLines(readme, warn = FALSE)
-text <- paste(lines, collapse = "\n")
 
 i <- grep("<!-- BEGIN COMPARE -->", lines)
 j <- grep("<!-- END COMPARE -->", lines)
-if (length(i) != 1 || length(j) != 1)
+if (length(i) != 1 || length(j) != 1 || j <= i)
   stop("README.md must contain exactly one '<!-- BEGIN COMPARE -->' line followed by one ",
        "'<!-- END COMPARE -->' line — found ", length(i), " and ", length(j),
        ". Add the marker pair by hand.")
 
-new_lines <- c(lines[seq_len(i - 1)], strsplit(block, "\n")[[1]], lines[seq(j + 1, length(lines))])
+new_lines <- c(lines[seq_len(i - 1)], strsplit(block, "\n")[[1]], lines[seq_len(length(lines) - j) + j])
 writeLines(new_lines, readme)
 cat(sprintf("Wrote README.md COMPARE block (%d lines between the markers)\n", length(strsplit(block, "\n")[[1]])))

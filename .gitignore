@@ -1,10 +1,12 @@
-# Nothing regenerable is tracked. `make all` rebuilds this project end to end
-# from the R scripts alone (~6 s, ~10 MB downloaded) — see R/00_prepare_data.R.
+# Only code, README.md and the README's figures are tracked. `make all-sites`
+# rebuilds everything else from the R scripts — except Moscow and Voronezh's
+# manual exports (below). One site downloads a few to a few dozen MB; all
+# fifteen together, about 120 MB.
 
-# Raw Météo-France source data — downloaded on demand by stage 00 from the
-# mirror in R/config.R (MF_BASE_URL). Public, Licence Ouverte, no credentials.
-# NOTE: the upstream filenames encode years and rotate each January; bump
-#       MF_ERAS in R/config.R when the cycle turns.
+# Raw source data, every provider — downloaded on demand by stage 00 into
+# data/raw/ (castanet) and data/raw/<site>/. All public; none needs credentials.
+# Météo-France's filenames encode years and rotate each January; stage 00 reads
+# the current names from the mirror (R/sources/meteofrance.R::mf_eras()).
 data/raw/
 
 # Moscow and Voronezh's raw data is a MANUAL export from Roshydromet's
@@ -20,105 +22,24 @@ data/processed/
 # Generated analysis outputs — rebuilt by `make all` / `make all SITE=<site>`.
 # Each report is the shareable artifact: copy it out, do not commit it (a
 # multi-MB base64 HTML re-inflates the history on every refresh).
-# EXCEPTION: every site's five PNG figures ARE tracked. README.md renders each
-# site's report inline (see R/03_readme.R) and GitHub can only show the
-# figures if they live in the repository. Figure refreshes are ordinary
-# sequential commits (no amend/force-push) — see the climatudes-release-workflow
-# memory. git requires each intermediate directory re-included explicitly,
-# hence one block per site (castanet keeps its legacy root path).
+# EXCEPTION: every site's five PNG figures ARE tracked, plus the two
+# cross-site figures in outputs/compare/figures/. README.md renders them
+# inline (see R/03_readme.R, R/04_compare.R) and GitHub can only show figures
+# that live in the repository. Figure refreshes are ordinary sequential commits
+# (no amend/force-push).
+#
+# Patterns, not one block per site, so a new site's figures are tracked without
+# editing this file: `*` never crosses `/`, and git can re-include a file only
+# when its parent directories are not themselves excluded — hence each level
+# is reopened as a directory before its files are excluded again. Castanet keeps
+# its legacy root path, outputs/figures/.
 outputs/*
-!outputs/figures/
-outputs/figures/*
+!outputs/*/
+outputs/*/*
 !outputs/figures/*.png
-
-!outputs/zurich/
-outputs/zurich/*
-!outputs/zurich/figures/
-outputs/zurich/figures/*
-!outputs/zurich/figures/*.png
-
-!outputs/karlsruhe/
-outputs/karlsruhe/*
-!outputs/karlsruhe/figures/
-outputs/karlsruhe/figures/*
-!outputs/karlsruhe/figures/*.png
-
-!outputs/santafe/
-outputs/santafe/*
-!outputs/santafe/figures/
-outputs/santafe/figures/*
-!outputs/santafe/figures/*.png
-
-!outputs/boston/
-outputs/boston/*
-!outputs/boston/figures/
-outputs/boston/figures/*
-!outputs/boston/figures/*.png
-
-!outputs/honolulu/
-outputs/honolulu/*
-!outputs/honolulu/figures/
-outputs/honolulu/figures/*
-!outputs/honolulu/figures/*.png
-
-!outputs/noumea/
-outputs/noumea/*
-!outputs/noumea/figures/
-outputs/noumea/figures/*
-!outputs/noumea/figures/*.png
-!outputs/lalitpur/
-outputs/lalitpur/*
-!outputs/lalitpur/figures/
-outputs/lalitpur/figures/*
-!outputs/lalitpur/figures/*.png
-
-!outputs/hyderabad/
-outputs/hyderabad/*
-!outputs/hyderabad/figures/
-outputs/hyderabad/figures/*
-!outputs/hyderabad/figures/*.png
-
-!outputs/moscow/
-outputs/moscow/*
-!outputs/moscow/figures/
-outputs/moscow/figures/*
-!outputs/moscow/figures/*.png
-
-!outputs/voronezh/
-outputs/voronezh/*
-!outputs/voronezh/figures/
-outputs/voronezh/figures/*
-!outputs/voronezh/figures/*.png
-
-!outputs/irvine/
-outputs/irvine/*
-!outputs/irvine/figures/
-outputs/irvine/figures/*
-!outputs/irvine/figures/*.png
-
-!outputs/albuquerque/
-outputs/albuquerque/*
-!outputs/albuquerque/figures/
-outputs/albuquerque/figures/*
-!outputs/albuquerque/figures/*.png
-
-!outputs/lyon/
-outputs/lyon/*
-!outputs/lyon/figures/
-outputs/lyon/figures/*
-!outputs/lyon/figures/*.png
-
-!outputs/paris/
-outputs/paris/*
-!outputs/paris/figures/
-outputs/paris/figures/*
-!outputs/paris/figures/*.png
-
-!outputs/compare/
-outputs/compare/*
-!outputs/compare/figures/
-outputs/compare/figures/*
-!outputs/compare/figures/*.png
+!outputs/*/figures/
+outputs/*/figures/*
+!outputs/*/figures/*.png
 
 # R session cruft
 .Rhistory

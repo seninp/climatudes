@@ -59,9 +59,8 @@ SITE <- list(
   meteofrance = list(
     base_url = "https://meteofrance.s3.sbg.io.cloud.ovh.net/data/synchro_ftp/BASE/QUOT",
     dept = "988",   # Nouvelle-Calédonie
-    # The three eras. IMPORTANT: these names encode years and ROTATE each January —
-    # when 2027 opens, `latest-2025-2026` stops resolving (404) and its rows migrate
-    # into `previous-1950-2026`. Verified 2026-08-14, mirroring castanet.R's caveat.
+    # Offline fallback only — the current era names are read from the mirror's
+    # listing (see R/sites/castanet.R and R/sources/meteofrance.R::mf_eras()).
     eras = c("avant-1949", "previous-1950-2024", "latest-2025-2026"),
     field_docs = c("RR-T-Vent")
   )

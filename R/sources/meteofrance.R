@@ -11,14 +11,50 @@
 # writes that via write_extract() to site$paths$processed/<STATION_EXTRACT>.
 # =============================================================================
 
-# Rolling files — the only raw files that change between refreshes. The three
-# eras are ordered oldest -> newest; only the newest (`latest-*`) gains rows and
-# rotates its name each January (see R/sites/castanet.R). `avant-1949` and the
-# closed `previous-*` era are stable, so refresh-rolling leaves them alone.
-rolling_files <- function(site) {
+# The era names encode years and rotate each January, so hand-copied names in
+# R/sites/*.R would all 404 at once when the year turns. Ask the mirror instead:
+# both hosts are S3 buckets that answer a ListObjectsV2 query, and the listing
+# for one department's prefix names exactly its current eras. The site file's
+# `eras` remains as the offline fallback (no network, or a listing that does not
+# show exactly one avant/previous/latest file). Cached per department per run.
+mf_era_cache <- new.env()
+mf_eras <- function(site) {
   mf <- site$meteofrance
-  rolling_era <- mf$eras[length(mf$eras)]
-  file.path(site$paths$raw, sprintf("Q_%s_%s_RR-T-Vent.csv.gz", mf$dept, rolling_era))
+  if (!is.null(mf_era_cache[[mf$dept]])) return(mf_era_cache[[mf$dept]])
+  bucket <- sub("/data/synchro_ftp/.*$", "", mf$base_url)
+  prefix <- sprintf("data/synchro_ftp/BASE/QUOT/Q_%s_", mf$dept)
+  listing <- suppressWarnings(tryCatch(
+    system2("curl", c("-fsS", "--max-time", "30",
+                      shQuote(sprintf("%s/?list-type=2&prefix=%s", bucket, prefix))),
+            stdout = TRUE, stderr = FALSE),
+    error = function(e) character(0)))
+  pat   <- sprintf("Q_%s_((avant|previous|latest)[-0-9]*)_RR-T-Vent\\.csv\\.gz", mf$dept)
+  found <- unique(sub(pat, "\\1", unlist(regmatches(listing, gregexpr(pat, listing)))))
+  kind  <- sub("-.*$", "", found)
+  eras <- if (identical(sort(kind), c("avant", "latest", "previous"))) {
+    found[order(match(kind, c("avant", "previous", "latest")))]
+  } else {
+    message("  could not list Météo-France eras for dept ", mf$dept,
+            " — falling back to meteofrance$eras in R/sites/", site$key, ".R")
+    mf$eras
+  }
+  if (!identical(eras, mf$eras))
+    message("  Météo-France eras for dept ", mf$dept, " are now ", paste(eras, collapse = ", "),
+            " — update the fallback meteofrance$eras in R/sites/", site$key, ".R")
+  mf_era_cache[[mf$dept]] <- eras
+  eras
+}
+
+# Rolling files — the only raw files that change between refreshes. The three
+# eras are ordered oldest -> newest; only the newest (`latest-*`) gains rows.
+# `avant-1949` and the closed `previous-*` era are stable, so refresh-rolling
+# leaves them alone. After a January rotation the new `previous-*` name is
+# absent locally too, so the next prepare fetches it once — which is correct,
+# since the old latest era's rows have moved into it.
+rolling_files <- function(site) {
+  eras <- mf_eras(site)
+  file.path(site$paths$raw, sprintf("Q_%s_%s_RR-T-Vent.csv.gz",
+                                    site$meteofrance$dept, eras[length(eras)]))
 }
 
 prepare_data <- function(site) {
@@ -27,15 +63,22 @@ prepare_data <- function(site) {
   dir.create(site$paths$raw,       recursive = TRUE, showWarnings = FALSE)
 
   mf <- site$meteofrance
-  rr_t_vent_gz <- sprintf("Q_%s_%s_RR-T-Vent.csv.gz", mf$dept, mf$eras)
+  rr_t_vent_gz <- sprintf("Q_%s_%s_RR-T-Vent.csv.gz", mf$dept, mf_eras(site))
   gz_paths <- file.path(site$paths$raw, rr_t_vent_gz)
 
   for (i in seq_along(gz_paths))
     if (!file.exists(gz_paths[i]))
       fetch_url(file.path(mf$base_url, rr_t_vent_gz[i]), gz_paths[i], verify_gz,
                 on_404_hint = sprintf(
-                  "If this is a 404, the upstream era names have rotated — see meteofrance$eras in R/sites/%s.R.",
+                  "If this is a 404, the upstream era names have rotated and the listing failed — see meteofrance$eras in R/sites/%s.R.",
                   site$key))
+
+  # Only once the current eras are safely on disk: files from eras that have
+  # rotated away are superseded (their rows now live under the new names) and
+  # would otherwise sit in the raw dir forever.
+  stale <- setdiff(list.files(site$paths$raw, sprintf("^Q_%s_.*_RR-T-Vent\\.csv\\.gz$", mf$dept)),
+                   rr_t_vent_gz)
+  for (f in stale) { unlink(file.path(site$paths$raw, f)); message("  removed rotated-out era: ", f) }
 
   # field-definition docs (reference only, not read by the pipeline) — served
   # upstream as `.csv` with CRLF endings despite being plain text; normalise to

@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 # =============================================================================
 # Stage 02 — build the report (generic across sites; SITE env var selects one)
-# Assembles a self-contained, readable HTML report (English) that embeds both
+# Assembles a self-contained, readable HTML report (English) that embeds all five
 # figures as base64 — no pandoc / external assets. Run stage 01 first.
 # Output: <outputs>/temperature_report.html
 #
@@ -13,7 +13,7 @@
 # The Methodology section below is COMPLETE, because each of these reports ships
 # as a single standalone file that has to explain itself. Stage 03's README
 # version is cut to the per-site facts and links to one shared "How every
-# chapter is built" section, since all ten chapters share a page there.
+# chapter is built" section, since every chapter shares a page there.
 # =============================================================================
 
 suppressPackageStartupMessages({
@@ -75,8 +75,6 @@ for (r in stats$records) {
     rec_row("Coldest &#10052;",  span, r$cold$date, r$cold$tn, r$cold$tx, "#1F5FA8", "TN"))
 }
 record_rows_html <- paste(record_rows, collapse = "\n")
-
-fmt <- function(x, d = 2) formatC(x, format = "f", digits = d)
 
 template <- '<!DOCTYPE html>
 <html lang="en">
@@ -356,7 +354,7 @@ template <- '<!DOCTYPE html>
         years; the trend is a least-squares slope with its two-sided p-value.
         Monthly climatology keeps only months with&nbsp;≥&nbsp;27 valid days.</li>
     <li><strong>Trend.</strong> Slope estimated by linear regression (least squares);
-        the line-chart curves use LOESS smoothing (span&nbsp;=&nbsp;0.7).</li>
+        the line-chart curves use LOESS smoothing (span&nbsp;=&nbsp;0.7 for temperature, 0.75 for rainfall).</li>
     <li><strong>Reproducibility.</strong> A 4-stage R pipeline
         (<code>R/00_prepare_data.R</code> → <code>R/01_plot.R</code> →
         <code>R/02_report.R</code> → <code>R/03_readme.R</code>), driven by
@@ -406,7 +404,7 @@ html <- gsub("<p>[[:space:]]*</p>", "", html)
 
 # safety: STOP if any placeholder went unfilled. This was a warning(), but
 # Rscript exits 0 on a warning — so an unfilled {{TOKEN}} would ship verbatim
-# into the committed report, and during `make all-sites` (10 sites) the warning
+# into the committed report, and during `make all-sites` (every site) the warning
 # scrolls past unnoticed. A missing fill is a bug, not a note.
 leftover <- regmatches(html, gregexpr("\\{\\{[A-Z_0-9]+\\}\\}", html))[[1]]
 if (length(leftover) > 0)

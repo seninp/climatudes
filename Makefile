@@ -5,7 +5,9 @@
 #   make all-sites         run the full pipeline for every site in R/sites/, then compare
 #   make compare           rebuild the cross-site comparison (needs every site's stats already built)
 #   make prepare           fetch missing raw data -> small gzipped station extract
-#   make refresh           re-download the current/rolling raw data and rebuild everything
+#   make refresh-rolling   re-download only the raw files that change (the routine refresh)
+#   make refresh-rolling-all-sites   ... for every site, then compare
+#   make refresh           re-download ALL of this site's raw data (incl. stable archives) and rebuild
 #   make plots             build the figures + annual table + stats
 #   make report            build the self-contained HTML report
 #   make readme            inject the same report into README.md (between this site's markers)
@@ -81,9 +83,17 @@ prepare: $(EXTRACT)
 $(EXTRACT): $(RAW_FILES) R/00_prepare_data.R R/lib/common.R $(SITE_CONFIG)
 	SITE=$(SITE) $(RSCRIPT) R/00_prepare_data.R
 
-# force a re-download of the rolling/current raw data, then rebuild everything
+# force a re-download of ALL this site's raw data, then rebuild everything.
+# Deletes only the plain files directly in RAWDIR, never subdirectories:
+# castanet's RAWDIR is data/raw itself, so `rm -rf $(RAWDIR)` used to wipe every
+# site's raw tree. Refuses the hand-fed meteoru sites (Moscow, Voronezh), whose
+# exports cannot be re-downloaded.
 refresh:
-	rm -rf $(RAWDIR) $(EXTRACT)
+	@if grep -q 'source *= *"meteoru"' $(SITE_CONFIG); then \
+	  echo "refresh: SITE '$(SITE)' is a manual export (meteoru) — nothing to re-download; refusing to delete it" >&2; \
+	  exit 1; fi
+	@if [ -d $(RAWDIR) ]; then find $(RAWDIR) -maxdepth 1 -type f -print -delete; fi
+	rm -f $(EXTRACT)
 	$(MAKE) SITE=$(SITE) all
 
 # ---- surgical refresh: re-download ONLY the rolling files, keep historical ---

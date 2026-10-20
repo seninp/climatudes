@@ -125,6 +125,9 @@ ghcn_iem_read_ghcn <- function(path) {
 # The daily.py service returns a precomputed daily summary; we take only
 # max_temp_f / min_temp_f (F -> C) and ignore its precip, which METAR does not
 # measure reliably here. `end` is stamped to today by prepare_data().
+ghcn_iem_iem_files <- function(raw_dir, station, start)
+  list.files(raw_dir, sprintf("^iem_%s_%s_to_.*\\.csv$", station, start), full.names = TRUE)
+
 ghcn_iem_fetch_iem <- function(raw_dir, network, station, start, today) {
   dest <- file.path(raw_dir, sprintf("iem_%s_%s_to_%s.csv", station, start, today))
   if (!file.exists(dest)) {
@@ -139,6 +142,10 @@ ghcn_iem_fetch_iem <- function(raw_dir, network, station, start, today) {
       "IEM station %s (network %s) may not exist, or the daily service changed.",
       station, network))
   }
+  # Each day's pull is a complete superset of the earlier ones, so drop them;
+  # otherwise one dated copy accumulates per refresh.
+  older <- setdiff(ghcn_iem_iem_files(raw_dir, station, start), dest)
+  for (f in older) { unlink(f); message("  removed superseded: ", basename(f)) }
   dest
 }
 
@@ -182,15 +189,13 @@ ghcn_iem_month_offsets <- function(ghcn, iem) {
 
 # Rolling files — both providers gain rows over time (GHCN's rainfall and recent
 # temperature; IEM's daily temperature), so both are rolling and refresh-rolling
-# re-pulls them. The IEM filename embeds today's date; GHCN runs to its future
-# sentinel.
+# re-pulls them. The IEM filename embeds its pull date, so every dated copy on
+# disk counts as rolling; GHCN runs to its future sentinel.
 rolling_files <- function(site) {
   gi <- site$ghcn_iem
-  today <- format(Sys.Date(), "%Y-%m-%d")
   c(file.path(site$paths$raw, sprintf("ghcn_%s_%s_%s.csv",
               gi$ghcn_id, gi$ghcn_start, gi$ghcn_end)),
-    file.path(site$paths$raw, sprintf("iem_%s_%s_to_%s.csv",
-              gi$iem_station, gi$iem_start, today)))
+    ghcn_iem_iem_files(site$paths$raw, gi$iem_station, gi$iem_start))
 }
 
 prepare_data <- function(site) {
