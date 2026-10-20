@@ -502,7 +502,7 @@ build_common_fills <- function(stats, site) {
     RAW_BOTH_SENTENCE = raw_both_sentence,
     YTD_WINDOW = y$window, YTD_NORMAL = fmt(y$normal, 1), YTD_SENTENCE = ytd_sentence,
     YTD_NORM_SPAN = norm_span,
-    YTD_NYEARS_PRIOR = y$n_years - 1,
+    YTD_NYEARS_PRIOR = y$n_years - as.integer(isTRUE(y$has_ytd)),   # n_years counts the current year only when it is ranked
     YTD_STANDING = bold(ytd_standing_text(y)),
     EXTREMES_HEADER = extremes_header, EXTREMES_CLOSING = extremes_closing,
     EXT_SPAN0 = sprintf("%d–%d", ex$yr0, ex$yr0 + 9),

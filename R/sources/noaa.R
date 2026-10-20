@@ -17,59 +17,22 @@
 # writes that via write_extract() to site$paths$processed/<STATION_EXTRACT>.
 # =============================================================================
 
+source("R/lib/ghcn.R")   # ghcn_fetch(), ghcn_read() — shared with R/sources/ghcn_iem.R
+
 # Fetch one station's full requested range in a single request (GHCN-Daily
 # station histories are small enough — a hundred years is a few hundred KB —
 # that there is no need for DWD/MeteoSwiss's historical/recent file split).
-# `end` is deliberately requested far in the future: the service just returns
-# whatever has actually been published up to today, so a fixed future end
-# date never needs bumping and never 404s.
-noaa_fetch_station <- function(base_url, raw_dir, id, start, end) {
-  dest <- file.path(raw_dir, sprintf("%s_%s_%s.csv", id, start, end))
-  if (!file.exists(dest)) {
-    url <- sprintf(
-      "%s?dataset=daily-summaries&stations=%s&startDate=%s&endDate=%s&format=csv&units=metric&dataTypes=TMAX,TMIN,PRCP&includeAttributes=true",
-      base_url, id, start, end)
-    fetch_url(url, dest, verify_text, on_404_hint = sprintf(
-      "station %s may not exist in GHCN-Daily, or has no data between %s and %s.",
-      id, start, end))
-  }
-  dest
-}
-
-# Each element's *_ATTRIBUTES column is "MFLAG,QFLAG,SFLAG[,...]" — the daily-
-# summaries endpoint returns the raw value even when GHCN's own QC has flagged
-# it (e.g. QFLAG "G", failed gap check — seen in practice: a -50 degC August
-# TMIN at Santa Fe, 1901-08-25, physically impossible for that station/season).
-# A non-empty QFLAG means "do not trust this value" — null it out here rather
-# than downstream, so every stage after stage 00 sees only QC-passed values.
-noaa_qflag_ok <- function(attrs) {
-  # A station/date with no reading at all for this element (e.g. a rain-only
-  # station has no TMAX/TMIN column data) makes fread() infer the whole
-  # *_ATTRIBUTES column as logical NA rather than character — coerce first so
-  # strsplit() never sees a non-character vector.
-  attrs <- as.character(attrs)
-  qflag <- vapply(strsplit(attrs, ",", fixed = TRUE), function(x)
-    if (length(x) >= 2) x[[2]] else "", character(1))
-  is.na(attrs) | qflag == ""
-}
+# `end` is deliberately requested far in the future (2030-12-31 in the site
+# files): the service just returns whatever has actually been published up to
+# today, so the end date never 404s — but it does need bumping before 2031.
+noaa_fetch_station <- function(base_url, raw_dir, id, start, end)
+  ghcn_fetch(base_url, file.path(raw_dir, sprintf("%s_%s_%s.csv", id, start, end)), id, start, end)
 
 noaa_read <- function(path, num_poste) {
-  suppressPackageStartupMessages(library(data.table))
-  d <- fread(path)
-  tn <- as.numeric(d$TMIN)
-  tx <- as.numeric(d$TMAX)
-  rr <- as.numeric(d$PRCP)
-  tn[!noaa_qflag_ok(d$TMIN_ATTRIBUTES)] <- NA_real_
-  tx[!noaa_qflag_ok(d$TMAX_ATTRIBUTES)] <- NA_real_
-  rr[!noaa_qflag_ok(d$PRCP_ATTRIBUTES)] <- NA_real_
-  data.table(
-    NUM_POSTE = num_poste,
-    AAAAMMJJ  = as.integer(gsub("-", "", d$DATE, fixed = TRUE)),
-    TN        = tn,
-    TX        = tx,
-    TNTXM     = (tn + tx) / 2,
-    RR        = rr
-  )
+  d <- ghcn_read(path)
+  d[, `:=`(NUM_POSTE = num_poste, TNTXM = (TN + TX) / 2)]
+  setcolorder(d, c("NUM_POSTE", "AAAAMMJJ", "TN", "TX", "TNTXM", "RR"))
+  d
 }
 
 # Rolling files — the only raw files that change between refreshes. Each main
@@ -86,8 +49,7 @@ rolling_files <- function(site) {
 
 prepare_data <- function(site) {
   suppressPackageStartupMessages(library(data.table))
-  dir.create(site$paths$processed, recursive = TRUE, showWarnings = FALSE)
-  dir.create(site$paths$raw,       recursive = TRUE, showWarnings = FALSE)
+  ensure_site_dirs(site)
 
   noaa <- site$noaa
   station_ids <- names(noaa$stations)
@@ -104,12 +66,7 @@ prepare_data <- function(site) {
 
   extract_gz <- file.path(site$paths$processed, STATION_EXTRACT)
   raw_paths  <- unlist(lapply(station_files, function(x) c(x$main, x$predecessor)), use.names = FALSE)
-  inputs <- c(raw_paths, "R/sources/noaa.R", sprintf("R/sites/%s.R", site$key))
-  if (file.exists(extract_gz) &&
-      file.info(extract_gz)$mtime >= max(file.info(inputs)$mtime)) {
-    message("up to date: ", extract_gz)
-    return(invisible(NULL))
-  }
+  if (extract_up_to_date(site, raw_paths)) return(invisible(NULL))
 
   message("Reading NOAA GHCN-Daily stations: ", paste(names(site$stations), collapse = ", "))
 

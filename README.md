@@ -1029,7 +1029,7 @@ Rainfall here is not flat: the long run tilts wetter. The tilt is small against 
 
 <sub>Rain through the year: each grey line is one year’s monthly totals, the dark line the
 long-term monthly normal, the bold blue line 2025. July is the
-wettest month on average (86 mm), March the driest
+wettest month on average (87 mm), March the driest
 (37 mm) — but the spread between years is why that slow trend is easy to miss from the monthly shape alone.</sub>
 
 ### Methodology

@@ -135,6 +135,24 @@ verify_zip <- function(p) if (system2("unzip", c("-t", shQuote(p)),
                                       stdout = FALSE, stderr = FALSE) != 0)
   stop("downloaded file is not a valid zip archive: ", p)
 
+# ---- shared by every R/sources/*.R prepare_data() ----------------------------
+ensure_site_dirs <- function(site) {
+  dir.create(site$paths$processed, recursive = TRUE, showWarnings = FALSE)
+  dir.create(site$paths$raw,       recursive = TRUE, showWarnings = FALSE)
+}
+
+# TRUE (and says so) when the cached extract is newer than every raw input and
+# every code input — then prepare_data() has nothing to do. The code inputs must
+# match the Makefile's $(EXTRACT) prerequisites; see the note there.
+extract_up_to_date <- function(site, raw_inputs) {
+  extract_gz <- file.path(site$paths$processed, STATION_EXTRACT)
+  inputs <- c(raw_inputs, "R/00_prepare_data.R", "R/lib/common.R", "R/lib/ghcn.R",
+              sprintf("R/sources/%s.R", site$source), sprintf("R/sites/%s.R", site$key))
+  fresh <- file.exists(extract_gz) && file.info(extract_gz)$mtime >= max(file.info(inputs)$mtime)
+  if (fresh) message("up to date: ", extract_gz)
+  fresh
+}
+
 # ---- write the normalized daily extract --------------------------------------
 # Every R/sources/*.R fetcher ends by handing its normalized data.table (columns
 # NUM_POSTE, AAAAMMJJ, TN, TX, TNTXM, RR — TNTXM always computed as (TN+TX)/2 for

@@ -37,7 +37,11 @@ else
   FIGDIR    := outputs/$(SITE)/figures
 endif
 
-RAW_FILES   := $(wildcard $(RAWDIR)/*)
+# Plain files only: castanet's RAWDIR is data/raw itself, whose other entries
+# are the other sites' directories — their mtimes moved with every refresh and
+# kept castanet's extract permanently "stale".
+RAW_FILES   := $(shell find $(RAWDIR) -maxdepth 1 -type f 2>/dev/null)
+SITE_SOURCE := $(shell sed -n 's/^ *source *= *"\([a-z_]*\)".*/\1/p' R/sites/$(SITE).R)
 EXTRACT     := $(PROCESSED)/stations_daily.csv.gz
 FIGURES     := $(FIGDIR)/temperature_series.png \
                $(FIGDIR)/temperature_climatology.png \
@@ -80,7 +84,12 @@ compare:
 # nothing — that is fine and intended: stage 00 downloads what it needs. It is
 # only listed so that dropping in a newer raw file re-triggers the slice.
 prepare: $(EXTRACT)
-$(EXTRACT): $(RAW_FILES) R/00_prepare_data.R R/lib/common.R $(SITE_CONFIG)
+# The same code inputs stage 00's own freshness check uses (common.R's
+# extract_up_to_date()). If the two lists differ, make reruns stage 00, stage 00
+# finds nothing to do and leaves the extract untouched, and make reruns it again
+# next time, forever. The site's source module used to be missing here, so
+# editing it never triggered stage 00 at all.
+$(EXTRACT): $(RAW_FILES) R/00_prepare_data.R R/lib/common.R R/lib/ghcn.R R/sources/$(SITE_SOURCE).R $(SITE_CONFIG)
 	SITE=$(SITE) $(RSCRIPT) R/00_prepare_data.R
 
 # force a re-download of ALL this site's raw data, then rebuild everything.

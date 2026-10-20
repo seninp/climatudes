@@ -168,7 +168,11 @@ trend_txt <- sprintf(
   "%s, annual mean temperature\n+%.2f °C / decade  ·  +%.1f °C over %d years (%d–%d)",
   SITE$reference_station, slope_dec_ref, rise_ref, yr1 - yr0, yr0, yr1)
 
-x_breaks <- seq(1860, 2030, by = 10)
+# Tick sequences are deliberately wider than any site's data: ggplot draws only
+# the breaks inside each chart's range. The old seq(-10, 40, 5) and
+# seq(-15, 30, 2) left Moscow's -25 °C cold line, its -32 °C winter trough and
+# Hyderabad's 35 °C maxima on unlabelled stretches of axis.
+x_breaks <- seq(1800, 2100, by = 10)
 
 stations_line_temp <- if (SITE$local_has_temp)
   sprintf("Stations: %s (%s) and %s (%s, long-term reference).",
@@ -195,7 +199,7 @@ p1 <- ggplot() +
   scale_shape_manual(values = shp, name = NULL, breaks = series_levels) +
   scale_x_continuous(breaks = x_breaks, limits = c(yr0, max(yr1, cur_year)),
                      expand = expansion(mult = c(0.01, 0.04))) +
-  scale_y_continuous(breaks = seq(-15, 30, 2),
+  scale_y_continuous(breaks = seq(-51, 51, 2),   # odd degrees, as before
                      limits = c(min(ref$TN) - 0.5, max(ref$TX) + 1.6),
                      labels = deg_label) +
   guides(colour = guide_legend(nrow = 2, byrow = TRUE,
@@ -395,7 +399,7 @@ p2 <- ggplot() +
            colour = COL$tx, fontface = "bold", size = 4) +
   scale_x_continuous(breaks = month_starts, labels = month_labs,
                      expand = expansion(mult = c(0.01, 0.05))) +
-  scale_y_continuous(breaks = seq(-10, 40, 5), labels = deg_label) +
+  scale_y_continuous(breaks = seq(-50, 50, 5), labels = deg_label) +
   labs(
     title = sprintf("Every year, day by day — %s", CLIMATOLOGY_STATION),
     subtitle = sprintf(
@@ -860,7 +864,9 @@ rain_clim <- dat[station == CLIMATOLOGY_STATION & !is.na(RR)]
 # with missing days is not mistaken for a dry one. This also drops the current,
 # still-incomplete month of the in-progress year automatically.
 rmon      <- rain_clim[, .(mm = sum(RR), nd = .N), by = .(year, month)][nd >= 27]
-rmon_prev <- rmon[year <  cur_year]
+# A YEAR_COMPLETE site's current year is finished, so it belongs in the normal —
+# the same rule prev_years applies to the temperature climatology above.
+rmon_prev <- if (YEAR_COMPLETE) rmon[year <= cur_year] else rmon[year < cur_year]
 rmon_cur  <- rmon[year == cur_year]
 rain_norm <- rmon_prev[, .(mm = mean(mm)), by = month][order(month)]
 rain_nyears <- uniqueN(rmon_prev$year)

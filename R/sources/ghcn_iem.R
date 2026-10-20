@@ -89,37 +89,12 @@ GHCN_IEM_ENVELOPE_MARGIN <- 3
 # Same endpoint/units as R/sources/noaa.R; replicated (not shared) so this module
 # stands alone. `end` is a future sentinel so the file keeps gaining rows (rain,
 # and recent temperature) as NOAA publishes, and never needs bumping.
-ghcn_iem_fetch_ghcn <- function(base_url, raw_dir, id, start, end) {
-  dest <- file.path(raw_dir, sprintf("ghcn_%s_%s_%s.csv", id, start, end))
-  if (!file.exists(dest)) {
-    url <- sprintf(
-      "%s?dataset=daily-summaries&stations=%s&startDate=%s&endDate=%s&format=csv&units=metric&dataTypes=TMAX,TMIN,PRCP&includeAttributes=true",
-      base_url, id, start, end)
-    fetch_url(url, dest, verify_text, on_404_hint = sprintf(
-      "GHCN station %s may not exist or have no data in %s..%s.", id, start, end))
-  }
-  dest
-}
+source("R/lib/ghcn.R")   # ghcn_fetch(), ghcn_read() — shared with R/sources/noaa.R
 
-# A non-empty QFLAG means GHCN's own QC rejected the value — null it out (same
-# rule as R/sources/noaa.R::noaa_qflag_ok).
-ghcn_iem_qflag_ok <- function(attrs) {
-  attrs <- as.character(attrs)
-  qflag <- vapply(strsplit(attrs, ",", fixed = TRUE), function(x)
-    if (length(x) >= 2) x[[2]] else "", character(1))
-  is.na(attrs) | qflag == ""
-}
+ghcn_iem_fetch_ghcn <- function(base_url, raw_dir, id, start, end)
+  ghcn_fetch(base_url, file.path(raw_dir, sprintf("ghcn_%s_%s_%s.csv", id, start, end)), id, start, end)
 
-ghcn_iem_read_ghcn <- function(path) {
-  suppressPackageStartupMessages(library(data.table))
-  d <- fread(path)
-  tn <- as.numeric(d$TMIN); tx <- as.numeric(d$TMAX); rr <- as.numeric(d$PRCP)
-  tn[!ghcn_iem_qflag_ok(d$TMIN_ATTRIBUTES)] <- NA_real_
-  tx[!ghcn_iem_qflag_ok(d$TMAX_ATTRIBUTES)] <- NA_real_
-  rr[!ghcn_iem_qflag_ok(d$PRCP_ATTRIBUTES)] <- NA_real_
-  data.table(AAAAMMJJ = as.integer(gsub("-", "", d$DATE, fixed = TRUE)),
-             TN = tn, TX = tx, RR = rr)
-}
+ghcn_iem_read_ghcn <- ghcn_read
 
 # ---- Iowa Environmental Mesonet (daily summary from METAR) -------------------
 # The daily.py service returns a precomputed daily summary; we take only
@@ -200,8 +175,7 @@ rolling_files <- function(site) {
 
 prepare_data <- function(site) {
   suppressPackageStartupMessages(library(data.table))
-  dir.create(site$paths$processed, recursive = TRUE, showWarnings = FALSE)
-  dir.create(site$paths$raw,       recursive = TRUE, showWarnings = FALSE)
+  ensure_site_dirs(site)
 
   gi    <- site$ghcn_iem
   today <- format(Sys.Date(), "%Y-%m-%d")
@@ -213,12 +187,7 @@ prepare_data <- function(site) {
                                   gi$iem_station, gi$iem_start, today)
 
   extract_gz <- file.path(site$paths$processed, STATION_EXTRACT)
-  inputs <- c(ghcn_path, iem_path, "R/sources/ghcn_iem.R", sprintf("R/sites/%s.R", site$key))
-  if (file.exists(extract_gz) &&
-      file.info(extract_gz)$mtime >= max(file.info(inputs)$mtime)) {
-    message("up to date: ", extract_gz)
-    return(invisible(NULL))
-  }
+  if (extract_up_to_date(site, c(ghcn_path, iem_path))) return(invisible(NULL))
 
   message("Homogenizing GHCN (", gi$ghcn_id, ") + IEM METAR (", gi$iem_station,
           ") for ", site$city, " ...")

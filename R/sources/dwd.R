@@ -138,8 +138,7 @@ rolling_files <- function(site) {
 
 prepare_data <- function(site) {
   suppressPackageStartupMessages(library(data.table))
-  dir.create(site$paths$processed, recursive = TRUE, showWarnings = FALSE)
-  dir.create(site$paths$raw,       recursive = TRUE, showWarnings = FALSE)
+  ensure_site_dirs(site)
 
   dwd <- site$dwd
   station_ids <- names(dwd$stations)
@@ -176,12 +175,7 @@ prepare_data <- function(site) {
   extract_gz <- file.path(site$paths$processed, STATION_EXTRACT)
   raw_paths  <- unlist(lapply(station_files, function(x)
     c(x$hist, x$akt, x$predecessor$hist)), use.names = FALSE)
-  inputs <- c(raw_paths, "R/sources/dwd.R", sprintf("R/sites/%s.R", site$key))
-  if (file.exists(extract_gz) &&
-      file.info(extract_gz)$mtime >= max(file.info(inputs)$mtime)) {
-    message("up to date: ", extract_gz)
-    return(invisible(NULL))
-  }
+  if (extract_up_to_date(site, raw_paths)) return(invisible(NULL))
 
   message("Slicing DWD raw zips to stations: ",
           paste(names(site$stations), collapse = ", "))

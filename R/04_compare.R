@@ -80,6 +80,15 @@ load_site <- function(key) {
   )
 }
 
+# SITE_ORDER is hand-ordered, but its membership must equal R/sites/*.R (which
+# is what the Makefile runs): a site left out here would vanish from the
+# comparison without complaint.
+site_files <- sub("\\.R$", "", list.files("R/sites", "\\.R$"))
+if (!setequal(site_files, SITE_ORDER))
+  stop("SITE_ORDER and R/sites/*.R disagree — missing from SITE_ORDER: ",
+       paste(setdiff(site_files, SITE_ORDER), collapse = ", "),
+       "; no site file: ", paste(setdiff(SITE_ORDER, site_files), collapse = ", "))
+
 cmp <- rbindlist(lapply(SITE_ORDER, load_site))
 cmp[, site_key := factor(site_key, levels = SITE_ORDER)]
 

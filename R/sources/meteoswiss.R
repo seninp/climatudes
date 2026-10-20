@@ -16,32 +16,50 @@
 # writes that via write_extract() to site$paths$processed/<STATION_EXTRACT>.
 # =============================================================================
 
-# Rolling files — the only raw files that change between refreshes. For every
-# distinct (dataset, station) pair the site needs, the "recent" file rolls
-# (current calendar year to date); the "historical" file is closed at the
-# previous year-end and stable, so refresh-rolling leaves it alone. This mirrors
-# the pair-collection in prepare_data() so the two never drift.
-rolling_files <- function(site) {
+# The distinct (dataset, station) pairs a site needs. Two stations can need the
+# same dataset (e.g. both SMA and REH pull from smn); one station can need two
+# different datasets (SMA: temp from nbcn, rain from smn). Shared by
+# rolling_files() and prepare_data() so the two cannot drift.
+ms_pairs <- function(site) {
   ms <- site$meteoswiss
-  paths <- character(0)
-  seen  <- character(0)
-  for (abbr in names(ms$stations)) {
+  pairs <- do.call(rbind, lapply(names(ms$stations), function(abbr) {
     st <- ms$stations[[abbr]]
-    for (dataset in unique(c(st$temp_dataset, st$rain_dataset))) {
-      combo <- paste(dataset, abbr)
-      if (combo %in% seen) next
-      seen <- c(seen, combo)
-      paths <- c(paths, file.path(site$paths$raw,
-                                  sprintf("ogd-%s_%s_d_recent.csv", dataset, tolower(abbr))))
-    }
-  }
-  paths
+    data.frame(dataset = unique(c(st$temp_dataset, st$rain_dataset)), abbr = abbr)
+  }))
+  pairs[!duplicated(paste(pairs$dataset, pairs$abbr)), , drop = FALSE]
+}
+
+ms_raw_path <- function(site, dataset, abbr, kind)
+  file.path(site$paths$raw, sprintf("ogd-%s_%s_d_%s.csv", dataset, tolower(abbr), kind))
+
+# Last AAAAMMJJ in a MeteoSwiss daily file (rows are "...;DD.MM.YYYY 00:00;...").
+ms_last_day <- function(path) {
+  last <- utils::tail(readLines(path, warn = FALSE), 1)
+  d <- regmatches(last, regexpr("[0-9]{2}\\.[0-9]{2}\\.[0-9]{4}", last))
+  if (!length(d)) return(NA_integer_)
+  p <- as.integer(strsplit(d, ".", fixed = TRUE)[[1]])
+  p[3] * 10000L + p[2] * 100L + p[1]
+}
+
+# A cached "historical" file is stale once the year has turned past it: upstream
+# closes the previous year into "historical" and restarts "recent" on Jan 1, so
+# keeping the old copy would silently drop a whole year between the two.
+ms_hist_stale <- function(path)
+  file.exists(path) && isTRUE(ms_last_day(path) < (as.integer(format(Sys.Date(), "%Y")) - 1L) * 10000L + 1231L)
+
+# Rolling files — the only raw files that change between refreshes. For every
+# (dataset, station) pair the "recent" file rolls (current calendar year to
+# date). The "historical" file is closed at the previous year-end and stable,
+# so refresh-rolling leaves it alone — except once a year, when it is stale.
+rolling_files <- function(site) {
+  pairs <- ms_pairs(site)
+  hist  <- ms_raw_path(site, pairs$dataset, pairs$abbr, "historical")
+  c(ms_raw_path(site, pairs$dataset, pairs$abbr, "recent"), hist[vapply(hist, ms_hist_stale, logical(1))])
 }
 
 prepare_data <- function(site) {
   suppressPackageStartupMessages(library(data.table))
-  dir.create(site$paths$processed, recursive = TRUE, showWarnings = FALSE)
-  dir.create(site$paths$raw,       recursive = TRUE, showWarnings = FALSE)
+  ensure_site_dirs(site)
 
   ms <- site$meteoswiss
 
@@ -59,43 +77,34 @@ prepare_data <- function(site) {
              tre200dn = "TN", tre200dx = "TX", rre150d0 = "RR")
   )
 
-  raw_path <- function(dataset, abbr, kind)
-    file.path(site$paths$raw, sprintf("ogd-%s_%s_d_%s.csv", dataset, tolower(abbr), kind))
+  raw_path <- function(dataset, abbr, kind) ms_raw_path(site, dataset, abbr, kind)
 
   # ---- fetch step ------------------------------------------------------------
-  # Two stations can need the same dataset (e.g. both SMA and REH pull from
-  # smn); one station can need two different datasets (SMA: temp from nbcn,
-  # rain from smn). Collect the distinct (dataset, abbr) pairs actually needed
-  # first, so a dataset shared by two stations is only fetched once.
-  seen <- character(0)
+  # Each distinct (dataset, abbr) pair is fetched once, even when two stations
+  # share it — see ms_pairs().
+  pairs <- ms_pairs(site)
   raw_paths <- character(0)
-  for (abbr in names(ms$stations)) {
-    st <- ms$stations[[abbr]]
-    for (dataset in unique(c(st$temp_dataset, st$rain_dataset))) {
-      combo <- paste(dataset, abbr)
-      if (combo %in% seen) next
-      seen <- c(seen, combo)
-      for (kind in c("historical", "recent")) {
-        dest <- raw_path(dataset, abbr, kind)
-        raw_paths <- c(raw_paths, dest)
-        if (!file.exists(dest)) {
-          url <- file.path(ms$base_url, sprintf("ch.meteoschweiz.ogd-%s", dataset), tolower(abbr),
-                            sprintf("ogd-%s_%s_d_%s.csv", dataset, tolower(abbr), kind))
-          fetch_url(url, dest, verify_text, on_404_hint = sprintf(
-            "If this is a 404, station %s may not have a %s dataset — check meteoswiss$stations in R/sites/%s.R.",
-            abbr, dataset, site$key))
-        }
+  for (i in seq_len(nrow(pairs))) {
+    dataset <- pairs$dataset[i]; abbr <- pairs$abbr[i]
+    for (kind in c("historical", "recent")) {
+      dest <- raw_path(dataset, abbr, kind)
+      raw_paths <- c(raw_paths, dest)
+      if (kind == "historical" && ms_hist_stale(dest)) {
+        message("  ", basename(dest), " ends before last year-end — re-fetching it")
+        unlink(dest)
+      }
+      if (!file.exists(dest)) {
+        url <- file.path(ms$base_url, sprintf("ch.meteoschweiz.ogd-%s", dataset), tolower(abbr),
+                          sprintf("ogd-%s_%s_d_%s.csv", dataset, tolower(abbr), kind))
+        fetch_url(url, dest, verify_text, on_404_hint = sprintf(
+          "If this is a 404, station %s may not have a %s dataset — check meteoswiss$stations in R/sites/%s.R.",
+          abbr, dataset, site$key))
       }
     }
   }
 
   extract_gz <- file.path(site$paths$processed, STATION_EXTRACT)
-  inputs <- c(raw_paths, "R/sources/meteoswiss.R", sprintf("R/sites/%s.R", site$key))
-  if (file.exists(extract_gz) &&
-      file.info(extract_gz)$mtime >= max(file.info(inputs)$mtime)) {
-    message("up to date: ", extract_gz)
-    return(invisible(NULL))
-  }
+  if (extract_up_to_date(site, raw_paths)) return(invisible(NULL))
 
   # ---- read step --------------------------------------------------------------
   # Cache one combined (historical + recent) table per (dataset, abbr) pair, so
@@ -129,6 +138,18 @@ prepare_data <- function(site) {
     # either file. Still dedupe defensively in case that ever changes: keep
     # the "recent" row on any date present in both, since it is the more
     # recently refreshed of the two files for that date.
+    # The two files must meet: if "recent" has restarted on Jan 1 but upstream
+    # has not yet closed the past year into "historical", a whole year is
+    # missing between them. Stop rather than publish a record with a hole.
+    if (nrow(hist) && nrow(rec)) {
+      h_end   <- as.Date(as.character(max(hist$AAAAMMJJ)), "%Y%m%d")
+      r_start <- as.Date(as.character(min(rec$AAAAMMJJ)),  "%Y%m%d")
+      if (r_start - h_end > 1)
+        stop(sprintf(paste0("MeteoSwiss %s/%s: historical ends %s but recent starts %s — ",
+                            "upstream has not yet moved the past year into the historical file. ",
+                            "Re-run `make refresh-rolling SITE=%s` in a few days."),
+                     dataset, abbr, h_end, r_start, site$key))
+    }
     both <- rbindlist(list(hist, rec), fill = TRUE)
     setorder(both, AAAAMMJJ)
     combined <- both[!duplicated(AAAAMMJJ, fromLast = TRUE)]

@@ -85,8 +85,7 @@ rolling_files <- function(site) character(0)
 
 prepare_data <- function(site) {
   suppressPackageStartupMessages(library(data.table))
-  dir.create(site$paths$processed, recursive = TRUE, showWarnings = FALSE)
-  dir.create(site$paths$raw,       recursive = TRUE, showWarnings = FALSE)
+  ensure_site_dirs(site)
 
   extract_gz <- file.path(site$paths$processed, STATION_EXTRACT)
 
@@ -111,12 +110,7 @@ prepare_data <- function(site) {
   }
 
   zip_path <- meteoru_find_export(site$paths$raw)
-  inputs <- c(zip_path, "R/sources/meteoru.R", sprintf("R/sites/%s.R", site$key))
-  if (file.exists(extract_gz) &&
-      file.info(extract_gz)$mtime >= max(file.info(inputs)$mtime)) {
-    message("up to date: ", extract_gz)
-    return(invisible(NULL))
-  }
+  if (extract_up_to_date(site, zip_path)) return(invisible(NULL))
 
   message("Reading Roshydromet/AISORI-M export: ", basename(zip_path))
   slice <- rbindlist(lapply(names(site$stations), function(sid) {

@@ -59,8 +59,7 @@ rolling_files <- function(site) {
 
 prepare_data <- function(site) {
   suppressPackageStartupMessages(library(data.table))
-  dir.create(site$paths$processed, recursive = TRUE, showWarnings = FALSE)
-  dir.create(site$paths$raw,       recursive = TRUE, showWarnings = FALSE)
+  ensure_site_dirs(site)
 
   mf <- site$meteofrance
   rr_t_vent_gz <- sprintf("Q_%s_%s_RR-T-Vent.csv.gz", mf$dept, mf_eras(site))
@@ -91,12 +90,7 @@ prepare_data <- function(site) {
   }
 
   extract_gz <- file.path(site$paths$processed, STATION_EXTRACT)
-  inputs <- c(gz_paths, "R/sources/meteofrance.R", sprintf("R/sites/%s.R", site$key))
-  if (file.exists(extract_gz) &&
-      file.info(extract_gz)$mtime >= max(file.info(inputs)$mtime)) {
-    message("up to date: ", extract_gz)
-    return(invisible(NULL))
-  }
+  if (extract_up_to_date(site, gz_paths)) return(invisible(NULL))
 
   message("Slicing ", length(gz_paths), " raw .gz files to stations: ",
           paste(names(site$stations), collapse = ", "))
